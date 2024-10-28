@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 import 'package:trailpro_planning/presentation/day_plan_screen.dart';
 
-class WeekPlanWidget extends StatelessWidget {
-  WeekPlanWidget({super.key});
+class WeekPlanWidget extends StatefulWidget {
+  const WeekPlanWidget({super.key});
 
+  @override
+  State<WeekPlanWidget> createState() => _WeekPlanWidgetState();
+}
+
+class _WeekPlanWidgetState extends State<WeekPlanWidget> {
   List<Map<String, String>> weekPlan = WeekPlanMap.weekPlan;
 
   @override
