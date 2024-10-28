@@ -1,32 +1,33 @@
-import 'package:flutter/material.dart';
-import 'package:trailpro_planning/presentation/authorization.dart';
+import 'package:trailpro_planning/presentation/authorization_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/presentation/studentscreen.dart';
-import 'package:trailpro_planning/presentation/trainerscreen.dart';
+import 'package:trailpro_planning/presentation/day_plan_screen.dart';
+import 'package:trailpro_planning/presentation/splash_screen.dart';
+import 'package:trailpro_planning/presentation/student_screen.dart';
+import 'package:trailpro_planning/presentation/trainer_screen.dart';
 
 final GoRouter router = GoRouter(
+  initialLocation: '/splashscreen',
   routes: <RouteBase>[
     GoRoute(
       path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return const Authorization();
-      },
+      builder: (_, __) => const Authorization(),
       routes: <RouteBase>[
         GoRoute(
+            path: 'splashscreen',
+            builder: (_, __) => const SplashScreen(),
+            ),
+        GoRoute(
             path: 'trainerscreen',
-            builder: (BuildContext context, GoRouterState state) {
-              return const TrainerScreen();
-            },
-            routes: <RouteBase>[
-
-            ]),
+            builder: (_, __) => const TrainerScreen(),
+            routes: <RouteBase>[]),
         GoRoute(
             path: 'studentscreen',
-            builder: (BuildContext context, GoRouterState state) {
-              return const StudentScreen();
-            },
+            builder: (_, __) => const StudentScreen(),
             routes: <RouteBase>[
-
+              // GoRoute(
+              //     path: 'dayplan',
+              //     builder: (_, __) => const DayPlan(),
+              //     routes: <RouteBase>[]),
             ]),
       ],
     ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trailpro_planning/presentation/authorization.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,9 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const Authorization()));
-    });
+    Future.delayed(const Duration(seconds: 3), () => context.go('/'));
   }
 
   @override
