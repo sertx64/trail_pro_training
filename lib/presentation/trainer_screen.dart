@@ -5,6 +5,6 @@ class TrainerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('ЭКРАН ТРЕНЕРА')));
+    return const Scaffold(body: Center(child: Text('ЭКРАН ТРЕНЕРА')));
   }
 }

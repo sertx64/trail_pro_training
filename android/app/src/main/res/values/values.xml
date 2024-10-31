@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Place your Firebase API key here -->
+    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID</string>
+    <string name="firebase_database_url">YOUR_DATABASE_URL</string>
+    <!-- Add other resources as needed -->
+</resources>

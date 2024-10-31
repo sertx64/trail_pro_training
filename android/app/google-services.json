@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "549021025029",
+    "project_id": "trailpro-planning",
+    "storage_bucket": "trailpro-planning.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549021025029:android:0776d86541afecb0e3ed6c",
+        "android_client_info": {
+          "package_name": "com.example.trailpro_planning"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUQoa3BTUweIYaXLjLxM10uUTlkto33a0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

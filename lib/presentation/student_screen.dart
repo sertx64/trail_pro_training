@@ -12,7 +12,7 @@ class StudentScreen extends StatelessWidget {
               style: TextStyle(fontSize: 27, color: Colors.white),
               'Недельный план'),
           backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-      body: WeekPlanWidget(),
+      body: const WeekPlanWidget(),
     );
   }
 }

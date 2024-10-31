@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DayPlan extends StatelessWidget {
-  const DayPlan(this.dayPlanMap, {super.key});
-
   final Map<String, String> dayPlanMap;
+  const DayPlan(this.dayPlanMap, {super.key});
 
   @override
   Widget build(BuildContext context) {

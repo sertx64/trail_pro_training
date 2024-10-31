@@ -1,5 +1,7 @@
 plugins {
+
     id "com.android.application"
+    id 'com.google.gms.google-services'
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
@@ -34,6 +36,7 @@ android {
     }
 
     defaultConfig {
+
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.trailpro_planning"
         // You can update the following values to match your application needs.
@@ -42,6 +45,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
+        minSdkVersion 23
     }
 
     buildTypes {
@@ -56,3 +60,4 @@ android {
 flutter {
     source = "../.."
 }
+

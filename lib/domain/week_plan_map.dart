@@ -1,3 +1,5 @@
+import '../data/firebase_api.dart';
+
 class WeekPlanMap {
   static List<Map<String, String>> weekPlan = [
     {
@@ -43,4 +45,11 @@ class WeekPlanMap {
       'group_training':'1',
     }
   ];
+}
+
+class WeekPlanMap1 {
+
+  static Future<List<Map<String, String>>> weekPlan() async {
+    return await getData('week_plan_path');
+  }
 }
