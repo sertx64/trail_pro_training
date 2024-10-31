@@ -10,7 +10,18 @@ class WeekPlanWidget extends StatefulWidget {
 }
 
 class _WeekPlanWidgetState extends State<WeekPlanWidget> {
-  final List<Map<String, String>> weekPlan = WeekPlanMap.weekPlan;
+  List<Map<String, String>>? weekPlan;
+
+  @override
+  void initState() {
+    loadWeekPlan();
+    super.initState();
+  }
+
+  void loadWeekPlan() async {
+    weekPlan = await WeekPlanMap().weekPlan();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +31,7 @@ class _WeekPlanWidgetState extends State<WeekPlanWidget> {
             padding: const EdgeInsets.all(8.0),
             child: ListView.separated(
               itemBuilder: (context, index) {
-                Map<String, String> dayPlan = weekPlan[index];
+                Map<String, String> dayPlan = weekPlan![index];
                 return Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -54,7 +65,7 @@ class _WeekPlanWidgetState extends State<WeekPlanWidget> {
                       },
                     ));
               },
-              itemCount: weekPlan.length,
+              itemCount: weekPlan!.length,
               separatorBuilder: (context, index) => const SizedBox(height: 8),
             ));
   }
