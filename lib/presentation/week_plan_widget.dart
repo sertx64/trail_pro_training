@@ -54,12 +54,13 @@ class _WeekPlanWidgetState extends State<WeekPlanWidget> {
                               decoration: BoxDecoration(
                                 border: Border.all(
                                     width: 5.0,
-                                    color: const Color.fromRGBO(1, 57, 104, 1)),
+                                    color: (dayPlan['label_training'] == '')
+                                        ? Colors.blueGrey
+                                        : const Color.fromRGBO(1, 57, 104, 1)),
                                 shape: BoxShape.circle,
                                 color: (dayPlan['label_training'] == '')
                                     ? Colors.blueGrey
-                                    : const Color.fromRGBO(
-                                    255, 132, 26, 1),
+                                    : const Color.fromRGBO(255, 132, 26, 1),
                               ),
                               child: Center(
                                 child: Text(
@@ -74,13 +75,16 @@ class _WeekPlanWidgetState extends State<WeekPlanWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  style: TextStyle(
+                                  style: const TextStyle(
+
                                       color: Color.fromRGBO(1, 57, 104, 1),
                                       fontSize: 22),
                                   dayPlan['date']!),
                               Text(
                                   style: const TextStyle(
-                                      color: Color.fromRGBO(1, 57, 104, 1), fontSize: 18),
+                                      fontWeight: FontWeight.w600,
+                                      color: Color.fromRGBO(1, 57, 104, 1),
+                                      fontSize: 18),
                                   (dayPlan['label_training'] == '')
                                       ? 'День отдыха'
                                       : dayPlan['label_training']!),
