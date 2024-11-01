@@ -28,7 +28,7 @@ class Authorization extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(200, 50),
                     backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-                onPressed: () => context.go('/trainerscreen'),
+                onPressed: () => context.go('/trainerauth'),
                 child: const Text(
                     style: TextStyle(fontSize: 24, color: Colors.white),
                     'Тренер')),

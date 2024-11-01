@@ -3,6 +3,7 @@ import 'package:trailpro_planning/presentation/authorization_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/presentation/splash_screen.dart';
 import 'package:trailpro_planning/presentation/student_screen.dart';
+import 'package:trailpro_planning/presentation/trainer_auth_screen.dart';
 import 'package:trailpro_planning/presentation/trainer_screen.dart';
 
 final GoRouter router = GoRouter(
@@ -17,13 +18,18 @@ final GoRouter router = GoRouter(
             builder: (BuildContext context, GoRouterState state) => const SplashScreen(),
             ),
         GoRoute(
-            path: 'trainerscreen',
-            builder: (BuildContext context, GoRouterState state) => const TrainerScreen(),
-            routes: const <RouteBase>[]),
+            path: 'trainerauth',
+            builder: (BuildContext context, GoRouterState state) => TrainerAuth(),
+            routes: <RouteBase>[
+              GoRoute(
+                  path: 'trainerscreen',
+                  builder: (BuildContext context, GoRouterState state) => const TrainerScreen(),
+                  ),
+            ]),
         GoRoute(
             path: 'studentscreen',
             builder: (BuildContext context, GoRouterState state) => const StudentScreen(),
-            routes: const <RouteBase>[
+            //routes: <RouteBase>[
               // GoRoute(
               //     path: 'dayplan/:day',
               //     builder: (BuildContext context, GoRouterState state) {
@@ -32,7 +38,8 @@ final GoRouter router = GoRouter(
               //       return DayPlan(day);
               //     },
               //     routes: <RouteBase>[]),
-            ]),
+            //]
+        ),
       ],
     ),
   ],

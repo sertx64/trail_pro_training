@@ -17,13 +17,21 @@ const _credentials = r'''
 ''';
 const _spreadsheetId = '182H6VT_Phx-4by5_fWefCMLdUPTaR6cXwPt5FD-OjZs';
 
-class GetApiGSheet {
+class ApiGSheet {
   final gSheets = GSheets(_credentials);
 
-  Future<List<String>?> weekPlanList(String id) async {
+  Future<List<String>?> getWeekPlanList(String id) async {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
-    final  weekplanlist = ss.worksheetByTitle('tp_week_plan');
+    final weekPlanSheet = ss.worksheetByTitle('tp_week_plan');
+    final weekplanlist = await weekPlanSheet!.values.rowByKey(id);
 
-    return await  weekplanlist!.values.rowByKey(id);
+    return weekplanlist;
+  }
+
+  void sendWeekPlanList(String id, List weekplanlist) async {
+    final ss = await gSheets.spreadsheet(_spreadsheetId);
+    final weekPlanSheet = ss.worksheetByTitle('tp_week_plan');
+
+    await weekPlanSheet!.values.insertRowByKey(id, weekplanlist);
   }
 }

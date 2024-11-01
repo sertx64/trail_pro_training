@@ -13,7 +13,11 @@ class DayPlan extends StatelessWidget {
             style: const TextStyle(color: Colors.white, fontSize: 27),
             dayPlanMap['date']!),
       ),
-      body: Center(child: Text(dayPlanMap['description_training']!)),
+      body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+          style: const TextStyle(color: Color.fromRGBO(1, 57, 104, 1), fontSize: 25),
+          dayPlanMap['description_training']!)),
     );
   }
 }

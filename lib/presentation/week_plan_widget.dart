@@ -26,7 +26,11 @@ class _WeekPlanWidgetState extends State<WeekPlanWidget> {
   @override
   Widget build(BuildContext context) {
     return (weekPlan == null)
-        ? const SizedBox(child: Text('Идёт загрузка'))
+        ? const Center(
+            child: CircularProgressIndicator(
+            color: Color.fromRGBO(255, 132, 26, 1),
+            strokeWidth: 6,
+          ))
         : Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView.separated(
