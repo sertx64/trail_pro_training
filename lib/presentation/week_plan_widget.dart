@@ -44,19 +44,50 @@ class _WeekPlanWidgetState extends State<WeekPlanWidget> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: ListTile(
-                      title: Text(
-                          style: TextStyle(
-                              color: (dayPlan['label_training'] == '')
-                                  ? Colors.blueGrey
-                                  : const Color.fromRGBO(255, 132, 26, 1),
-                              fontSize: 22),
-                          dayPlan['date']!),
-                      subtitle: Text(
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 18),
-                          (dayPlan['label_training'] == '')
-                              ? 'День отдыха'
-                              : dayPlan['label_training']!),
+                      contentPadding:
+                          const EdgeInsets.fromLTRB(8.0, 1.0, 8.0, 1.0),
+                      title: Row(
+                        children: [
+                          Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 5.0,
+                                    color: const Color.fromRGBO(1, 57, 104, 1)),
+                                shape: BoxShape.circle,
+                                color: (dayPlan['label_training'] == '')
+                                    ? Colors.blueGrey
+                                    : const Color.fromRGBO(
+                                    255, 132, 26, 1),
+                              ),
+                              child: Center(
+                                child: Text(
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        fontSize: 22),
+                                    dayPlan['day']!),
+                              )),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(1, 57, 104, 1),
+                                      fontSize: 22),
+                                  dayPlan['date']!),
+                              Text(
+                                  style: const TextStyle(
+                                      color: Color.fromRGBO(1, 57, 104, 1), fontSize: 18),
+                                  (dayPlan['label_training'] == '')
+                                      ? 'День отдыха'
+                                      : dayPlan['label_training']!),
+                            ],
+                          ),
+                        ],
+                      ),
                       onTap: () {
                         (dayPlan['label_training'] == '')
                             ? null
