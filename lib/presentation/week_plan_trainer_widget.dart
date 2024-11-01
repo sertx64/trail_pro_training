@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
+import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
 import 'package:trailpro_planning/presentation/day_plan_trainer.dart';
 
 class WeekPlanTrainerWidget extends StatefulWidget {
@@ -90,6 +91,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                               dayPlan['label_training'] = _controllerLabelTraining.text;
                               dayPlan['description_training'] = _controllerDescriptionTraining.text;
                               setState(() {});
+                              WeekPlanSentList(weekPlan!).sentPlan();
                             },
                             child: const Text('Ok'),
                           )
