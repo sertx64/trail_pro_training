@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trailpro_planning/presentation/week_plan_trainer_widget.dart';
 
 class TrainerScreen extends StatelessWidget {
   const TrainerScreen({super.key});
@@ -7,9 +8,13 @@ class TrainerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text('Составление плана'),
-        ),
 
-        body: Center(child: Text('ЭКРАН ТРЕНЕРА')));
+            title: const Text(
+                style: TextStyle(fontSize: 27, color: Colors.white),
+                'Составление плана'),
+            backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+
+        body: const WeekPlanTrainerWidget()
+    );
   }
 }

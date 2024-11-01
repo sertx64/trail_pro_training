@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
-import 'package:trailpro_planning/presentation/day_plan_screen.dart';
+import 'package:trailpro_planning/presentation/day_plan_student.dart';
 
 class WeekPlanStudentWidget extends StatefulWidget {
   const WeekPlanStudentWidget({super.key});
