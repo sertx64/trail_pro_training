@@ -1,8 +1,10 @@
 import 'package:trailpro_planning/data/gsheets_api.dart';
 
 class WeekPlanMap {
+  WeekPlanMap(this.yearweek);
+  String yearweek;
   Future<List<Map<String, String>>> weekPlanStudent() async {
-    List<String>? weekPlanList = await ApiGSheet().getWeekPlanList('w1');
+    List<String>? weekPlanList = await ApiGSheet().getWeekPlanList(yearweek);
 
     final List<Map<String, String>> weekPlan = [
       {

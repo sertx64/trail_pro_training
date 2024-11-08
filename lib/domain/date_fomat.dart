@@ -1,15 +1,14 @@
 import 'package:intl/intl.dart';
+import 'package:week_number/iso.dart';
 
 String yearWeekNow() {
-  // Получаем текущую дату
   final now = DateTime.now();
-
-  // Форматируем строку для отображения года
   String year = DateFormat('yyyy').format(now);
+  print(year);
+  int week = now.weekNumber;
 
-  // Используем класс DateFormat для получения номера недели
-  int weekNumber = int.parse(DateFormat('w').format(now));
 
-  String yearweek = '$year$weekNumber';
-  return yearweek;
+
+
+  return '$year$week';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trailpro_planning/domain/date_fomat.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
 import 'package:trailpro_planning/presentation/day_plan_trainer.dart';
@@ -20,7 +21,8 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
   }
 
   void loadWeekPlan() async {
-    weekPlan = await WeekPlanMap().weekPlanStudent();
+    String yW = yearWeekNow();
+    weekPlan = await WeekPlanMap(yW).weekPlanStudent();
     setState(() {});
   }
 
