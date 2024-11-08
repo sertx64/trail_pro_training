@@ -16,18 +16,21 @@ class TrainerAuth extends StatelessWidget {
         children: [
           //const SizedBox(height: 150),
           const Text('введите ПИН'),
-          TextField(
-            obscureText: true,
-            keyboardType: TextInputType.number,
-            style: const TextStyle(fontSize: 22),
-            decoration: const InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30.0)),
+          SizedBox(
+            width: 250,
+            child: TextField(
+              obscureText: true,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(fontSize: 22),
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                ),
               ),
+              controller: _pin,
             ),
-            controller: _pin,
           ),
           const SizedBox(height: 20),
           ElevatedButton(

@@ -52,9 +52,5 @@ class WeekPlanMap {
     return weekPlan;
   }
 
-  Future<List<String>> weekPlanTrainer() async {
-    List<String>? weekPlanList = await ApiGSheet().getWeekPlanList('w5');
 
-    return weekPlanList!;
-  }
 }
