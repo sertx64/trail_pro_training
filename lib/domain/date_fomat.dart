@@ -6,5 +6,6 @@ String yearWeekNow() {
   String year = DateFormat('yyyy').format(now);
   int week = now.weekNumber;
 
-  return '$year$week';
+
+  return (week < 10) ? '${year}0$week' : '$year$week';
 }

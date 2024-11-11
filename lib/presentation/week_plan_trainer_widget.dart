@@ -13,16 +13,16 @@ class WeekPlanTrainerWidget extends StatefulWidget {
 
 class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
   List<Map<String, String>>? weekPlan;
+  int yW = int.parse(yearWeekNow());
 
   @override
   void initState() {
-    loadWeekPlan();
+    loadWeekPlan(yW);
     super.initState();
   }
 
-  void loadWeekPlan() async {
-    String yW = yearWeekNow();
-    weekPlan = await WeekPlanMap(yW).weekPlanStudent();
+  void loadWeekPlan(int yWid) async {
+    weekPlan = await WeekPlanMap(yWid).weekPlanStudent();
     setState(() {});
   }
 
@@ -93,7 +93,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                               dayPlan['label_training'] = _controllerLabelTraining.text;
                               dayPlan['description_training'] = _controllerDescriptionTraining.text;
                               setState(() {});
-                              WeekPlanSentList(weekPlan!).sentPlan();
+                              WeekPlanSentList(yW, weekPlan!).sentPlan();
                             },
                             child: const Text('Ok'),
                           )

@@ -17,8 +17,9 @@ class TrainerAuth extends StatelessWidget {
           //const SizedBox(height: 150),
           const Text('введите ПИН'),
           SizedBox(
-            width: 250,
+            width: 200,
             child: TextField(
+              autofocus: true,
               obscureText: true,
               keyboardType: TextInputType.number,
               style: const TextStyle(fontSize: 22),

@@ -12,17 +12,16 @@ class WeekPlanStudentWidget extends StatefulWidget {
 
 class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
   List<Map<String, String>>? weekPlan;
+  int yW = int.parse(yearWeekNow());
 
   @override
   void initState() {
-    loadWeekPlan();
+    loadWeekPlan(yW);
     super.initState();
   }
 
-  void loadWeekPlan() async {
-    String yW = yearWeekNow();
-
-    weekPlan = await WeekPlanMap(yW).weekPlanStudent();
+  void loadWeekPlan(int yWid) async {
+    weekPlan = await WeekPlanMap(yWid).weekPlanStudent();
     setState(() {});
   }
 
@@ -128,7 +127,16 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                             fixedSize: const Size(190, 50),
                             backgroundColor:
                                 const Color.fromRGBO(1, 57, 104, 1)),
-                        onPressed: () {},
+                        onPressed: () async {
+                          --yW;
+                          if (yW == 202444) yW = 202445;
+                          if (yW == 202500) yW = 202452;
+                          if (yW == 202600) yW = 202552;
+                          if (yW == 202700) yW = 202652;
+                          print(yW);
+                          loadWeekPlan(yW);
+
+                        },
                         child: const Text(
                             style: TextStyle(fontSize: 24, color: Colors.white),
                             'прошлая')),
@@ -137,7 +145,14 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                             fixedSize: const Size(190, 50),
                             backgroundColor:
                                 const Color.fromRGBO(1, 57, 104, 1)),
-                        onPressed: () {},
+                        onPressed: () {
+                          ++yW;
+                          if (yW == 202453) yW = 202501;
+                          if (yW == 202553) yW = 202601;
+                          if (yW == 202653) yW = 202701;
+                          print(yW);
+                          loadWeekPlan(yW);
+                        },
                         child: const Text(
                             style: TextStyle(fontSize: 24, color: Colors.white),
                             'следующая')),

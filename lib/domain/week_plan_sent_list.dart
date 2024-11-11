@@ -2,8 +2,9 @@ import 'package:trailpro_planning/data/gsheets_api.dart';
 
 class WeekPlanSentList {
   final List<Map<String, String>> weekPlanSent;
+  final int yearWeek;
 
-  WeekPlanSentList(this.weekPlanSent);
+  WeekPlanSentList(this.yearWeek, this.weekPlanSent);
 
   void sentPlan() {
     List<String> planList = [];
@@ -29,6 +30,6 @@ class WeekPlanSentList {
     planList.add(weekPlanSent[6]['label_training']!);
     planList.add(weekPlanSent[6]['description_training']!);
 
-    ApiGSheet().sendWeekPlanList('w1', planList);
+    ApiGSheet().sendWeekPlanList('$yearWeek', planList);
   }
 }
