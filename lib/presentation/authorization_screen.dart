@@ -17,11 +17,13 @@ class Authorization extends StatelessWidget {
             child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 100),
+            const SizedBox(height: 200),
             const SizedBox(
               height: 50,
               width: 250,
               // child: TextField(
+              //   textAlign: TextAlign.center,
+              //   cursorColor: Color.fromRGBO(255, 132, 26, 1),
               //   style: TextStyle(fontSize: 16),
               //   decoration: InputDecoration(
               //     filled: true,
@@ -40,6 +42,8 @@ class Authorization extends StatelessWidget {
               height: 50,
               width: 250,
               // child: TextField(
+              //   textAlign: TextAlign.center,
+              //   cursorColor: Color.fromRGBO(255, 132, 26, 1),
               //   obscureText: true,
               //   keyboardType: TextInputType.number,
               //   style: TextStyle(fontSize: 14),
@@ -55,7 +59,7 @@ class Authorization extends StatelessWidget {
             ),
 
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -66,14 +70,14 @@ class Authorization extends StatelessWidget {
                     style: TextStyle(fontSize: 24, color: Colors.white),
                     'Войти')),
             const SizedBox(
-              height: 10,
+              height: 30,
             ),
             TextButton(
                 onPressed: () => context.go('/trainerauth'),
                 child: const Text(
-                    style: TextStyle(fontSize: 20,
-                        color: Color.fromRGBO(1, 57, 104, 1)),
-                    'Я тренер')),
+                    style: TextStyle(fontSize: 16,
+                        color: Color.fromRGBO(255, 132, 26, 1)),
+                    '( Я тренер )')),
           ],
         )));
   }

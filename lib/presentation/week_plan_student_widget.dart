@@ -21,6 +21,8 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
   }
 
   void loadWeekPlan(int yWid) async {
+    weekPlan = null;
+    setState(() {});
     weekPlan = await WeekPlanMap(yWid).weekPlanStudent();
     setState(() {});
   }
@@ -43,6 +45,9 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                       Map<String, String> dayPlan = weekPlan![index];
                       return Container(
                           decoration: BoxDecoration(
+                            color: (dayPlan['date'] == dateNow())
+                                ? Colors.green[100]
+                                : Colors.white,
                             border: Border.all(
                                 width: 5.0,
                                 color: const Color.fromRGBO(1, 57, 104, 1)),
@@ -84,8 +89,8 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                                   children: [
                                     Text(
                                         style: const TextStyle(
-                                            color:
-                                                Color.fromRGBO(1, 57, 104, 1),
+                                            color: Color.fromRGBO(
+                                                        1, 57, 104, 1),
                                             fontSize: 22),
                                         dayPlan['date']!),
                                     Text(

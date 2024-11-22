@@ -22,6 +22,8 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
   }
 
   void loadWeekPlan(int yWid) async {
+    weekPlan = null;
+    setState(() {});
     weekPlan = await WeekPlanMap(yWid).weekPlanStudent();
     setState(() {});
   }
@@ -84,12 +86,15 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                           TextEditingController(
                               text: dayPlan['label_training']);
                       final TextEditingController
-                          _controllerDescriptionTraining =
+                          controllerDescriptionTraining =
                           TextEditingController(
                               text: dayPlan['description_training']);
                       return Container(
                         padding: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
+                          color: (dayPlan['date'] == dateNow())
+                              ? Colors.greenAccent
+                              : Colors.white,
                           border: Border.all(
                               width: 5.0,
                               color: const Color.fromRGBO(1, 57, 104, 1)),
@@ -139,7 +144,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                                     dayPlan['label_training'] =
                                         _controllerLabelTraining.text;
                                     dayPlan['description_training'] =
-                                        _controllerDescriptionTraining.text;
+                                        controllerDescriptionTraining.text;
                                     setState(() {});
                                     WeekPlanSentList(yW, weekPlan!).sentPlan();
                                   },
@@ -180,7 +185,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                                   fontWeight: FontWeight.w600,
                                   color: Color.fromRGBO(1, 57, 104, 1),
                                   fontSize: 16),
-                              controller: _controllerDescriptionTraining,
+                              controller: controllerDescriptionTraining,
                             ),
                           ],
                         ),

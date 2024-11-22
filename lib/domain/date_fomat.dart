@@ -9,3 +9,9 @@ String yearWeekNow() {
 
   return (week < 10) ? '${year}0$week' : '$year$week';
 }
+
+String dateNow() {
+  final now = DateTime.now();
+  String date = DateFormat('dd.MM.yyyy').format(now);
+  return date;
+}

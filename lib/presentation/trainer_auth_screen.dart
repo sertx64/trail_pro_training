@@ -15,14 +15,20 @@ class TrainerAuth extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const SizedBox(height: 250),
-          const Text('введите ПИН'),
+          const Text(
+              style: TextStyle(color: Color.fromRGBO(1, 57, 104, 1)),
+              'введите ПИН'),
           SizedBox(
             width: 200,
             child: TextField(
+              textAlign: TextAlign.center,
+              cursorColor: const Color.fromRGBO(255, 132, 26, 1),
               autofocus: true,
               obscureText: true,
               keyboardType: TextInputType.number,
-              style: const TextStyle(fontSize: 22),
+              style: const TextStyle(
+                  color: Color.fromRGBO(255, 132, 26, 1),
+                  fontSize: 22),
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
