@@ -18,7 +18,11 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
   void initState() {
     loadWeekPlan(yW);
     super.initState();
+
+
   }
+
+
 
   void loadWeekPlan(int yWid) async {
     weekPlan = await WeekPlanMap(yWid).weekPlanStudent();
@@ -37,8 +41,7 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height - 160,
+                Expanded(
                   child: ListView.separated(
                     itemBuilder: (context, index) {
                       Map<String, String> dayPlan = weekPlan![index];
@@ -134,8 +137,8 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                           if (yW == 202600) yW = 202552;
                           if (yW == 202700) yW = 202652;
                           print(yW);
-                          loadWeekPlan(yW);
 
+                          loadWeekPlan(yW);
                         },
                         child: const Text(
                             style: TextStyle(fontSize: 24, color: Colors.white),
