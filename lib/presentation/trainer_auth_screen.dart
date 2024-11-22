@@ -12,9 +12,9 @@ class TrainerAuth extends StatelessWidget {
             child: Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          //const SizedBox(height: 150),
+          const SizedBox(height: 250),
           const Text('введите ПИН'),
           SizedBox(
             width: 200,

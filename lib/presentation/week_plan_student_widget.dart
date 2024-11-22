@@ -18,11 +18,7 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
   void initState() {
     loadWeekPlan(yW);
     super.initState();
-
-
   }
-
-
 
   void loadWeekPlan(int yWid) async {
     weekPlan = await WeekPlanMap(yWid).weekPlanStudent();
@@ -136,7 +132,6 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                           if (yW == 202500) yW = 202452;
                           if (yW == 202600) yW = 202552;
                           if (yW == 202700) yW = 202652;
-                          print(yW);
 
                           loadWeekPlan(yW);
                         },
@@ -153,7 +148,7 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                           if (yW == 202453) yW = 202501;
                           if (yW == 202553) yW = 202601;
                           if (yW == 202653) yW = 202701;
-                          print(yW);
+
                           loadWeekPlan(yW);
                         },
                         child: const Text(

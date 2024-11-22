@@ -19,37 +19,39 @@ class Authorization extends StatelessWidget {
           children: [
             const SizedBox(height: 100),
             const SizedBox(
+              height: 50,
               width: 250,
-              child: TextField(
-                style: TextStyle(fontSize: 16),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                  ),
-                ),
-                //controller: _pin,
-              ),
+              // child: TextField(
+              //   style: TextStyle(fontSize: 16),
+              //   decoration: InputDecoration(
+              //     filled: true,
+              //     fillColor: Colors.white,
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.all(Radius.circular(30.0)),
+              //     ),
+              //   ),
+              //   //controller: _login,
+              // ),
             ),
             const SizedBox(
               height: 10,
             ),
             const SizedBox(
+              height: 50,
               width: 250,
-              child: TextField(
-                obscureText: true,
-                keyboardType: TextInputType.number,
-                style: TextStyle(fontSize: 14),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                  ),
-                ),
-                //controller: _pin,
-              ),
+              // child: TextField(
+              //   obscureText: true,
+              //   keyboardType: TextInputType.number,
+              //   style: TextStyle(fontSize: 14),
+              //   decoration: InputDecoration(
+              //     filled: true,
+              //     fillColor: Colors.white,
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.all(Radius.circular(30.0)),
+              //     ),
+              //   ),
+              //   //controller: _pin,
+              // ),
             ),
 
             const SizedBox(
@@ -68,7 +70,10 @@ class Authorization extends StatelessWidget {
             ),
             TextButton(
                 onPressed: () => context.go('/trainerauth'),
-                child: const Text('Я тренер')),
+                child: const Text(
+                    style: TextStyle(fontSize: 20,
+                        color: Color.fromRGBO(1, 57, 104, 1)),
+                    'Я тренер')),
           ],
         )));
   }

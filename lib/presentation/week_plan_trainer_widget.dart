@@ -35,10 +35,47 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
             strokeWidth: 6,
           ))
         : Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
             child: Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(190, 30),
+                            backgroundColor:
+                                const Color.fromRGBO(1, 57, 104, 1)),
+                        onPressed: () async {
+                          --yW;
+                          if (yW == 202444) yW = 202445;
+                          if (yW == 202500) yW = 202452;
+                          if (yW == 202600) yW = 202552;
+                          if (yW == 202700) yW = 202652;
 
+                          loadWeekPlan(yW);
+                        },
+                        child: const Text(
+                            style: TextStyle(fontSize: 24, color: Colors.white),
+                            '<<')),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(190, 30),
+                            backgroundColor:
+                                const Color.fromRGBO(1, 57, 104, 1)),
+                        onPressed: () {
+                          ++yW;
+                          if (yW == 202453) yW = 202501;
+                          if (yW == 202553) yW = 202601;
+                          if (yW == 202653) yW = 202701;
+
+                          loadWeekPlan(yW);
+                        },
+                        child: const Text(
+                            style: TextStyle(fontSize: 24, color: Colors.white),
+                            '>>')),
+                  ],
+                ),
                 Expanded(
                   child: ListView.separated(
                     itemBuilder: (context, index) {
@@ -95,11 +132,9 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                                         color: Color.fromRGBO(1, 57, 104, 1),
                                         fontSize: 16),
                                     dayPlan['date']!),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(16.0))),
+                                IconButton(
+                                  color: const Color.fromRGBO(1, 57, 104, 1),
+                                  iconSize: 35.0,
                                   onPressed: () {
                                     dayPlan['label_training'] =
                                         _controllerLabelTraining.text;
@@ -108,7 +143,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                                     setState(() {});
                                     WeekPlanSentList(yW, weekPlan!).sentPlan();
                                   },
-                                  child: const Text('Ok'),
+                                  icon: const Icon(Icons.save),
                                 )
                               ],
                             ),
@@ -149,59 +184,12 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                             ),
                           ],
                         ),
-                        // onTap: () {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => DayPlanTrainer(),
-                        //     ),
-                        //   );
-                        // },
                       );
                     },
                     itemCount: weekPlan!.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(190, 30),
-                            backgroundColor:
-                            const Color.fromRGBO(1, 57, 104, 1)),
-                        onPressed: () async {
-                          --yW;
-                          if (yW == 202444) yW = 202445;
-                          if (yW == 202500) yW = 202452;
-                          if (yW == 202600) yW = 202552;
-                          if (yW == 202700) yW = 202652;
-                          print(yW);
-
-                          loadWeekPlan(yW);
-                        },
-                        child: const Text(
-                            style: TextStyle(fontSize: 24, color: Colors.white),
-                            '<<')),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(190, 30),
-                            backgroundColor:
-                            const Color.fromRGBO(1, 57, 104, 1)),
-                        onPressed: () {
-                          ++yW;
-                          if (yW == 202453) yW = 202501;
-                          if (yW == 202553) yW = 202601;
-                          if (yW == 202653) yW = 202701;
-                          print(yW);
-                          loadWeekPlan(yW);
-                        },
-                        child: const Text(
-                            style: TextStyle(fontSize: 24, color: Colors.white),
-                            '>>')),
-                  ],
                 ),
               ],
             ));
