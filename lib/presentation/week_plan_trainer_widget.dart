@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trailpro_planning/domain/date_fomat.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
-import 'package:trailpro_planning/presentation/day_plan_trainer.dart';
+
 
 class WeekPlanTrainerWidget extends StatefulWidget {
   const WeekPlanTrainerWidget({super.key});
@@ -82,7 +82,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                   child: ListView.separated(
                     itemBuilder: (context, index) {
                       Map<String, String> dayPlan = weekPlan![index];
-                      final TextEditingController _controllerLabelTraining =
+                      final TextEditingController controllerLabelTraining =
                           TextEditingController(
                               text: dayPlan['label_training']);
                       final TextEditingController
@@ -142,7 +142,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                                   iconSize: 35.0,
                                   onPressed: () {
                                     dayPlan['label_training'] =
-                                        _controllerLabelTraining.text;
+                                        controllerLabelTraining.text;
                                     dayPlan['description_training'] =
                                         controllerDescriptionTraining.text;
                                     setState(() {});
@@ -168,7 +168,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                                   fontWeight: FontWeight.w600,
                                   color: Color.fromRGBO(1, 57, 104, 1),
                                   fontSize: 16),
-                              controller: _controllerLabelTraining,
+                              controller: controllerLabelTraining,
                             ),
                             const SizedBox(height: 6),
                             TextField(
