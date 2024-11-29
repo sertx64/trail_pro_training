@@ -8,6 +8,14 @@ class Authorization extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            actions: [
+              IconButton(
+                icon: const Icon(
+                    color: Color.fromRGBO(255, 132, 26, 1),
+                    Icons.fitness_center_rounded),
+                onPressed: () => context.go('/trainerauth'),
+              ),
+            ],
             title: const Center(
                 child: Text(
                     style: TextStyle(fontSize: 30, color: Colors.white),
@@ -21,19 +29,19 @@ class Authorization extends StatelessWidget {
             const SizedBox(
               height: 50,
               width: 250,
-              // child: TextField(
-              //   textAlign: TextAlign.center,
-              //   cursorColor: Color.fromRGBO(255, 132, 26, 1),
-              //   style: TextStyle(fontSize: 16),
-              //   decoration: InputDecoration(
-              //     filled: true,
-              //     fillColor: Colors.white,
-              //     border: OutlineInputBorder(
-              //       borderRadius: BorderRadius.all(Radius.circular(30.0)),
-              //     ),
-              //   ),
-              //   //controller: _login,
-              // ),
+              child: TextField(
+                textAlign: TextAlign.center,
+                cursorColor: Color.fromRGBO(255, 132, 26, 1),
+                style: TextStyle(fontSize: 16),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  ),
+                ),
+                //controller: _login,
+              ),
             ),
             const SizedBox(
               height: 10,
@@ -41,23 +49,22 @@ class Authorization extends StatelessWidget {
             const SizedBox(
               height: 50,
               width: 250,
-              // child: TextField(
-              //   textAlign: TextAlign.center,
-              //   cursorColor: Color.fromRGBO(255, 132, 26, 1),
-              //   obscureText: true,
-              //   keyboardType: TextInputType.number,
-              //   style: TextStyle(fontSize: 14),
-              //   decoration: InputDecoration(
-              //     filled: true,
-              //     fillColor: Colors.white,
-              //     border: OutlineInputBorder(
-              //       borderRadius: BorderRadius.all(Radius.circular(30.0)),
-              //     ),
-              //   ),
-              //   //controller: _pin,
-              // ),
+              child: TextField(
+                textAlign: TextAlign.center,
+                cursorColor: Color.fromRGBO(255, 132, 26, 1),
+                obscureText: true,
+                keyboardType: TextInputType.number,
+                style: TextStyle(fontSize: 14),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  ),
+                ),
+                //controller: _pin,
+              ),
             ),
-
             const SizedBox(
               height: 10,
             ),
@@ -72,12 +79,6 @@ class Authorization extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            TextButton(
-                onPressed: () => context.go('/trainerauth'),
-                child: const Text(
-                    style: TextStyle(fontSize: 16,
-                        color: Color.fromRGBO(255, 132, 26, 1)),
-                    '( Я тренер )')),
           ],
         )));
   }

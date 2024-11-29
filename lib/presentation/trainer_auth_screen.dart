@@ -14,7 +14,12 @@ class TrainerAuth extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(height: 250),
+          const SizedBox(height: 230),
+          const Text(
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromRGBO(255, 132, 26, 1)),
+              'Вы тренер?'),
           const Text(
               style: TextStyle(color: Color.fromRGBO(1, 57, 104, 1)),
               'введите ПИН'),
@@ -52,7 +57,7 @@ class TrainerAuth extends StatelessWidget {
               },
               child: const Text(
                   style: TextStyle(fontSize: 24, color: Colors.white),
-                  'Вперёд!'))
+                  'Вход'))
         ],
       ),
     )));
