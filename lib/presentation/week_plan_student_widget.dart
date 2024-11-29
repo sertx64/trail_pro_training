@@ -128,7 +128,7 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                   children: [
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(170, 40),
+                            fixedSize: const Size(110, 40),
                             backgroundColor:
                                 const Color.fromRGBO(1, 57, 104, 1)),
                         onPressed: () async {
@@ -141,11 +141,11 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                           loadWeekPlan(yW);
                         },
                         child: const Text(
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                            'прошлая')),
+                            style: TextStyle(fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
+                            '<<<')),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(170, 40),
+                            fixedSize: const Size(110, 40),
                             backgroundColor:
                                 const Color.fromRGBO(1, 57, 104, 1)),
                         onPressed: () {
@@ -157,8 +157,8 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                           loadWeekPlan(yW);
                         },
                         child: const Text(
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                            'следующая')),
+                            style: TextStyle(fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
+                            '>>>')),
                   ],
                 )
               ],

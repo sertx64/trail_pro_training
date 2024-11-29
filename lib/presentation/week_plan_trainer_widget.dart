@@ -3,7 +3,6 @@ import 'package:trailpro_planning/domain/date_fomat.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
 
-
 class WeekPlanTrainerWidget extends StatefulWidget {
   const WeekPlanTrainerWidget({super.key});
 
@@ -36,49 +35,45 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
             color: Color.fromRGBO(255, 132, 26, 1),
             strokeWidth: 6,
           ))
-        : Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(190, 30),
-                            backgroundColor:
-                                const Color.fromRGBO(1, 57, 104, 1)),
-                        onPressed: () async {
-                          --yW;
-                          if (yW == 202444) yW = 202445;
-                          if (yW == 202500) yW = 202452;
-                          if (yW == 202600) yW = 202552;
-                          if (yW == 202700) yW = 202652;
+        : Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                      onPressed: () async {
+                        --yW;
+                        if (yW == 202444) yW = 202445;
+                        if (yW == 202500) yW = 202452;
+                        if (yW == 202600) yW = 202552;
+                        if (yW == 202700) yW = 202652;
 
-                          loadWeekPlan(yW);
-                        },
-                        child: const Text(
-                            style: TextStyle(fontSize: 24, color: Colors.white),
-                            '<<')),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(190, 30),
-                            backgroundColor:
-                                const Color.fromRGBO(1, 57, 104, 1)),
-                        onPressed: () {
-                          ++yW;
-                          if (yW == 202453) yW = 202501;
-                          if (yW == 202553) yW = 202601;
-                          if (yW == 202653) yW = 202701;
+                        loadWeekPlan(yW);
+                      },
+                      child: const Text(
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Color.fromRGBO(255, 132, 26, 1)),
+                          '<<<<<')),
+                  TextButton(
+                      onPressed: () {
+                        ++yW;
+                        if (yW == 202453) yW = 202501;
+                        if (yW == 202553) yW = 202601;
+                        if (yW == 202653) yW = 202701;
 
-                          loadWeekPlan(yW);
-                        },
-                        child: const Text(
-                            style: TextStyle(fontSize: 24, color: Colors.white),
-                            '>>')),
-                  ],
-                ),
-                Expanded(
+                        loadWeekPlan(yW);
+                      },
+                      child: const Text(
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Color.fromRGBO(255, 132, 26, 1)),
+                          '>>>>>')),
+                ],
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 6.0),
                   child: ListView.separated(
                     itemBuilder: (context, index) {
                       Map<String, String> dayPlan = weekPlan![index];
@@ -86,8 +81,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                           TextEditingController(
                               text: dayPlan['label_training']);
                       final TextEditingController
-                          controllerDescriptionTraining =
-                          TextEditingController(
+                          controllerDescriptionTraining = TextEditingController(
                               text: dayPlan['description_training']);
                       return Container(
                         padding: const EdgeInsets.all(4.0),
@@ -96,7 +90,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                               ? Colors.greenAccent
                               : Colors.white,
                           border: Border.all(
-                              width: 5.0,
+                              width: 4.0,
                               color: const Color.fromRGBO(1, 57, 104, 1)),
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -154,6 +148,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                             ),
                             const SizedBox(height: 6),
                             TextField(
+                              maxLength: 27,
                               decoration: const InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 6, horizontal: 6),
@@ -170,7 +165,7 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                                   fontSize: 16),
                               controller: controllerLabelTraining,
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 2),
                             TextField(
                               maxLines: null,
                               decoration: const InputDecoration(
@@ -196,7 +191,8 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                         const SizedBox(height: 8),
                   ),
                 ),
-              ],
-            ));
+              ),
+            ],
+          );
   }
 }
