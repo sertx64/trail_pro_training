@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trailpro_planning/domain/check_pin_student.dart';
 
 class Authorization extends StatelessWidget {
   Authorization({super.key});
@@ -75,7 +76,23 @@ class Authorization extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(200, 50),
                     backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-                onPressed: () => context.go('/studentscreen'),
+                onPressed: () async {
+                  String login = _login.text;
+                  String pin = _pin.text;
+                  String? checkPin;
+                  checkPin = null;
+                  print(checkPin);
+                  checkPin = (login == '' || pin == '')
+                      ? null
+                      : await CheckPinStudent(login).checkPin();
+                  print(checkPin);
+
+                  (pin == checkPin)
+                      ? context.go('/studentscreen')
+                      : print('неправильный логин или пин');
+                },
+
+                //=> context.go('/studentscreen'),
                 child: const Text(
                     style: TextStyle(fontSize: 24, color: Colors.white),
                     'Войти')),
