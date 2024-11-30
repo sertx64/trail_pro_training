@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class Authorization extends StatelessWidget {
-  const Authorization({super.key});
+   Authorization({super.key});
+
+  final TextEditingController _pin = TextEditingController();
+  final TextEditingController _login = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,7 @@ class Authorization extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(30.0)),
                   ),
                 ),
-                //controller: _login,
+                controller: _login,
               ),
             ),
             const SizedBox(
@@ -62,7 +65,7 @@ class Authorization extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(30.0)),
                   ),
                 ),
-                //controller: _pin,
+                controller: _pin,
               ),
             ),
             const SizedBox(
