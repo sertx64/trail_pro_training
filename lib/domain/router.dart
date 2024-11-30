@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trailpro_planning/presentation/authorization_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trailpro_planning/presentation/day_plan_student.dart';
 import 'package:trailpro_planning/presentation/splash_screen.dart';
 import 'package:trailpro_planning/presentation/student_screen.dart';
 import 'package:trailpro_planning/presentation/trainer_auth_screen.dart';
@@ -11,35 +12,36 @@ final GoRouter router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
-      builder: (BuildContext context, GoRouterState state) => const Authorization(),
+      builder: (BuildContext context, GoRouterState state) => Authorization(),
       routes: <RouteBase>[
         GoRoute(
-            path: 'splashscreen',
-            builder: (BuildContext context, GoRouterState state) => const SplashScreen(),
-            ),
+          path: 'splashscreen',
+          builder: (BuildContext context, GoRouterState state) =>
+              const SplashScreen(),
+        ),
         GoRoute(
             path: 'trainerauth',
-            builder: (BuildContext context, GoRouterState state) => TrainerAuth(),
+            builder: (BuildContext context, GoRouterState state) =>
+                TrainerAuth(),
             routes: <RouteBase>[
               GoRoute(
-                  path: 'trainerscreen',
-                  builder: (BuildContext context, GoRouterState state) => const TrainerScreen(),
-                  ),
+                path: 'trainerscreen',
+                builder: (BuildContext context, GoRouterState state) =>
+                    const TrainerScreen(),
+              ),
             ]),
         GoRoute(
             path: 'studentscreen',
-            builder: (BuildContext context, GoRouterState state) => const StudentScreen(),
-            //routes: <RouteBase>[
-              // GoRoute(
-              //     path: 'dayplan/:day',
-              //     builder: (BuildContext context, GoRouterState state) {
-              //
-              //       final day = state.params['day'];
-              //       return DayPlan(day);
-              //     },
-              //     routes: <RouteBase>[]),
-            //]
-        ),
+            builder: (BuildContext context, GoRouterState state) =>
+                const StudentScreen(),
+            routes: <RouteBase>[
+              GoRoute(
+                  path: 'dayplan',
+                  builder: (BuildContext context, GoRouterState state) {
+                    return  DayPlan();
+                  },
+                  routes: <RouteBase>[]),
+            ]),
       ],
     ),
   ],

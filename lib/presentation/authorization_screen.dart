@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class Authorization extends StatelessWidget {
-   Authorization({super.key});
+  Authorization({super.key});
 
   final TextEditingController _pin = TextEditingController();
   final TextEditingController _login = TextEditingController();
@@ -29,14 +29,14 @@ class Authorization extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(height: 200),
-            const SizedBox(
+            SizedBox(
               height: 50,
               width: 250,
               child: TextField(
                 textAlign: TextAlign.center,
-                cursorColor: Color.fromRGBO(255, 132, 26, 1),
-                style: TextStyle(fontSize: 16),
-                decoration: InputDecoration(
+                cursorColor: const Color.fromRGBO(255, 132, 26, 1),
+                style: const TextStyle(fontSize: 16),
+                decoration: const InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -49,16 +49,16 @@ class Authorization extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            const SizedBox(
+            SizedBox(
               height: 50,
               width: 250,
               child: TextField(
                 textAlign: TextAlign.center,
-                cursorColor: Color.fromRGBO(255, 132, 26, 1),
+                cursorColor: const Color.fromRGBO(255, 132, 26, 1),
                 obscureText: true,
                 keyboardType: TextInputType.number,
-                style: TextStyle(fontSize: 14),
-                decoration: InputDecoration(
+                style: const TextStyle(fontSize: 14),
+                decoration: const InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(

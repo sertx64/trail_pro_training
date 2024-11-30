@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:trailpro_planning/domain/provider_test.dart';
 
 class DayPlan extends StatelessWidget {
-  final Map<String, String> dayPlanMap;
-  const DayPlan(this.dayPlanMap, {super.key});
+
+   DayPlan({super.key});
+  final Map<String, String> dayPlanMap = ProviderTest.dayPlanStudent;
 
   @override
   Widget build(BuildContext context) {

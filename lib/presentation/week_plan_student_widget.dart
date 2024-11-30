@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_fomat.dart';
+import 'package:trailpro_planning/domain/provider_test.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
-import 'package:trailpro_planning/presentation/day_plan_student.dart';
+
 
 class WeekPlanStudentWidget extends StatefulWidget {
   const WeekPlanStudentWidget({super.key});
@@ -89,8 +91,8 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                                   children: [
                                     Text(
                                         style: const TextStyle(
-                                            color: Color.fromRGBO(
-                                                        1, 57, 104, 1),
+                                            color:
+                                                Color.fromRGBO(1, 57, 104, 1),
                                             fontSize: 22),
                                         dayPlan['date']!),
                                     Text(
@@ -109,12 +111,10 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                             onTap: () {
                               (dayPlan['label_training'] == '')
                                   ? null
-                                  : Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DayPlan(dayPlan),
-                                      ),
-                                    );
+                                  : {
+                                      ProviderTest.dayPlanStudent = dayPlan,
+                                      context.go('/studentscreen/dayplan')
+                                    };
                             },
                           ));
                     },
@@ -141,7 +141,9 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                           loadWeekPlan(yW);
                         },
                         child: const Text(
-                            style: TextStyle(fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Color.fromRGBO(255, 132, 26, 1)),
                             '<<<')),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -157,7 +159,9 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                           loadWeekPlan(yW);
                         },
                         child: const Text(
-                            style: TextStyle(fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Color.fromRGBO(255, 132, 26, 1)),
                             '>>>')),
                   ],
                 )
