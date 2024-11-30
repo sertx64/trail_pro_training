@@ -34,4 +34,12 @@ class ApiGSheet {
 
     await weekPlanSheet!.values.insertRowByKey(id, weekplanlist);
   }
+
+  Future<String?> checkPinStudent(String nameStudent) async {
+    final ss = await gSheets.spreadsheet(_spreadsheetId);
+    final weekPlanSheet = ss.worksheetByTitle(nameStudent);
+    final pinCode = weekPlanSheet!.values.value(column: 1, row: 1);
+
+    return pinCode;
+  }
 }

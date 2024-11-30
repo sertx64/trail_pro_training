@@ -142,7 +142,9 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                                     setState(() {});
                                     WeekPlanSentList(yW, weekPlan!).sentPlan();
                                   },
-                                  icon: const Icon(Icons.save),
+                                  icon: const Icon(
+                                      color: Color.fromRGBO(255, 132, 26, 1),
+                                      Icons.save),
                                 )
                               ],
                             ),
