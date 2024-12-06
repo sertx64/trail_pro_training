@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/domain/auth_user_map.dart';
+import 'package:trailpro_planning/domain/provider_test.dart';
 
 class Authorization extends StatelessWidget {
   Authorization({super.key});
@@ -76,11 +76,20 @@ class Authorization extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(200, 50),
                     backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-                onPressed: () async {
+                onPressed: () {
                   String login = _login.text;
                   String pin = _pin.text;
-                  String? checkPin;
-
+                  Map<String, String> aum = ProviderTest.authUserMap;
+                  if (aum.containsKey(login)) {
+                    if (pin == aum[login]) {
+                      ProviderTest.userLogin = login;
+                      context.go('/studentscreen');
+                    } else {
+                      return;
+                    }
+                  } else {
+                    return;
+                  }
                 },
 
                 //=> context.go('/studentscreen'),

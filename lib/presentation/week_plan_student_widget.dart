@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/domain/date_fomat.dart';
+import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/provider_test.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 

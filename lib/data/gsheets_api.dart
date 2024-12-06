@@ -38,7 +38,7 @@ class ApiGSheet {
   Future<List<String>?> getAuthUserList() async {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
     final weekPlanSheet = ss.worksheetByTitle('auth_user');
-    final authUserList = await weekPlanSheet!.values.rowByKey('loginpin');
+    final authUserList = await weekPlanSheet!.values.columnByKey('loginpin');
 
     return authUserList;
   }
