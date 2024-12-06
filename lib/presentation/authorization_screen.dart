@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/domain/check_pin_student.dart';
+import 'package:trailpro_planning/domain/auth_user_map.dart';
 
 class Authorization extends StatelessWidget {
   Authorization({super.key});
@@ -80,16 +80,7 @@ class Authorization extends StatelessWidget {
                   String login = _login.text;
                   String pin = _pin.text;
                   String? checkPin;
-                  checkPin = null;
-                  print(checkPin);
-                  checkPin = (login == '' || pin == '')
-                      ? null
-                      : await CheckPinStudent(login).checkPin();
-                  print(checkPin);
 
-                  (pin == checkPin)
-                      ? context.go('/studentscreen')
-                      : print('неправильный логин или пин');
                 },
 
                 //=> context.go('/studentscreen'),

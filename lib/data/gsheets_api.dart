@@ -35,11 +35,11 @@ class ApiGSheet {
     await weekPlanSheet!.values.insertRowByKey(id, weekplanlist);
   }
 
-  Future<String?> checkPinStudent(String nameStudent) async {
+  Future<List<String>?> getAuthUserList() async {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
-    final weekPlanSheet = ss.worksheetByTitle(nameStudent);
-    final pinCode = weekPlanSheet!.values.value(column: 1, row: 1);
+    final weekPlanSheet = ss.worksheetByTitle('auth_user');
+    final authUserList = await weekPlanSheet!.values.rowByKey('loginpin');
 
-    return pinCode;
+    return authUserList;
   }
 }
