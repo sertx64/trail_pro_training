@@ -37,9 +37,27 @@ class ApiGSheet {
 
   Future<List<String>?> getAuthUserList() async {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
-    final weekPlanSheet = ss.worksheetByTitle('auth_user');
-    final authUserList = await weekPlanSheet!.values.columnByKey('loginpin');
+    final sheet = ss.worksheetByTitle('auth_user');
+    final authUserList = await sheet!.values.columnByKey('loginpin');
 
     return authUserList;
   }
+
+  Future<List<String>?> getReportsList(String date) async {
+    final ss = await gSheets.spreadsheet(_spreadsheetId);
+    final sheet = ss.worksheetByTitle('reports');
+    final reportsList = await sheet!.values.columnByKey(date);
+
+    return reportsList;
+  }
+
+  void sendReportsList(String date, List reportList) async {
+    final ss = await gSheets.spreadsheet(_spreadsheetId);
+    final sheet = ss.worksheetByTitle('reports');
+
+    await sheet!.values.insertColumnByKey(date, reportList);
+  }
+
+
+
 }
