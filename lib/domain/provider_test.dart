@@ -7,7 +7,7 @@ class ProviderTest {
 
   static String userLogin = '';
 
-  static List reportsList = [];
+  //static List reportsList = [];
 
 
 }
