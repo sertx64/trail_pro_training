@@ -7,6 +7,10 @@ class ProviderTest {
 
   static String userLogin = '';
 
+  static int currentWeek = 0;
+
+  static List<Map<String, String>> currentWeekPlan = [];
+
   //static List reportsList = [];
 
 

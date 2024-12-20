@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
+import 'package:trailpro_planning/domain/provider_test.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
 
@@ -131,6 +133,18 @@ class _WeekPlanTrainerWidgetState extends State<WeekPlanTrainerWidget> {
                                         color: Color.fromRGBO(1, 57, 104, 1),
                                         fontSize: 16),
                                     dayPlan['date']!),
+                                IconButton(
+                                  color: const Color.fromRGBO(1, 57, 104, 1),
+                                  iconSize: 35.0,
+                                  onPressed: () {
+                                    ProviderTest.currentWeek = yW;
+                                    ProviderTest.currentWeekPlan = weekPlan!;
+                                    context.go('/trainerauth/trainerscreen/dayplantrainer');
+                                  },
+                                  icon: const Icon(
+                                      color: Color.fromRGBO(255, 132, 26, 1),
+                                      Icons.edit),
+                                ),
                                 IconButton(
                                   color: const Color.fromRGBO(1, 57, 104, 1),
                                   iconSize: 35.0,
