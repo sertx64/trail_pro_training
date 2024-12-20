@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trailpro_planning/presentation/authorization_screen.dart';
+import 'package:trailpro_planning/presentation/authorization_student_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/presentation/day_plan_student.dart';
 import 'package:trailpro_planning/presentation/splash_screen.dart';

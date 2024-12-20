@@ -46,7 +46,7 @@ class ApiGSheet {
   Future<List<String>?> getReportsList(String date) async {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
     final sheet = ss.worksheetByTitle('reports');
-    final reportsList = await sheet!.values.columnByKey(date);
+    final reportsList = await sheet!.values.rowByKey(date);
 
     return reportsList;
   }
@@ -55,7 +55,7 @@ class ApiGSheet {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
     final sheet = ss.worksheetByTitle('reports');
 
-    await sheet!.values.insertColumnByKey(date, reportList);
+    await sheet!.values.insertRowByKey(date, reportList);
   }
 
 
