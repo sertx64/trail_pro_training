@@ -1,5 +1,5 @@
 import 'package:trailpro_planning/data/gsheets_api.dart';
-import 'package:trailpro_planning/domain/provider_test.dart';
+import 'package:trailpro_planning/domain/management.dart';
 
 void createAuthUserMap() async {
   List<String>? authUserList = await ApiGSheet().getAuthUserList();
@@ -10,5 +10,5 @@ void createAuthUserMap() async {
     authusermap[authUserList[i]] = authUserList[i + 1];
   }
 
-  ProviderTest.authUserMap = authusermap;
+  Management.authUserMap = authusermap;
 }

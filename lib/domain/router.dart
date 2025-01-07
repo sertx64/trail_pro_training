@@ -33,7 +33,7 @@ final GoRouter router = GoRouter(
                     GoRoute(
                       path: 'dayplantrainer',
                       builder: (BuildContext context, GoRouterState state) =>
-                          const DayPlanTrainer(),
+                          DayPlanTrainer(),
                         routes: <RouteBase>[]
                     ),
                   ]),

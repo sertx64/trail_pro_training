@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/domain/provider_test.dart';
+import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/student_report.dart';
 
 class DayPlan extends StatelessWidget {
   DayPlan({super.key});
-  final Map<String, String> dayPlanMap = ProviderTest.dayPlanStudent;
+  final Map<String, String> dayPlanMap = Management.dayPlanStudent;
   final TextEditingController _load = TextEditingController();
   final TextEditingController _feeling = TextEditingController();
 

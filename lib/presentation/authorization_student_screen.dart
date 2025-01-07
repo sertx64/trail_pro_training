@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/domain/provider_test.dart';
+import 'package:trailpro_planning/domain/management.dart';
 
 class Authorization extends StatelessWidget {
   Authorization({super.key});
@@ -79,10 +79,10 @@ class Authorization extends StatelessWidget {
                 onPressed: () {
                   String login = _login.text;
                   String pin = _pin.text;
-                  Map<String, String> aum = ProviderTest.authUserMap;
+                  Map<String, String> aum = Management.authUserMap;
                   if (aum.containsKey(login)) {
                     if (pin == aum[login]) {
-                      ProviderTest.userLogin = login;
+                      Management.userLogin = login;
                       context.go('/studentscreen');
                     } else {
                       return;
