@@ -15,7 +15,6 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
   List<Map<String, String>>? weekPlan;
 
   int yW = int.parse(yearWeekNow());
-  //int yW = Management.currentWeek;
 
   @override
   void initState() {
@@ -158,7 +157,7 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
                             fixedSize: const Size(110, 40),
                             backgroundColor:
                                 const Color.fromRGBO(1, 57, 104, 1)),
-                        onPressed: () async {
+                        onPressed: () {
                           --yW;
                           if (yW == 202444) yW = 202445;
                           if (yW == 202500) yW = 202452;
@@ -172,6 +171,17 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
                                 fontSize: 20,
                                 color: Color.fromRGBO(255, 132, 26, 1)),
                             '<<<')),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(80, 40),
+                            backgroundColor:
+                            Colors.green),
+                        onPressed: () {
+                          loadWeekPlan(yW);
+                        },
+                        child: const Icon(
+                            color: Colors.white,
+                            Icons.refresh)),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             fixedSize: const Size(110, 40),
