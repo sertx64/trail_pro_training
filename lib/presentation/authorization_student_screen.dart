@@ -91,8 +91,6 @@ class Authorization extends StatelessWidget {
                     return;
                   }
                 },
-
-                //=> context.go('/studentscreen'),
                 child: const Text(
                     style: TextStyle(fontSize: 24, color: Colors.white),
                     'Войти')),

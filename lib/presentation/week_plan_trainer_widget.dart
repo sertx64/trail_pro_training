@@ -13,7 +13,9 @@ class WeekPlanTrainerWidget extends StatefulWidget {
 
 class _WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
   List<Map<String, String>>? weekPlan;
+
   int yW = int.parse(yearWeekNow());
+  //int yW = Management.currentWeek;
 
   @override
   void initState() {
