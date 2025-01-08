@@ -62,7 +62,11 @@ class _DayPlanState extends State<DayPlan> {
                       ? true
                       : false,
                   child: (reports == null)
-                      ? const Text('проверяем')
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                          color: Color.fromRGBO(255, 132, 26, 1),
+                          strokeWidth: 6,
+                        ))
                       : (reports!.contains(Management.userLogin))
                           ? const Text('уже был отчёт')
                           : Column(
