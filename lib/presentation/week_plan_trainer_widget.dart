@@ -8,10 +8,10 @@ class WeekPlanTrainerWidget extends StatefulWidget {
   const WeekPlanTrainerWidget({super.key});
 
   @override
-  State<WeekPlanTrainerWidget> createState() => _WeekPlanStudentWidgetState();
+  State<WeekPlanTrainerWidget> createState() => WeekPlanStudentWidgetState();
 }
 
-class _WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
+class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
   List<Map<String, String>>? weekPlan;
 
   int yW = int.parse(yearWeekNow());
@@ -20,6 +20,10 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
   void initState() {
     loadWeekPlan(yW);
     super.initState();
+  }
+
+  void ssetState () {
+    setState(() {});
   }
 
   void loadWeekPlan(int yWid) async {
@@ -177,7 +181,8 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
                             backgroundColor:
                             Colors.green),
                         onPressed: () {
-                          loadWeekPlan(yW);
+                          setState(() {});
+                          //loadWeekPlan(yW);
                         },
                         child: const Icon(
                             color: Colors.white,

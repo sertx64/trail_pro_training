@@ -30,6 +30,7 @@ class Authorization extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(height: 200),
+            const Text('логин'),
             SizedBox(
               height: 50,
               width: 250,
@@ -47,9 +48,8 @@ class Authorization extends StatelessWidget {
                 controller: _login,
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
+            const Text('пин'),
             SizedBox(
               height: 50,
               width: 250,

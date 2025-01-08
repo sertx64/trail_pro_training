@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
 
+
 class DayPlanTrainer extends StatelessWidget {
   String? lable =
       Management.currentWeekPlan[Management.currentDayWeek]['label_training'];
@@ -66,7 +67,7 @@ class DayPlanTrainer extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     //fixedSize: const Size(200, 50),
                     backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-                onPressed: () {
+                onPressed: () async {
                   Management.currentWeekPlan[Management.currentDayWeek]
                       ['label_training'] = controllerLabelTraining.text;
                   Management.currentWeekPlan[Management.currentDayWeek]
@@ -76,8 +77,10 @@ class DayPlanTrainer extends StatelessWidget {
                   WeekPlanSentList(
                           Management.currentWeek, Management.currentWeekPlan)
                       .sentPlan();
-                  context.go(
-                      '/trainerauth/trainerscreen');
+
+                  context.go('/trainerauth/trainerscreen');
+                  //WeekPlanStudentWidgetState().ssetState();
+
                 },
                 child: const Text(
                     style: TextStyle(fontSize: 24, color: Colors.white),

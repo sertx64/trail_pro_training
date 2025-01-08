@@ -15,3 +15,8 @@ String dateNow() {
   String date = DateFormat('dd.MM.yyyy').format(now);
   return date;
 }
+
+int dayWeekNow() {
+  final now = DateTime.now();
+  return now.weekday;
+}

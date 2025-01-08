@@ -15,7 +15,7 @@ class Management {
 
   static int currentDayWeek = 0;
 
-  //static List reportsList = [];
+  static List reportsList = [];
 
 
 }

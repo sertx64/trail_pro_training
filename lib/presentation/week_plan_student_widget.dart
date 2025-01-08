@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
+import 'package:trailpro_planning/domain/student_report.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
-
 
 class WeekPlanStudentWidget extends StatefulWidget {
   const WeekPlanStudentWidget({super.key});
@@ -113,7 +113,11 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                                   ? null
                                   : {
                                       Management.dayPlanStudent = dayPlan,
-                                      context.go('/studentscreen/dayplan')
+                                      Management.currentDayWeek = index,
+                                      Management.currentWeek = yW,
+                                      context.go('/studentscreen/dayplan'),
+                                      // Management.reportsList =
+                                      //     (await getReports(dayPlan['date']!))!,
                                     };
                             },
                           ));

@@ -8,3 +8,8 @@ void sentReport(String dayDate, String load, String feeling) async {
   reportsList.add(feeling);
   ApiGSheet().sendReportsList(dayDate, reportsList);
 }
+
+Future<List<String>?> getReports(String dayDate) async {
+  return await ApiGSheet().getReportsList(dayDate);
+
+}
