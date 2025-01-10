@@ -15,7 +15,7 @@ class _DayPlanState extends State<DayPlan> {
   final Map<String, String> dayPlanMap = Management.dayPlanStudent;
 
   List<String>? reports;
-
+  String textFeedback = '';
   double _load = 5.0;
   double _feeling = 5.0;
 
@@ -32,6 +32,8 @@ class _DayPlanState extends State<DayPlan> {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController controllerFeedback =
+        TextEditingController(text: textFeedback);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
@@ -41,93 +43,139 @@ class _DayPlanState extends State<DayPlan> {
       ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  style: const TextStyle(
-                      color: Color.fromRGBO(255, 132, 26, 1), fontSize: 19),
-                  dayPlanMap['label_training']!),
-              const SizedBox(height: 16),
-              const Text('План:'),
-              Text(
-                  style: const TextStyle(
-                      color: Color.fromRGBO(1, 57, 104, 1), fontSize: 20),
-                  dayPlanMap['description_training']!),
-              const SizedBox(height: 18),
-              Visibility(
-                  visible: (Management.currentWeek * 10 +
-                              Management.currentDayWeek <=
-                          int.parse(yearWeekNow()) * 10 + dayWeekNow())
-                      ? true
-                      : false,
-                  child: (reports == null)
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                          color: Color.fromRGBO(255, 132, 26, 1),
-                          strokeWidth: 6,
-                        ))
-                      : (reports!.contains(Management.userLogin))
-                          ? const Text('уже был отчёт')
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Нагрузка: ${_load.toStringAsFixed(0)}'),
-                                Slider(
-                                  min: 1,
-                                  max: 10,
-                                  divisions: 9,
-                                  value: _load,
-                                  label: _load.toStringAsFixed(0),
-                                  activeColor: Colors.red,
-                                  thumbColor:
-                                      const Color.fromRGBO(255, 132, 26, 1),
-                                  onChanged: (newValue) {
-                                    setState(() {
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    style: const TextStyle(
+                        color: Color.fromRGBO(255, 132, 26, 1), fontSize: 19),
+                    dayPlanMap['label_training']!),
+                const SizedBox(height: 16),
+                const Text('План:'),
+                Text(
+                    style: const TextStyle(
+                        color: Color.fromRGBO(1, 57, 104, 1), fontSize: 20),
+                    dayPlanMap['description_training']!),
+                const SizedBox(height: 18),
+                Visibility(
+                    visible: (Management.currentWeek * 10 +
+                                Management.currentDayWeek <=
+                            int.parse(yearWeekNow()) * 10 + dayWeekNow())
+                        ? true
+                        : false,
+                    child: (reports == null)
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                            color: Color.fromRGBO(255, 132, 26, 1),
+                            strokeWidth: 6,
+                          ))
+                        : (reports!.contains(Management.userLogin))
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Уже оставляли отчёт:'),
+                                  Text(
+                                      style: const TextStyle(
+                                          color: Colors.red, fontSize: 20),
+                                      'Вы испытали нагрузку: ${reports![
+                                      reports!.indexOf(Management.userLogin) +
+                                          1]}'),
+                                  Text(
+                                      style: const TextStyle(
+                                          color: Colors.blue, fontSize: 20),
+                                      'Ваше самочуствие: ${reports![
+                                  reports!.indexOf(Management.userLogin) +
+                                      2]}'),
+                                  const Text('Также оставили комментарий:'),
+                                  Text(reports![
+                                      reports!.indexOf(Management.userLogin) +
+                                          3]),
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Нагрузка: ${_load.toStringAsFixed(0)}'),
+                                  Slider(
+                                    min: 1,
+                                    max: 10,
+                                    divisions: 9,
+                                    value: _load,
+                                    label: _load.toStringAsFixed(0),
+                                    activeColor: Colors.red,
+                                    thumbColor:
+                                        const Color.fromRGBO(255, 132, 26, 1),
+                                    onChanged: (newValue) {
+                                      textFeedback = controllerFeedback.text;
                                       _load = newValue;
-                                    });
-                                  },
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                    'Самочуствие: ${_feeling.toStringAsFixed(0)}'),
-                                Slider(
-                                  min: 1,
-                                  max: 10,
-                                  divisions: 9,
-                                  value: _feeling,
-                                  label: _feeling.toStringAsFixed(0),
-                                  activeColor: Colors.blue,
-                                  thumbColor:
-                                      const Color.fromRGBO(255, 132, 26, 1),
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _feeling = newValue;
-                                    });
-                                  },
-                                ),
-                                const SizedBox(height: 10),
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        fixedSize: const Size(110, 40),
-                                        backgroundColor: const Color.fromRGBO(
-                                            1, 57, 104, 1)),
-                                    onPressed: () {
-                                      sentReport(
-                                          dayPlanMap['date']!,
-                                          _load.toStringAsFixed(0),
-                                          _feeling.toStringAsFixed(0));
-                                      context.go('/studentscreen');
+                                      setState(() {});
                                     },
-                                    child: const Text(
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Color.fromRGBO(
-                                                255, 132, 26, 1)),
-                                        'Отчёт')),
-                              ],
-                            )),
-            ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                      'Самочуствие: ${_feeling.toStringAsFixed(0)}'),
+                                  Slider(
+                                    min: 1,
+                                    max: 10,
+                                    divisions: 9,
+                                    value: _feeling,
+                                    label: _feeling.toStringAsFixed(0),
+                                    activeColor: Colors.blue,
+                                    thumbColor:
+                                        const Color.fromRGBO(255, 132, 26, 1),
+                                    onChanged: (newValue) {
+                                      textFeedback = controllerFeedback.text;
+                                      _feeling = newValue;
+                                      setState(() {});
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Text('Впечатления (не обязательно)'),
+                                  TextField(
+                                    maxLength: 200,
+                                    maxLines: null,
+                                    decoration: const InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16.0)),
+                                      ),
+                                    ),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Color.fromRGBO(1, 57, 104, 1),
+                                        fontSize: 16),
+                                    controller: controllerFeedback,
+                                  ),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          fixedSize: const Size(110, 40),
+                                          backgroundColor: const Color.fromRGBO(
+                                              1, 57, 104, 1)),
+                                      onPressed: () {
+                                        if (controllerFeedback.text == '') {
+                                          controllerFeedback.text =
+                                              'нет комментария';
+                                        }
+                                        sentReport(
+                                            dayPlanMap['date']!,
+                                            _load.toStringAsFixed(0),
+                                            _feeling.toStringAsFixed(0),
+                                            controllerFeedback.text);
+                                        context.go('/studentscreen');
+                                      },
+                                      child: const Text(
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Color.fromRGBO(
+                                                  255, 132, 26, 1)),
+                                          'Отчёт')),
+                                ],
+                              )),
+              ],
+            ),
           )),
     );
   }
