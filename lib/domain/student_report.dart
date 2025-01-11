@@ -14,3 +14,12 @@ Future<List<String>?> getReports(String dayDate) async {
   return await ApiGSheet().getReportsList(dayDate);
 
 }
+
+List<List<String>> splitReports(List<String> reports) {
+
+  List<List<String>> splitList =[];
+  for (var i = 0; i < reports.length; i += 4) {
+    splitList.add(reports.sublist(i, i+4>reports.length ?reports.length :i+4));
+  }
+  return splitList;
+}
