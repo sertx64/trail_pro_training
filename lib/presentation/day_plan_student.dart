@@ -21,7 +21,11 @@ class _DayPlanState extends State<DayPlan> {
 
   @override
   void initState() {
-    loadReports();
+    (Management.currentWeek * 10 +
+        Management.currentDayWeek <
+        int.parse(yearWeekNow()) * 10 + dayWeekNow())
+    ? loadReports()
+    : null;
     super.initState();
   }
 
@@ -60,7 +64,7 @@ class _DayPlanState extends State<DayPlan> {
                 const SizedBox(height: 18),
                 Visibility(
                     visible: (Management.currentWeek * 10 +
-                                Management.currentDayWeek <=
+                                Management.currentDayWeek <
                             int.parse(yearWeekNow()) * 10 + dayWeekNow())
                         ? true
                         : false,

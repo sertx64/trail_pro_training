@@ -43,6 +43,13 @@ class ApiGSheet {
     return authUserList;
   }
 
+  void sendAuthUserList(List userList) async {
+    final ss = await gSheets.spreadsheet(_spreadsheetId);
+    final sheet = ss.worksheetByTitle('auth_user');
+
+    await sheet!.values.insertColumnByKey('loginpin', userList);
+  }
+
   Future<List<String>?> getReportsList(String date) async {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
     final sheet = ss.worksheetByTitle('reports');

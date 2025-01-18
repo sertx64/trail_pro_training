@@ -1,6 +1,7 @@
 class Management {
   static Map<String, String> dayPlanStudent = {};
 
+  static List<String> authUserList = [];
   static Map<String, String> authUserMap = {};
 
   static String userLogin = '';

@@ -22,7 +22,7 @@ class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
     super.initState();
   }
 
-  void ssetState () {
+  void ssetState() {
     setState(() {});
   }
 
@@ -51,9 +51,14 @@ class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
                       Map<String, String> dayPlan = weekPlan![index];
                       return Container(
                           decoration: BoxDecoration(
-                            color: (dayPlan['date'] == dateNow())
-                                ? Colors.green[100]
-                                : Colors.white,
+                            color: (yW * 10 + index <
+                                    int.parse(yearWeekNow()) * 10 +
+                                        dayWeekNow() -
+                                        1)
+                                ? Colors.grey[350]
+                                : (dayPlan['date'] == dateNow())
+                                    ? Colors.green[100]
+                                    : Colors.white,
                             border: Border.all(
                                 width: 5.0,
                                 color: const Color.fromRGBO(1, 57, 104, 1)),
@@ -142,9 +147,17 @@ class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
                               Management.currentDayWeek = index;
                               Management.currentWeekPlan = weekPlan!;
                               Management.currentWeek = yW;
-
-                              context.go(
-                                  '/trainerauth/trainerscreen/dayplantrainer');
+                              (Management.currentWeek * 10 +
+                                              Management.currentDayWeek <
+                                          int.parse(yearWeekNow()) * 10 +
+                                              dayWeekNow() &&
+                                      Management.currentWeekPlan[
+                                                  Management.currentDayWeek]
+                                              ['label_training'] ==
+                                          '')
+                                  ? null
+                                  : context.go(
+                                      '/trainerauth/trainerscreen/dayplantrainer');
                             },
                           ));
                     },
@@ -178,15 +191,12 @@ class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             fixedSize: const Size(80, 40),
-                            backgroundColor:
-                            Colors.green),
+                            backgroundColor: Colors.green),
                         onPressed: () {
                           setState(() {});
                           //loadWeekPlan(yW);
                         },
-                        child: const Icon(
-                            color: Colors.white,
-                            Icons.refresh)),
+                        child: const Icon(color: Colors.white, Icons.refresh)),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             fixedSize: const Size(110, 40),

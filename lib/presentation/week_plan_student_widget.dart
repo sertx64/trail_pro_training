@@ -46,9 +46,14 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
                       Map<String, String> dayPlan = weekPlan![index];
                       return Container(
                           decoration: BoxDecoration(
-                            color: (dayPlan['date'] == dateNow())
-                                ? Colors.green[100]
-                                : Colors.white,
+                            color: (yW * 10 + index <
+                                    int.parse(yearWeekNow()) * 10 +
+                                        dayWeekNow() -
+                                        1)
+                                ? Colors.grey[350]
+                                : (dayPlan['date'] == dateNow())
+                                    ? Colors.green[100]
+                                    : Colors.white,
                             border: Border.all(
                                 width: 5.0,
                                 color: const Color.fromRGBO(1, 57, 104, 1)),

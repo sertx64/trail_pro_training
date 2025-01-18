@@ -44,7 +44,11 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Планируем $day $date'),
+          backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
+          title: Text(
+              style: const TextStyle(fontSize: 30, color: Colors.white),
+              'День $day $date'),
+          centerTitle: true,
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -54,26 +58,28 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('День прошёл!'),
-                      if (lable != '')
-                        const Text('была тренировка:')
-                      else
-                        const Text('был день отдыха'),
-                      Text(lable!),
+                      Text(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 20),
+                          lable!),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       Text(
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),
                           description!),
-                      const SizedBox(height: 10,),
-                      if (lable != '') const Text('Обратная связь:'),
-                      if (lable != '')
-                        (reports == null)
-                            ? const Center(
-                                child: CircularProgressIndicator(
-                                color: Color.fromRGBO(255, 132, 26, 1),
-                                strokeWidth: 6,
-                              ))
-                            : ReportsWidget(reports!),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text('Обратная связь:'),
+                      (reports == null)
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                              color: Color.fromRGBO(255, 132, 26, 1),
+                              strokeWidth: 6,
+                            ))
+                          : ReportsWidget(reports!),
                     ],
                   )
                 : Column(
