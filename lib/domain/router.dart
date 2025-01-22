@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/presentation/day_plan_student.dart';
 import 'package:trailpro_planning/presentation/day_plan_trainer.dart';
 import 'package:trailpro_planning/presentation/info_screen.dart';
+import 'package:trailpro_planning/presentation/personal_plan_trainer_screen.dart';
 import 'package:trailpro_planning/presentation/site_trailpro.dart';
 import 'package:trailpro_planning/presentation/splash_screen.dart';
 import 'package:trailpro_planning/presentation/student_screen.dart';
 import 'package:trailpro_planning/presentation/trainer_auth_screen.dart';
 import 'package:trailpro_planning/presentation/trainer_screen.dart';
+import 'package:trailpro_planning/presentation/user_list_screen.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/splashscreen',
@@ -53,6 +55,18 @@ final GoRouter router = GoRouter(
                       path: 'dayplantrainer',
                       builder: (BuildContext context, GoRouterState state) =>
                           DayPlanTrainer(),
+                    ),
+                    GoRoute(
+                      path: 'userlistscreen',
+                      builder: (BuildContext context, GoRouterState state) =>
+                          UserListScreen(),
+                        routes: <RouteBase>[
+                          GoRoute(
+                            path: 'personalplan',
+                            builder: (BuildContext context, GoRouterState state) =>
+                            const PersonalPlanTrainerScreen(),
+                          ),
+                        ]
                     ),
                   ]),
             ]),

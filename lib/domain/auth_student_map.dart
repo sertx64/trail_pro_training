@@ -11,6 +11,7 @@ void createAuthUserMap() async {
   }
 
   Management.authUserMap = authusermap;
+  Management.userList = Management.authUserMap.keys.toList();
 }
 
 void addUser(String login, String pin) async {

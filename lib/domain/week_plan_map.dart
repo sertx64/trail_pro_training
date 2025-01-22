@@ -1,4 +1,5 @@
 import 'package:trailpro_planning/data/gsheets_api.dart';
+import 'package:trailpro_planning/domain/management.dart';
 
 class WeekPlanMap {
   WeekPlanMap(this.yearweek);

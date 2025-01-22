@@ -13,14 +13,20 @@ class TrainerScreen extends StatelessWidget {
               IconButton(
                 icon: const Icon(
                     color: Color.fromRGBO(255, 132, 26, 1),
+                    Icons.person_search),
+                onPressed: () => context.go('/trainerauth/trainerscreen/userlistscreen'),
+              ),
+              IconButton(
+                icon: const Icon(
+                    color: Color.fromRGBO(255, 132, 26, 1),
                     Icons.person_add),
                 onPressed: () => context.go('/trainerauth/trainerscreen/adduserscreen'),
               ),
             ],
             centerTitle: true,
             title: const Text(
-                style: TextStyle(fontSize: 27, color: Colors.white),
-                'План на неделю'),
+                style: TextStyle(fontSize: 22, color: Colors.white),
+                'План для группы'),
             backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
         body: const WeekPlanTrainerWidget());
   }

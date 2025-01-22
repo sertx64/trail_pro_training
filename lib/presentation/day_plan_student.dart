@@ -16,8 +16,8 @@ class _DayPlanState extends State<DayPlan> {
 
   List<String>? reports;
   String textFeedback = '';
-  double _load = 5.0;
-  double _feeling = 5.0;
+  double _load = 3.0;
+  double _feeling = 3.0;
 
   @override
   void initState() {
@@ -100,11 +100,14 @@ class _DayPlanState extends State<DayPlan> {
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Нагрузка: ${_load.toStringAsFixed(0)}'),
+                                  Text(
+                                      style: const TextStyle(
+                                          color: Colors.red, fontSize: 20),
+                                      'Нагрузка: ${_load.toStringAsFixed(0)}'),
                                   Slider(
                                     min: 1,
-                                    max: 10,
-                                    divisions: 9,
+                                    max: 5,
+                                    divisions: 4,
                                     value: _load,
                                     label: _load.toStringAsFixed(0),
                                     activeColor: Colors.red,
@@ -118,11 +121,13 @@ class _DayPlanState extends State<DayPlan> {
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
+                                      style: const TextStyle(
+                                          color: Colors.blue, fontSize: 20),
                                       'Самочуствие: ${_feeling.toStringAsFixed(0)}'),
                                   Slider(
                                     min: 1,
-                                    max: 10,
-                                    divisions: 9,
+                                    max: 5,
+                                    divisions: 4,
                                     value: _feeling,
                                     label: _feeling.toStringAsFixed(0),
                                     activeColor: Colors.blue,

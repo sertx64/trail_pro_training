@@ -27,10 +27,9 @@ class Authorization extends StatelessWidget {
               ),
             ],
             centerTitle: true,
-            title: const Center(
-                child: Text(
-                    style: TextStyle(fontSize: 30, color: Colors.white),
-                    'TrailPro planning')),
+            title: const Text(
+                style: TextStyle(fontSize: 30, color: Colors.white),
+                'TrailPro planning'),
             backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
         body: Center(
             child: Column(

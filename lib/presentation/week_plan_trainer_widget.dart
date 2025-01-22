@@ -22,10 +22,6 @@ class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
     super.initState();
   }
 
-  void ssetState() {
-    setState(() {});
-  }
-
   void loadWeekPlan(int yWid) async {
     weekPlan = null;
     setState(() {});
@@ -194,7 +190,6 @@ class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
                             backgroundColor: Colors.green),
                         onPressed: () {
                           setState(() {});
-                          //loadWeekPlan(yW);
                         },
                         child: const Icon(color: Colors.white, Icons.refresh)),
                     ElevatedButton(

@@ -1,4 +1,5 @@
 import 'package:gsheets/gsheets.dart';
+import 'package:trailpro_planning/domain/management.dart';
 
 const _credentials = r'''
 {
@@ -22,7 +23,7 @@ class ApiGSheet {
 
   Future<List<String>?> getWeekPlanList(String id) async {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
-    final weekPlanSheet = ss.worksheetByTitle('tp_week_plan');
+    final weekPlanSheet = ss.worksheetByTitle(Management.plan);
     final weekplanlist = await weekPlanSheet!.values.rowByKey(id);
 
     return weekplanlist;
@@ -30,7 +31,7 @@ class ApiGSheet {
 
   void sendWeekPlanList(String id, List weekplanlist) async {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
-    final weekPlanSheet = ss.worksheetByTitle('tp_week_plan');
+    final weekPlanSheet = ss.worksheetByTitle(Management.plan);
 
     await weekPlanSheet!.values.insertRowByKey(id, weekplanlist);
   }
