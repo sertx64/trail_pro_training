@@ -21,17 +21,17 @@ const _spreadsheetId = '182H6VT_Phx-4by5_fWefCMLdUPTaR6cXwPt5FD-OjZs';
 class ApiGSheet {
   final gSheets = GSheets(_credentials);
 
-  Future<List<String>?> getWeekPlanList(String id) async {
+  Future<List<String>?> getWeekPlanList(String plan, String id) async {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
-    final weekPlanSheet = ss.worksheetByTitle(Management.plan);
+    final weekPlanSheet = ss.worksheetByTitle(plan);
     final weekplanlist = await weekPlanSheet!.values.rowByKey(id);
 
     return weekplanlist;
   }
 
-  void sendWeekPlanList(String id, List weekplanlist) async {
+  void sendWeekPlanList(String plan, String id, List weekplanlist) async {
     final ss = await gSheets.spreadsheet(_spreadsheetId);
-    final weekPlanSheet = ss.worksheetByTitle(Management.plan);
+    final weekPlanSheet = ss.worksheetByTitle(plan);
 
     await weekPlanSheet!.values.insertRowByKey(id, weekplanlist);
   }

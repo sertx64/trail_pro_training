@@ -24,7 +24,7 @@ class _WeekPlanStudentWidgetState extends State<WeekPlanStudentWidget> {
   void loadWeekPlan(int yWid) async {
     weekPlan = null;
     setState(() {});
-    weekPlan = await WeekPlanMap(yWid).weekPlanStudent();
+    weekPlan = await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
     setState(() {});
   }
 

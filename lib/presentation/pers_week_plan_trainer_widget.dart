@@ -4,14 +4,14 @@ import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 
-class WeekPlanTrainerWidget extends StatefulWidget {
-  const WeekPlanTrainerWidget({super.key});
+class PersonalWeekPlanTrainerWidget extends StatefulWidget {
+  const PersonalWeekPlanTrainerWidget({super.key});
 
   @override
-  State<WeekPlanTrainerWidget> createState() => WeekPlanStudentWidgetState();
+  State<PersonalWeekPlanTrainerWidget> createState() => WeekPlanStudentWidgetState();
 }
 
-class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
+class WeekPlanStudentWidgetState extends State<PersonalWeekPlanTrainerWidget> {
   List<Map<String, String>>? weekPlan;
 
   int yW = int.parse(yearWeekNow());
@@ -25,7 +25,7 @@ class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
   void loadWeekPlan(int yWid) async {
     weekPlan = null;
     setState(() {});
-    weekPlan = await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
+    weekPlan = await WeekPlanMap(Management.selectedUser, yWid).weekPlanStudent();
     setState(() {});
   }
 
@@ -153,7 +153,7 @@ class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
                                           '')
                                   ? null
                                   : context.go(
-                                      '/trainerauth/trainerscreen/dayplantrainer');
+                                      '/trainerauth/trainerscreen/userlistscreen/personalplan/personaldayplantrainer');
                             },
                           ));
                     },

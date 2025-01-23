@@ -22,7 +22,7 @@ class UserListScreen extends StatelessWidget {
             return ListTile(
               title: Text(Management.userList[index]),
               onTap: () {
-                Management.plan = Management.userList[index];
+                Management.selectedUser = Management.userList[index];
                 context.go('/trainerauth/trainerscreen/userlistscreen/personalplan');
               },
             );

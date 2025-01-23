@@ -15,7 +15,7 @@ class Management {
 
   static String selectedUser = '';
 
-  static String plan = 'tp_week_plan';
+  //static String plan = 'tp_week_plan';
 
   //static List reportsList = [];
 }

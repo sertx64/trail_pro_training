@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:trailpro_planning/presentation/pers_week_plan_trainer_widget.dart';
 import 'package:trailpro_planning/presentation/week_plan_trainer_widget.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
@@ -12,11 +12,16 @@ class PersonalPlanTrainerScreen extends StatelessWidget {
         appBar: AppBar(
 
             centerTitle: true,
-            title: Text(
-                style: const TextStyle(fontSize: 22, color: Colors.white),
-                Management.plan,
+            title: Column(
+              children: [
+                const Text('План для'),
+                Text(
+                    style: const TextStyle(fontSize: 22, color: Colors.white),
+                    Management.selectedUser,
+                ),
+              ],
             ),
             backgroundColor: Colors.amber),
-        body: const WeekPlanTrainerWidget());
+        body: const PersonalWeekPlanTrainerWidget());
   }
 }
