@@ -97,6 +97,7 @@ class WeekPlanStudentWidgetState extends State<PersonalWeekPlanTrainerWidget> {
                                         )),
                                     const SizedBox(width: 8),
                                     Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                             style: const TextStyle(
@@ -146,11 +147,7 @@ class WeekPlanStudentWidgetState extends State<PersonalWeekPlanTrainerWidget> {
                               (Management.currentWeek * 10 +
                                               Management.currentDayWeek <
                                           int.parse(yearWeekNow()) * 10 +
-                                              dayWeekNow() &&
-                                      Management.currentWeekPlan[
-                                                  Management.currentDayWeek]
-                                              ['label_training'] ==
-                                          '')
+                                              dayWeekNow() )
                                   ? null
                                   : context.go(
                                       '/trainerauth/trainerscreen/userlistscreen/personalplan/personaldayplantrainer');

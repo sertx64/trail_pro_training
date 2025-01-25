@@ -12,7 +12,8 @@ class DayPlan extends StatefulWidget {
 }
 
 class _DayPlanState extends State<DayPlan> {
-  final Map<String, String> dayPlanMap = Management.dayPlanStudent;
+  final Map<String, String> dayPlanGroup = Management.dayPlanStudentGroup;
+  final Map<String, String> dayPlanPersonal = Management.dayPlanStudentPersonal;
 
   List<String>? reports;
   String textFeedback = '';
@@ -30,7 +31,7 @@ class _DayPlanState extends State<DayPlan> {
   }
 
   void loadReports() async {
-    reports = await getReports(dayPlanMap['date']!);
+    reports = await getReports(dayPlanGroup['date']!);
     setState(() {});
   }
 
@@ -43,7 +44,7 @@ class _DayPlanState extends State<DayPlan> {
         backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
         title: Text(
             style: const TextStyle(color: Colors.white, fontSize: 27),
-            dayPlanMap['date']!),
+            dayPlanGroup['date']!),
       ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -51,17 +52,50 @@ class _DayPlanState extends State<DayPlan> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                    style: const TextStyle(
-                        color: Color.fromRGBO(255, 132, 26, 1), fontSize: 19),
-                    dayPlanMap['label_training']!),
-                const SizedBox(height: 16),
-                const Text('План:'),
-                Text(
-                    style: const TextStyle(
-                        color: Color.fromRGBO(1, 57, 104, 1), fontSize: 20),
-                    dayPlanMap['description_training']!),
-                const SizedBox(height: 18),
+
+                Visibility(
+                  visible: (dayPlanGroup['label_training']! == '')
+                      ? false
+                      : true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('групповая тренировка'),
+                      Text(
+                          style: const TextStyle(
+                              color: Color.fromRGBO(255, 132, 26, 1), fontSize: 19),
+                          dayPlanGroup['label_training']!),
+
+
+                      Text(
+                          style: const TextStyle(
+                              color: Color.fromRGBO(1, 57, 104, 1), fontSize: 20),
+                          dayPlanGroup['description_training']!),
+                      const SizedBox(height: 18),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: (dayPlanPersonal['label_training']! == '')
+                      ? false
+                      : true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('персональная'),
+                      Text(
+                          style: const TextStyle(
+                              color: Color.fromRGBO(255, 132, 26, 1), fontSize: 19),
+                          dayPlanPersonal['label_training']!),
+                      Text(
+                          style: const TextStyle(
+                              color: Color.fromRGBO(1, 57, 104, 1), fontSize: 20),
+                          dayPlanPersonal['description_training']!),
+                      const SizedBox(height: 18),
+                    ],
+                  ),
+                ),
+
                 Visibility(
                     visible: (Management.currentWeek * 10 +
                                 Management.currentDayWeek <
@@ -169,7 +203,7 @@ class _DayPlanState extends State<DayPlan> {
                                               'нет комментария';
                                         }
                                         sentReport(
-                                            dayPlanMap['date']!,
+                                            dayPlanGroup['date']!,
                                             _load.toStringAsFixed(0),
                                             _feeling.toStringAsFixed(0),
                                             controllerFeedback.text);

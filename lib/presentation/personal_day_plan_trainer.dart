@@ -2,41 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
-import 'package:trailpro_planning/domain/student_report.dart';
 import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
-import 'package:trailpro_planning/presentation/reports_widget.dart';
 
-class PersolalDayPlanTrainer extends StatefulWidget {
-
-  const PersolalDayPlanTrainer({super.key});
-
-  @override
-  State<PersolalDayPlanTrainer> createState() => _PersolalDayPlanTrainerState();
-}
-
-class _PersolalDayPlanTrainerState extends State<PersolalDayPlanTrainer> {
-  String? lable =
+class PersolalDayPlanTrainer extends StatelessWidget {
+  final String? lable =
       Management.currentWeekPlan[Management.currentDayWeek]['label_training'];
 
-  String? description = Management.currentWeekPlan[Management.currentDayWeek]
+  final String? description = Management.currentWeekPlan[Management.currentDayWeek]
       ['description_training'];
 
-  String? date = Management.currentWeekPlan[Management.currentDayWeek]['date'];
+  final String? date = Management.currentWeekPlan[Management.currentDayWeek]['date'];
 
-  String? day = Management.currentWeekPlan[Management.currentDayWeek]['day'];
+  final String? day = Management.currentWeekPlan[Management.currentDayWeek]['day'];
 
-  List<String>? reports;
+  PersolalDayPlanTrainer({super.key});
 
-  @override
-  void initState() {
-    loadReports();
-    super.initState();
-  }
 
-  void loadReports() async {
-    reports = await getReports(date!);
-    setState(() {});
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,14 +57,7 @@ class _PersolalDayPlanTrainerState extends State<PersolalDayPlanTrainer> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text('Обратная связь:'),
-                      (reports == null)
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                              color: Color.fromRGBO(255, 132, 26, 1),
-                              strokeWidth: 6,
-                            ))
-                          : ReportsWidget(reports!),
+
                     ],
                   )
                 : Column(
@@ -139,12 +114,14 @@ class _PersolalDayPlanTrainerState extends State<PersolalDayPlanTrainer> {
                                       .currentDayWeek]['description_training'] =
                                   controllerDescriptionTraining.text;
 
-                              WeekPlanSentList(Management.selectedUser, Management.currentWeek,
+                              WeekPlanSentList(
+                                      Management.selectedUser,
+                                      Management.currentWeek,
                                       Management.currentWeekPlan)
                                   .sentPlan();
 
-                              context.go('/trainerauth/trainerscreen/userlistscreen/personalplan');
-
+                              context.go(
+                                  '/trainerauth/trainerscreen/userlistscreen/personalplan');
                             },
                             child: const Text(
                                 style: TextStyle(

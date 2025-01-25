@@ -97,6 +97,7 @@ class WeekPlanStudentWidgetState extends State<WeekPlanTrainerWidget> {
                                         )),
                                     const SizedBox(width: 8),
                                     Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                             style: const TextStyle(

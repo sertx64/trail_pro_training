@@ -1,5 +1,6 @@
 class Management {
-  static Map<String, String> dayPlanStudent = {};
+  static Map<String, String> dayPlanStudentGroup = {};
+  static Map<String, String> dayPlanStudentPersonal = {};
 
   static List<String> authUserList = [];
   static List<String> userList = [];

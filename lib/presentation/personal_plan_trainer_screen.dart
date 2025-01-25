@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trailpro_planning/presentation/pers_week_plan_trainer_widget.dart';
-import 'package:trailpro_planning/presentation/week_plan_trainer_widget.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
 class PersonalPlanTrainerScreen extends StatelessWidget {
@@ -14,9 +13,9 @@ class PersonalPlanTrainerScreen extends StatelessWidget {
             centerTitle: true,
             title: Column(
               children: [
-                const Text('План для'),
+                const Text('Персональный план для'),
                 Text(
-                    style: const TextStyle(fontSize: 22, color: Colors.white),
+                    style: const TextStyle(fontSize: 26, color: Colors.white),
                     Management.selectedUser,
                 ),
               ],
