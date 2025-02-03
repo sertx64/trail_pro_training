@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/domain/auth_student_map.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
 class UserListScreen extends StatelessWidget {
@@ -23,7 +22,8 @@ class UserListScreen extends StatelessWidget {
               title: Text(Management.userList[index]),
               onTap: () {
                 Management.selectedUser = Management.userList[index];
-                context.go('/trainerauth/trainerscreen/userlistscreen/personalplan');
+                context.go(
+                    '/trainerauth/trainerscreen/userlistscreen/personalplan');
               },
             );
           },

@@ -1,5 +1,4 @@
 import 'package:gsheets/gsheets.dart';
-import 'package:trailpro_planning/domain/management.dart';
 
 const _credentials = r'''
 {
@@ -65,7 +64,4 @@ class ApiGSheet {
 
     await sheet!.values.insertRowByKey(date, reportList);
   }
-
-
-
 }
