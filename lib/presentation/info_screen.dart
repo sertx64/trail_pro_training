@@ -25,12 +25,17 @@ class InfoScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 20, color: Colors.black),
                   'Данное приложение разрабатывается для планнирования тренеровок по скайраннингу и трейлраннингу командой TrailPro Team.'),
               const SizedBox(height: 10),
+              const Text(
+                  style: TextStyle(fontSize: 18, color: Colors.black),
+                  'Подробнее на нашем сайте:'),
               TextButton(
                 onPressed: () => context.go('/infoscreen/sitetrailpro'),
                 child: const Text(
-                    style: TextStyle(fontSize: 30, color: Colors.amber),
-                    'Подробнее о TrailPro...'),
-
+                    style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.black,
+                        decoration: TextDecoration.underline),
+                    'TrailPro.ru'),
               ),
               const SizedBox(height: 10),
               const Text(
