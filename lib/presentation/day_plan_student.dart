@@ -23,11 +23,10 @@ class _DayPlanState extends State<DayPlan> {
 
   @override
   void initState() {
-    (Management.currentWeek * 10 +
-        Management.currentDayWeek <
-        int.parse(yearWeekNow()) * 10 + dayWeekNow())
-    ? loadReports()
-    : null;
+    (Management.currentWeek * 10 + Management.currentDayWeek <
+            int.parse(yearWeekNow()) * 10 + dayWeekNow())
+        ? loadReports()
+        : null;
     super.initState();
   }
 
@@ -54,50 +53,48 @@ class _DayPlanState extends State<DayPlan> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 Visibility(
-                  visible: (dayPlanGroup['label_training']! == '')
-                      ? false
-                      : true,
+                  visible:
+                      (dayPlanGroup['label_training']! == '') ? false : true,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('групповая тренировка'),
                       Text(
                           style: const TextStyle(
-                              color: Color.fromRGBO(255, 132, 26, 1), fontSize: 19),
+                              color: Color.fromRGBO(255, 132, 26, 1),
+                              fontSize: 19),
                           dayPlanGroup['label_training']!),
-
-
                       Text(
                           style: const TextStyle(
-                              color: Color.fromRGBO(1, 57, 104, 1), fontSize: 20),
+                              color: Color.fromRGBO(1, 57, 104, 1),
+                              fontSize: 20),
                           dayPlanGroup['description_training']!),
                       const SizedBox(height: 18),
                     ],
                   ),
                 ),
                 Visibility(
-                  visible: (dayPlanPersonal['label_training']! == '')
-                      ? false
-                      : true,
+                  visible:
+                      (dayPlanPersonal['label_training']! == '') ? false : true,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('персональная'),
                       Text(
                           style: const TextStyle(
-                              color: Color.fromRGBO(255, 132, 26, 1), fontSize: 19),
+                              color: Color.fromRGBO(255, 132, 26, 1),
+                              fontSize: 19),
                           dayPlanPersonal['label_training']!),
                       Text(
                           style: const TextStyle(
-                              color: Color.fromRGBO(1, 57, 104, 1), fontSize: 20),
+                              color: Color.fromRGBO(1, 57, 104, 1),
+                              fontSize: 20),
                           dayPlanPersonal['description_training']!),
                       const SizedBox(height: 18),
                     ],
                   ),
                 ),
-
                 Visibility(
                     visible: (Management.currentWeek * 10 +
                                 Management.currentDayWeek <
@@ -141,40 +138,64 @@ class _DayPlanState extends State<DayPlan> {
                                       style: const TextStyle(
                                           color: Colors.red, fontSize: 20),
                                       'Нагрузка: ${_load.toStringAsFixed(0)}'),
-                                  Slider(
-                                    min: 1,
-                                    max: 5,
-                                    divisions: 4,
-                                    value: _load,
-                                    label: _load.toStringAsFixed(0),
-                                    activeColor: Colors.red,
-                                    thumbColor:
-                                        const Color.fromRGBO(255, 132, 26, 1),
-                                    onChanged: (newValue) {
-                                      textFeedback = controllerFeedback.text;
-                                      _load = newValue;
-                                      setState(() {});
-                                    },
+                                  SliderTheme(
+                                    data: SliderThemeData(
+                                      trackHeight: 15.0,
+                                      thumbShape: const RoundSliderThumbShape(
+                                          enabledThumbRadius: 15.0),
+                                      overlayShape:
+                                          const RoundSliderOverlayShape(
+                                              overlayRadius: 20.0),
+                                      activeTrackColor: Colors.red,
+                                        inactiveTrackColor: Colors.grey.withOpacity(0.5),
+                                      overlayColor: Colors.green.withAlpha(52),
+                                    ),
+                                    child: Slider(
+                                      min: 1,
+                                      max: 5,
+                                      divisions: 4,
+                                      value: _load,
+                                      label: _load.toStringAsFixed(0),
+                                      thumbColor:
+                                          const Color.fromRGBO(255, 132, 26, 1),
+                                      onChanged: (newValue) {
+                                        textFeedback = controllerFeedback.text;
+                                        _load = newValue;
+                                        setState(() {});
+                                      },
+                                    ),
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
                                       style: const TextStyle(
                                           color: Colors.blue, fontSize: 20),
                                       'Самочуствие: ${_feeling.toStringAsFixed(0)}'),
-                                  Slider(
-                                    min: 1,
-                                    max: 5,
-                                    divisions: 4,
-                                    value: _feeling,
-                                    label: _feeling.toStringAsFixed(0),
-                                    activeColor: Colors.blue,
-                                    thumbColor:
-                                        const Color.fromRGBO(255, 132, 26, 1),
-                                    onChanged: (newValue) {
-                                      textFeedback = controllerFeedback.text;
-                                      _feeling = newValue;
-                                      setState(() {});
-                                    },
+                                  SliderTheme(
+                                    data: SliderThemeData(
+                                      trackHeight: 15.0,
+                                      thumbShape: const RoundSliderThumbShape(
+                                          enabledThumbRadius: 15.0),
+                                      overlayShape:
+                                      const RoundSliderOverlayShape(
+                                          overlayRadius: 20.0),
+                                      activeTrackColor: Colors.blue,
+                                      inactiveTrackColor: Colors.grey.withOpacity(0.5),
+                                      overlayColor: Colors.green.withAlpha(52),
+                                    ),
+                                    child: Slider(
+                                      min: 1,
+                                      max: 5,
+                                      divisions: 4,
+                                      value: _feeling,
+                                      label: _feeling.toStringAsFixed(0),
+                                      thumbColor:
+                                          const Color.fromRGBO(255, 132, 26, 1),
+                                      onChanged: (newValue) {
+                                        textFeedback = controllerFeedback.text;
+                                        _feeling = newValue;
+                                        setState(() {});
+                                      },
+                                    ),
                                   ),
                                   const SizedBox(height: 10),
                                   const Text('Впечатления (не обязательно)'),
