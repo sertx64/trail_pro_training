@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
 class Authorization extends StatelessWidget {
-  Authorization({super.key});
+  const Authorization({super.key});
 
-  final TextEditingController _pin = TextEditingController();
-  final TextEditingController _login = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
+    final box = Hive.box('user');
+    final login = box.get('login', defaultValue: '');
+    final pin = box.get('pin', defaultValue: '');
+
+    final TextEditingController _pin = TextEditingController(text: pin);
+    final TextEditingController _login = TextEditingController(text: login);
+
     return Scaffold(
         appBar: AppBar(
             actions: [
@@ -89,6 +96,9 @@ class Authorization extends StatelessWidget {
                   if (aum.containsKey(login)) {
                     if (pin == aum[login]) {
                       Management.userLogin = login;
+                      box.put('login', login);
+                      box.put('pin', pin);
+
                       context.go('/studentscreen');
                     } else {
                       return;

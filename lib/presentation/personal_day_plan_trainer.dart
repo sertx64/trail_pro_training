@@ -8,17 +8,16 @@ class PersolalDayPlanTrainer extends StatelessWidget {
   final String? lable =
       Management.currentWeekPlan[Management.currentDayWeek]['label_training'];
 
-  final String? description = Management.currentWeekPlan[Management.currentDayWeek]
-      ['description_training'];
+  final String? description = Management
+      .currentWeekPlan[Management.currentDayWeek]['description_training'];
 
-  final String? date = Management.currentWeekPlan[Management.currentDayWeek]['date'];
+  final String? date =
+      Management.currentWeekPlan[Management.currentDayWeek]['date'];
 
-  final String? day = Management.currentWeekPlan[Management.currentDayWeek]['day'];
+  final String? day =
+      Management.currentWeekPlan[Management.currentDayWeek]['day'];
 
   PersolalDayPlanTrainer({super.key});
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,6 @@ class PersolalDayPlanTrainer extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-
                     ],
                   )
                 : Column(
@@ -120,8 +118,7 @@ class PersolalDayPlanTrainer extends StatelessWidget {
                                       Management.currentWeekPlan)
                                   .sentPlan();
 
-                              context.go(
-                                  '/trainerauth/trainerscreen/userlistscreen/personalplan');
+                              context.pop();
                             },
                             child: const Text(
                                 style: TextStyle(

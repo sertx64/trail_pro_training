@@ -7,7 +7,6 @@ import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
 import 'package:trailpro_planning/presentation/reports_widget.dart';
 
 class DayPlanTrainer extends StatefulWidget {
-
   const DayPlanTrainer({super.key});
 
   @override
@@ -139,12 +138,12 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                                       .currentDayWeek]['description_training'] =
                                   controllerDescriptionTraining.text;
 
-                              WeekPlanSentList('tp_week_plan', Management.currentWeek,
+                              WeekPlanSentList(
+                                      'tp_week_plan',
+                                      Management.currentWeek,
                                       Management.currentWeekPlan)
                                   .sentPlan();
-
-                              context.go('/trainerauth/trainerscreen');
-
+                              context.pop();
                             },
                             child: const Text(
                                 style: TextStyle(

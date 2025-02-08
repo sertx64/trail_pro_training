@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/student_report.dart';
+import 'package:trailpro_planning/presentation/reports_widget.dart';
 
 class DayPlan extends StatefulWidget {
   const DayPlan({super.key});
@@ -41,6 +42,7 @@ class _DayPlanState extends State<DayPlan> {
         TextEditingController(text: textFeedback);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
         title: Text(
             style: const TextStyle(color: Colors.white, fontSize: 27),
@@ -113,22 +115,23 @@ class _DayPlanState extends State<DayPlan> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text('Уже оставляли отчёт:'),
-                                  Text(
-                                      style: const TextStyle(
-                                          color: Colors.red, fontSize: 20),
-                                      'Вы испытали нагрузку: ${reports![
-                                      reports!.indexOf(Management.userLogin) +
-                                          1]}'),
-                                  Text(
-                                      style: const TextStyle(
-                                          color: Colors.blue, fontSize: 20),
-                                      'Ваше самочуствие: ${reports![
-                                  reports!.indexOf(Management.userLogin) +
-                                      2]}'),
-                                  const Text('Также оставили комментарий:'),
-                                  Text(reports![
-                                      reports!.indexOf(Management.userLogin) +
-                                          3]),
+                                  // Text(
+                                  //     style: const TextStyle(
+                                  //         color: Colors.red, fontSize: 20),
+                                  //     'Вы испытали нагрузку: ${reports![
+                                  //     reports!.indexOf(Management.userLogin) +
+                                  //         1]}'),
+                                  // Text(
+                                  //     style: const TextStyle(
+                                  //         color: Colors.blue, fontSize: 20),
+                                  //     'Ваше самочуствие: ${reports![
+                                  // reports!.indexOf(Management.userLogin) +
+                                  //     2]}'),
+                                  // const Text('Также оставили комментарий:'),
+                                  // Text(reports![
+                                  //     reports!.indexOf(Management.userLogin) +
+                                  //         3]),
+                                  ReportsWidget(reports!),
                                 ],
                               )
                             : Column(

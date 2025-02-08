@@ -8,9 +8,10 @@ class StudentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          centerTitle: true,
           title: const Text(
               style: TextStyle(fontSize: 27, color: Colors.white),
-              'Недельный план'),
+              'План тренировок'),
           backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
       body: const WeekPlanStudentWidget(),
     );
