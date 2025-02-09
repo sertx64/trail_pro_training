@@ -125,30 +125,45 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                           controller: controllerDescriptionTraining,
                         ),
                         const SizedBox(height: 8),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                //fixedSize: const Size(200, 50),
-                                backgroundColor:
-                                    const Color.fromRGBO(1, 57, 104, 1)),
-                            onPressed: () async {
-                              Management.currentWeekPlan[Management
-                                      .currentDayWeek]['label_training'] =
-                                  controllerLabelTraining.text;
-                              Management.currentWeekPlan[Management
-                                      .currentDayWeek]['description_training'] =
-                                  controllerDescriptionTraining.text;
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromRGBO(1, 57, 104, 1)),
+                                onPressed: () async {
+                                  Management.currentWeekPlan[Management
+                                          .currentDayWeek]['label_training'] =
+                                      controllerLabelTraining.text;
+                                  Management.currentWeekPlan[Management
+                                          .currentDayWeek]['description_training'] =
+                                      controllerDescriptionTraining.text;
 
-                              WeekPlanSentList(
-                                      'tp_week_plan',
-                                      Management.currentWeek,
-                                      Management.currentWeekPlan)
-                                  .sentPlan();
-                              context.pop();
-                            },
-                            child: const Text(
-                                style: TextStyle(
-                                    fontSize: 24, color: Colors.white),
-                                'Сохранить')),
+                                  WeekPlanSentList(
+                                          'tp_week_plan',
+                                          Management.currentWeek,
+                                          Management.currentWeekPlan)
+                                      .sentPlan();
+                                  context.pop();
+                                },
+                                child: const Text(
+                                    style: TextStyle(
+                                        fontSize: 24, color: Colors.white),
+                                    'Сохранить')),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                    Colors.green),
+                                onPressed: () async {
+
+                                },
+                                child: const Text(
+                                    style: TextStyle(
+                                        fontSize: 24, color: Colors.black),
+                                    'Тренировки')),
+                          ],
+                        ),
                       ]),
           ),
         ));
