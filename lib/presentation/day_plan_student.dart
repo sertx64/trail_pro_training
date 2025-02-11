@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
@@ -14,14 +15,17 @@ class DayPlan extends StatefulWidget {
 }
 
 class _DayPlanState extends State<DayPlan> {
-  final Map<String, String> dayPlanGroup = Management.dayPlanStudentGroup;
-  final Map<String, String> dayPlanPersonal = Management.dayPlanStudentPersonal;
+
+  final Management management = GetIt.instance<Management>();
+
+  //final Map<String, String> dayPlanGroup = Management.dayPlanStudentGroup;
+  //final Map<String, String> dayPlanPersonal = Management.dayPlanStudentPersonal;
 
   List<String>? reports;
 
   @override
   void initState() {
-    (Management.currentWeek * 10 + Management.currentDayWeek <
+    (management.yWeek * 10 + management.currentDayWeek888 <
             int.parse(yearWeekNow()) * 10 + dayWeekNow())
         ? loadReports()
         : null;
@@ -29,12 +33,14 @@ class _DayPlanState extends State<DayPlan> {
   }
 
   void loadReports() async {
-    reports = await getReports(dayPlanGroup['date']!);
+    reports = await getReports(management.dayPlanStudentGroup['date']!);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    Map<String, String> dayPlanGroup = management.dayPlanStudentGroup;
+    Map<String, String> dayPlanPersonal = management.dayPlanStudentPersonal;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -92,8 +98,8 @@ class _DayPlanState extends State<DayPlan> {
                   ),
                 ),
                 Visibility(
-                    visible: (Management.currentWeek * 10 +
-                                Management.currentDayWeek <
+                    visible: (management.yWeek * 10 +
+                        management.currentDayWeek888 <
                             int.parse(yearWeekNow()) * 10 + dayWeekNow())
                         ? true
                         : false,

@@ -184,14 +184,15 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                               '')
                                       ? null
                                       : {
-                                          Management.dayPlanStudentGroup =
-                                              dayPlanGroup,
-                                          Management.dayPlanStudentPersonal =
-                                              dayPlanPersonal,
-                                          Management.currentDayWeek = index,
-                                          Management.currentWeek = management.yWeek,
-                                          context.go('/studentscreen/dayplan'),
-
+                                          management.currentDayWeek888 = index,
+                                          // Management.dayPlanStudentGroup =
+                                          //     dayPlanGroup,
+                                          // Management.dayPlanStudentPersonal =
+                                          //     dayPlanPersonal,
+                                    //Management.currentDayWeek = index,
+                                    //       Management.currentWeek =
+                                    //           management.yWeek,
+                                          context.push('/studentscreen/dayplan'),
                                         };
                                 },
                               ));

@@ -16,14 +16,17 @@ class Management {
 
   bool isLoadingPlans = false;
 
+  List<Map<String, String>> _weekPlanGroup = [];
+  List<Map<String, String>> _weekPlanPersonal = [];
+
   void loadWeekPlan(yWid) async {
     isLoadingPlans = false;
     weekPlans.value = WeekPlansModel([], []);
-    List<Map<String, String>> group =
+    _weekPlanGroup =
         await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
-    List<Map<String, String>> person =
-        await WeekPlanMap(Management.userLogin, yWid).weekPlanStudent();
-    weekPlans.value = WeekPlansModel(group, person);
+    _weekPlanPersonal =
+        await WeekPlanMap(userLogin, yWid).weekPlanStudent();
+    weekPlans.value = WeekPlansModel(_weekPlanGroup, _weekPlanPersonal);
     isLoadingPlans = true;
   }
 
@@ -43,10 +46,12 @@ class Management {
     if (yWeek == 202700) yWeek = 202652;
     loadWeekPlan(yWeek);
   }
+  int currentDayWeek888 = 0;
+  late Map<String, String> dayPlanStudentGroup = _weekPlanGroup[currentDayWeek888];
+  late Map<String, String> dayPlanStudentPersonal = _weekPlanPersonal[currentDayWeek888];
 
-
-  static Map<String, String> dayPlanStudentGroup = {};
-  static Map<String, String> dayPlanStudentPersonal = {};
+  //static Map<String, String> dayPlanStudentGroup = {};
+  //static Map<String, String> dayPlanStudentPersonal = {};
 
   static List<String> authUserList = [];
   static List<String> userList = [];

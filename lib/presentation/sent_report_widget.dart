@@ -125,7 +125,7 @@ final String date;
                   _load.toStringAsFixed(0),
                   _feeling.toStringAsFixed(0),
                   controllerFeedback.text);
-              context.go('/studentscreen');
+              context.pop;
             },
             child: const Text(
                 style: TextStyle(
