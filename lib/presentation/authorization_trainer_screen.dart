@@ -8,20 +8,22 @@ class TrainerAuth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+            centerTitle: true,
+            title: const Text(
+                style: TextStyle(fontSize: 26, color: Colors.white),
+                'Вы тренер?'),
+            backgroundColor: const Color.fromRGBO(1, 57, 104, 1)
+        ),
         body: Center(
             child: Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(height: 230),
+          const SizedBox(height: 200),
           const Text(
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Color.fromRGBO(255, 132, 26, 1)),
-              'Вы тренер?'),
-          const Text(
-              style: TextStyle(color: Color.fromRGBO(1, 57, 104, 1)),
+              style: TextStyle(color: Color.fromRGBO(255, 132, 26, 1)),
               'введите ПИН'),
           SizedBox(
             width: 200,

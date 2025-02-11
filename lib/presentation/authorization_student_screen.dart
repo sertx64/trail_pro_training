@@ -42,7 +42,7 @@ class Authorization extends StatelessWidget {
             child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 200),
+            const SizedBox(height: 150),
             const Text('логин'),
             SizedBox(
               height: 50,

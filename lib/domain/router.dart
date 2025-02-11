@@ -10,7 +10,7 @@ import 'package:trailpro_planning/presentation/personal_plan_trainer_screen.dart
 import 'package:trailpro_planning/presentation/site_trailpro.dart';
 import 'package:trailpro_planning/presentation/splash_screen.dart';
 import 'package:trailpro_planning/presentation/student_screen.dart';
-import 'package:trailpro_planning/presentation/trainer_auth_screen.dart';
+import 'package:trailpro_planning/presentation/authorization_trainer_screen.dart';
 import 'package:trailpro_planning/presentation/trainer_screen.dart';
 import 'package:trailpro_planning/presentation/user_list_screen.dart';
 
