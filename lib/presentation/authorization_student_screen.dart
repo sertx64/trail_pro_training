@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
 class Authorization extends StatelessWidget {
-  const Authorization({super.key});
+  Authorization({super.key});
 
+  final Management management = GetIt.instance<Management>();
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +100,7 @@ class Authorization extends StatelessWidget {
                       Management.userLogin = login;
                       box.put('login', login);
                       box.put('pin', pin);
-
+                      management.loadWeekPlan(management.yWeek);
                       context.go('/studentscreen');
                     } else {
                       return;
