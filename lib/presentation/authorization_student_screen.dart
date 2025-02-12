@@ -100,7 +100,7 @@ class Authorization extends StatelessWidget {
                       Management.userLogin = login;
                       box.put('login', login);
                       box.put('pin', pin);
-                      management.loadWeekPlan(management.yWeek);
+                      management.loadWeekPlan(management.yearWeekIndex);
                       context.go('/studentscreen');
                     } else {
                       return;

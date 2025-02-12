@@ -49,7 +49,7 @@ class WeekPlanStudentWidget extends StatelessWidget {
                               value.weekPlanPersonal[index];
                           return Container(
                               decoration: BoxDecoration(
-                                color: (management.yWeek * 10 + index <
+                                color: (management.yearWeekIndex * 10 + index <
                                         int.parse(yearWeekNow()) * 10 +
                                             dayWeekNow() -
                                             1)
@@ -184,15 +184,10 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                               '')
                                       ? null
                                       : {
-                                          management.currentDayWeek888 = index,
-                                          // Management.dayPlanStudentGroup =
-                                          //     dayPlanGroup,
-                                          // Management.dayPlanStudentPersonal =
-                                          //     dayPlanPersonal,
-                                    //Management.currentDayWeek = index,
-                                    //       Management.currentWeek =
-                                    //           management.yWeek,
-                                          context.push('/studentscreen/dayplan'),
+                                          management.newScreenDayPlan(index),
+                                          management.loadReports(),
+                                          context
+                                              .push('/studentscreen/dayplan'),
                                         };
                                 },
                               ));

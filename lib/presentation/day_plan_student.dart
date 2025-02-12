@@ -18,24 +18,21 @@ class _DayPlanState extends State<DayPlan> {
 
   final Management management = GetIt.instance<Management>();
 
-  //final Map<String, String> dayPlanGroup = Management.dayPlanStudentGroup;
-  //final Map<String, String> dayPlanPersonal = Management.dayPlanStudentPersonal;
+ //List<String>? reports;
 
-  List<String>? reports;
-
-  @override
-  void initState() {
-    (management.yWeek * 10 + management.currentDayWeek888 <
-            int.parse(yearWeekNow()) * 10 + dayWeekNow())
-        ? loadReports()
-        : null;
-    super.initState();
-  }
-
-  void loadReports() async {
-    reports = await getReports(management.dayPlanStudentGroup['date']!);
-    setState(() {});
-  }
+  // @override
+  // void initState() {
+  //   (management.yearWeekIndex * 10 + management.currentDayWeekIndex <
+  //           int.parse(yearWeekNow()) * 10 + dayWeekNow())
+  //       ? loadReports()
+  //       : null;
+  //   super.initState();
+  // }
+  //
+  // void loadReports() async {
+  //   reports = await getReports(management.dayPlanStudentGroup['date']!);
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -98,23 +95,22 @@ class _DayPlanState extends State<DayPlan> {
                   ),
                 ),
                 Visibility(
-                    visible: (management.yWeek * 10 +
-                        management.currentDayWeek888 <
-                            int.parse(yearWeekNow()) * 10 + dayWeekNow())
+                    visible: (management.yearWeekIndex * 10 + management.currentDayWeekIndex <
+                        int.parse(yearWeekNow()) * 10 + dayWeekNow())
                         ? true
                         : false,
-                    child: (reports == null)
+                    child: (management.isLoadingReports)
                         ? const Center(
                             child: CircularProgressIndicator(
                             color: Color.fromRGBO(255, 132, 26, 1),
                             strokeWidth: 6,
                           ))
-                        : (reports!.contains(Management.userLogin))
+                        : (management.reportsOfDay.contains(Management.userLogin))
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text('Уже оставляли отчёт:'),
-                                  ReportsWidget(reports!),
+                                  ReportsWidget(management.reportsOfDay),
                                 ],
                               )
                             : SentReportWidget(dayPlanGroup['date']!)),

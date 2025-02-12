@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
+import 'package:trailpro_planning/domain/student_report.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 
 class WeekPlansModel {
@@ -12,58 +13,64 @@ class Management {
   ValueNotifier<WeekPlansModel> weekPlans =
       ValueNotifier<WeekPlansModel>(WeekPlansModel([], []));
 
-  int yWeek = int.parse(yearWeekNow());
-
   bool isLoadingPlans = false;
-
   List<Map<String, String>> _weekPlanGroup = [];
   List<Map<String, String>> _weekPlanPersonal = [];
-
-  void loadWeekPlan(yWid) async {
+  void loadWeekPlan(int yWid) async {
     isLoadingPlans = false;
     weekPlans.value = WeekPlansModel([], []);
-    _weekPlanGroup =
-        await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
-    _weekPlanPersonal =
-        await WeekPlanMap(userLogin, yWid).weekPlanStudent();
+    _weekPlanGroup = await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
+    _weekPlanPersonal = await WeekPlanMap(userLogin, yWid).weekPlanStudent();
     weekPlans.value = WeekPlansModel(_weekPlanGroup, _weekPlanPersonal);
     isLoadingPlans = true;
   }
 
+  int yearWeekIndex = int.parse(yearWeekNow());
   void nextWeek() {
-    ++yWeek;
-    if (yWeek == 202453) yWeek = 202501;
-    if (yWeek == 202553) yWeek = 202601;
-    if (yWeek == 202653) yWeek = 202701;
-    loadWeekPlan(yWeek);
-}
+    ++yearWeekIndex;
+    if (yearWeekIndex == 202453) yearWeekIndex = 202501;
+    if (yearWeekIndex == 202553) yearWeekIndex = 202601;
+    if (yearWeekIndex == 202653) yearWeekIndex = 202701;
+    loadWeekPlan(yearWeekIndex);
+  }
 
   void previousWeek() {
-    --yWeek;
-    if (yWeek == 202444) yWeek = 202445;
-    if (yWeek == 202500) yWeek = 202452;
-    if (yWeek == 202600) yWeek = 202552;
-    if (yWeek == 202700) yWeek = 202652;
-    loadWeekPlan(yWeek);
+    --yearWeekIndex;
+    if (yearWeekIndex == 202444) yearWeekIndex = 202445;
+    if (yearWeekIndex == 202500) yearWeekIndex = 202452;
+    if (yearWeekIndex == 202600) yearWeekIndex = 202552;
+    if (yearWeekIndex == 202700) yearWeekIndex = 202652;
+    loadWeekPlan(yearWeekIndex);
   }
-  int currentDayWeek888 = 0;
-  late Map<String, String> dayPlanStudentGroup = _weekPlanGroup[currentDayWeek888];
-  late Map<String, String> dayPlanStudentPersonal = _weekPlanPersonal[currentDayWeek888];
 
-  //static Map<String, String> dayPlanStudentGroup = {};
-  //static Map<String, String> dayPlanStudentPersonal = {};
+  int currentDayWeekIndex = 0;
+  Map<String, String> dayPlanStudentGroup = {};
+  Map<String, String> dayPlanStudentPersonal = {};
+
+  void newScreenDayPlan(int dayIndex) {
+    dayPlanStudentGroup = _weekPlanGroup[dayIndex];
+    dayPlanStudentPersonal = _weekPlanPersonal[dayIndex];
+    currentDayWeekIndex = dayIndex;
+  }
+
+  List<String> reportsOfDay = [];
+  bool isLoadingReports = false;
+  void loadReports() async {
+
+
+    if (yearWeekIndex * 10 + currentDayWeekIndex <
+        int.parse(yearWeekNow()) * 10 + dayWeekNow()) {
+      reportsOfDay = (await getReports(dayPlanStudentGroup['date']!))!;
+      isLoadingReports = true;
+    } else {isLoadingReports = false;}
+  }
 
   static List<String> authUserList = [];
   static List<String> userList = [];
   static Map<String, String> authUserMap = {};
-
   static String userLogin = '';
-
   static int currentWeek = 0;
-
   static List<Map<String, String>> currentWeekPlan = [];
-
   static int currentDayWeek = 0;
-
   static String selectedUser = '';
 }
