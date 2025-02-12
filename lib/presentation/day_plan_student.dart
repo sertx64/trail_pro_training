@@ -1,38 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
-import 'package:trailpro_planning/domain/student_report.dart';
 import 'package:trailpro_planning/presentation/reports_widget.dart';
-import 'package:trailpro_planning/presentation/sent_report_widget.dart';
 
-class DayPlan extends StatefulWidget {
-  const DayPlan({super.key});
 
-  @override
-  State<DayPlan> createState() => _DayPlanState();
-}
-
-class _DayPlanState extends State<DayPlan> {
+class DayPlan extends StatelessWidget {
+  DayPlan({super.key});
 
   final Management management = GetIt.instance<Management>();
 
- //List<String>? reports;
-
-  // @override
-  // void initState() {
-  //   (management.yearWeekIndex * 10 + management.currentDayWeekIndex <
-  //           int.parse(yearWeekNow()) * 10 + dayWeekNow())
-  //       ? loadReports()
-  //       : null;
-  //   super.initState();
-  // }
-  //
-  // void loadReports() async {
-  //   reports = await getReports(management.dayPlanStudentGroup['date']!);
-  //   setState(() {});
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -99,21 +76,8 @@ class _DayPlanState extends State<DayPlan> {
                         int.parse(yearWeekNow()) * 10 + dayWeekNow())
                         ? true
                         : false,
-                    child: (management.isLoadingReports)
-                        ? const Center(
-                            child: CircularProgressIndicator(
-                            color: Color.fromRGBO(255, 132, 26, 1),
-                            strokeWidth: 6,
-                          ))
-                        : (management.reportsOfDay.contains(Management.userLogin))
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Уже оставляли отчёт:'),
-                                  ReportsWidget(management.reportsOfDay),
-                                ],
-                              )
-                            : SentReportWidget(dayPlanGroup['date']!)),
+                    child: ReportsWidget(),
+                ),
               ],
             ),
           )),
