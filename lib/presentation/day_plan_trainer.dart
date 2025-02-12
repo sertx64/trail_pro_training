@@ -33,7 +33,7 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
   }
 
   void loadReports() async {
-    reports = await getReports(date!);
+    reports = await StudentReport().getReports(date!);
     setState(() {});
   }
 

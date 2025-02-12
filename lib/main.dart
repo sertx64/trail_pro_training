@@ -10,9 +10,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   GetIt.I.registerSingleton<Management>(Management());
-  // final Management management = GetIt.instance<Management>();
-  // management.loadWeekPlan(202507);
-  // print(management.weekPlans);
 
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDirectory.path);
@@ -22,19 +19,8 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void dispose() {
-    Hive.close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

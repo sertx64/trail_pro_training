@@ -2,23 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/auth_student_map.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    createAuthUserMap();
-    super.initState();
-    Future.delayed(const Duration(seconds: 4), () => context.go('/'));
-  }
-
-  @override
   Widget build(BuildContext context) {
+    createAuthUserMap();
+    Future.delayed(const Duration(seconds: 4), () => context.go('/'));
     return Scaffold(
       body: Container(
         color: Colors.white,

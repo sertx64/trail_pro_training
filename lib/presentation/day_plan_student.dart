@@ -4,12 +4,10 @@ import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/presentation/reports_widget.dart';
 
-
 class DayPlan extends StatelessWidget {
   DayPlan({super.key});
 
   final Management management = GetIt.instance<Management>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +70,12 @@ class DayPlan extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                    visible: (management.yearWeekIndex * 10 + management.currentDayWeekIndex <
-                        int.parse(yearWeekNow()) * 10 + dayWeekNow())
-                        ? true
-                        : false,
-                    child: ReportsWidget(),
+                  visible: (management.yearWeekIndex * 10 +
+                              management.currentDayWeekIndex <
+                          int.parse(yearWeekNow()) * 10 + dayWeekNow())
+                      ? true
+                      : false,
+                  child: ReportsWidget(),
                 ),
               ],
             ),

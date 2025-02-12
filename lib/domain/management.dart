@@ -3,12 +3,6 @@ import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/student_report.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 
-class WeekPlansModel {
-  List<Map<String, String>> weekPlanGroup;
-  List<Map<String, String>> weekPlanPersonal;
-  WeekPlansModel(this.weekPlanGroup, this.weekPlanPersonal);
-}
-
 class Management {
   ValueNotifier<WeekPlansModel> weekPlans =
       ValueNotifier<WeekPlansModel>(WeekPlansModel([], []));
@@ -18,6 +12,7 @@ class Management {
   bool isLoadingPlans = false;
   List<Map<String, String>> _weekPlanGroup = [];
   List<Map<String, String>> _weekPlanPersonal = [];
+
   void loadWeekPlan(int yWid) async {
     isLoadingPlans = false;
     weekPlans.value = WeekPlansModel([], []);
@@ -55,14 +50,11 @@ class Management {
     currentDayWeekIndex = dayIndex;
   }
 
-
-
-
   bool isLoadingReports = false;
   void loadReports() async {
     isLoadingReports = false;
     reportsOfDay.value = [];
-    reportsOfDay.value = (await getReports(dayPlanStudentGroup['date']!))!;
+    reportsOfDay.value = (await StudentReport().getReports(dayPlanStudentGroup['date']!))!;
     isLoadingReports = true;
   }
 
@@ -74,4 +66,10 @@ class Management {
   static List<Map<String, String>> currentWeekPlan = [];
   static int currentDayWeek = 0;
   static String selectedUser = '';
+}
+
+class WeekPlansModel {
+  List<Map<String, String>> weekPlanGroup;
+  List<Map<String, String>> weekPlanPersonal;
+  WeekPlansModel(this.weekPlanGroup, this.weekPlanPersonal);
 }

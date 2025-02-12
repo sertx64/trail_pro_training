@@ -32,29 +32,29 @@ class ReportsWidget extends StatelessWidget {
                               Text(
                                   style: const TextStyle(
                                       color: Colors.green, fontSize: 20),
-                                  splitReports(value)[index][0]),
+                                  StudentReport().splitReports(value)[index][0]),
                               Row(
                                 children: [
                                   Text(
                                       style: const TextStyle(
                                           color: Colors.red, fontSize: 16),
-                                      'Нагрузка ${splitReports(value)[index][1]}'),
+                                      'Нагрузка ${StudentReport().splitReports(value)[index][1]}'),
                                   const SizedBox(
                                     width: 10,
                                   ),
                                   Text(
                                       style: const TextStyle(
                                           color: Colors.blue, fontSize: 16),
-                                      'Самочуствие ${splitReports(value)[index][2]}'),
+                                      'Самочуствие ${StudentReport().splitReports(value)[index][2]}'),
                                 ],
                               ),
-                              Text(splitReports(value)[index][3]),
+                              Text(StudentReport().splitReports(value)[index][3]),
                             ],
                           );
                         },
                         separatorBuilder: (context, index) =>
                             const SizedBox(height: 8),
-                        itemCount: splitReports(value).length,
+                        itemCount: StudentReport().splitReports(value).length,
                       ),
                     );
         });

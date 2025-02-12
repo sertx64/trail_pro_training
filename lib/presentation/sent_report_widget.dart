@@ -120,12 +120,12 @@ final String date;
                 controllerFeedback.text =
                 'нет комментария';
               }
-              sentReport(
+              StudentReport().sentReport(
                   widget.date,
                   _load.toStringAsFixed(0),
                   _feeling.toStringAsFixed(0),
                   controllerFeedback.text);
-              context.pop;
+              context.go('/studentscreen');
             },
             child: const Text(
                 style: TextStyle(

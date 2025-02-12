@@ -4,21 +4,38 @@ import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
-class Authorization extends StatelessWidget {
-  Authorization({super.key});
-  final box = Hive.box('user');
-  final Management management = GetIt.instance<Management>();
+class Authorization extends StatefulWidget {
+  const Authorization({super.key});
 
+  @override
+  State<Authorization> createState() => _AuthorizationState();
+}
+
+class _AuthorizationState extends State<Authorization> {
+  final Management management = GetIt.instance<Management>();
+  final box = Hive.box('user');
+  final TextEditingController _pin = TextEditingController();
+  final TextEditingController _login = TextEditingController();
+
+  @override
+  void initState() {
+    final login = box.get('login', defaultValue: '');
+    final pin = box.get('pin', defaultValue: '');
+    _login.text = login;
+    _pin.text = pin;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _login.dispose();
+    _pin.dispose();
+    Hive.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-
-    final login = box.get('login', defaultValue: '');
-    final pin = box.get('pin', defaultValue: '');
-    final TextEditingController _pin = TextEditingController(text: pin);
-    final TextEditingController _login = TextEditingController(text: login);
-
     return Scaffold(
         appBar: AppBar(
             actions: [
@@ -30,8 +47,7 @@ class Authorization extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(
-                    color: Color.fromRGBO(255, 132, 26, 1),
-                    Icons.info_outline),
+                    color: Color.fromRGBO(255, 132, 26, 1), Icons.info_outline),
                 onPressed: () => context.go('/infoscreen'),
               ),
             ],
