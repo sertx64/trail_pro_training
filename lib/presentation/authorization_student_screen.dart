@@ -26,10 +26,11 @@ class _AuthorizationState extends State<Authorization> {
     super.initState();
 
     // Первичная иницализация из сохраненных значений
-    String login = box.get('login', defaultValue: '123');
+    String login = box.get('login', defaultValue: '');
     String pin = box.get('pin', defaultValue: '');
-    _pinTextController.text = login;
-    _loginTextController.text = pin;
+    _pinTextController.text = pin;
+    _loginTextController.text = login;
+    setState(() {});
   }
 
   @override
