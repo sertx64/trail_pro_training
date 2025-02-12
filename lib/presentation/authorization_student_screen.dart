@@ -6,16 +6,16 @@ import 'package:trailpro_planning/domain/management.dart';
 
 class Authorization extends StatelessWidget {
   Authorization({super.key});
-
+  final box = Hive.box('user');
   final Management management = GetIt.instance<Management>();
+
 
   @override
   Widget build(BuildContext context) {
 
-    final box = Hive.box('user');
+
     final login = box.get('login', defaultValue: '');
     final pin = box.get('pin', defaultValue: '');
-
     final TextEditingController _pin = TextEditingController(text: pin);
     final TextEditingController _login = TextEditingController(text: login);
 

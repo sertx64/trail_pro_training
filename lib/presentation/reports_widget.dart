@@ -8,8 +8,6 @@ class ReportsWidget extends StatelessWidget {
   ReportsWidget({super.key});
   final Management management = GetIt.instance<Management>();
 
-  //final List<String> reports;
-
   @override
   Widget build(BuildContext context) {
     management.loadReports();

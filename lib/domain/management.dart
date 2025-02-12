@@ -62,9 +62,7 @@ class Management {
   void loadReports() async {
     isLoadingReports = false;
     reportsOfDay.value = [];
-    print(dayPlanStudentGroup['date']!);
     reportsOfDay.value = (await getReports(dayPlanStudentGroup['date']!))!;
-    print(reportsOfDay.value);
     isLoadingReports = true;
   }
 
