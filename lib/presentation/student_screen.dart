@@ -185,9 +185,7 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                       ? null
                                       : {
                                           management.newScreenDayPlan(index),
-                                          management.loadReports(),
-                                          context
-                                              .push('/studentscreen/dayplan'),
+                                          context.push('/studentscreen/dayplan'),
                                         };
                                 },
                               ));

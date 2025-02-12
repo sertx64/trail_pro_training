@@ -13,6 +13,8 @@ class Management {
   ValueNotifier<WeekPlansModel> weekPlans =
       ValueNotifier<WeekPlansModel>(WeekPlansModel([], []));
 
+  ValueNotifier<List<String>> reportsOfDay = ValueNotifier<List<String>>([]);
+
   bool isLoadingPlans = false;
   List<Map<String, String>> _weekPlanGroup = [];
   List<Map<String, String>> _weekPlanPersonal = [];
@@ -53,16 +55,17 @@ class Management {
     currentDayWeekIndex = dayIndex;
   }
 
-  List<String> reportsOfDay = [];
+
+
+
   bool isLoadingReports = false;
   void loadReports() async {
-
-
-    if (yearWeekIndex * 10 + currentDayWeekIndex <
-        int.parse(yearWeekNow()) * 10 + dayWeekNow()) {
-      reportsOfDay = (await getReports(dayPlanStudentGroup['date']!))!;
-      isLoadingReports = true;
-    } else {isLoadingReports = false;}
+    isLoadingReports = false;
+    reportsOfDay.value = [];
+    print(dayPlanStudentGroup['date']!);
+    reportsOfDay.value = (await getReports(dayPlanStudentGroup['date']!))!;
+    print(reportsOfDay.value);
+    isLoadingReports = true;
   }
 
   static List<String> authUserList = [];

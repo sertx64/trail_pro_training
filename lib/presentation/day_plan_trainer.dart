@@ -81,7 +81,7 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                               color: Color.fromRGBO(255, 132, 26, 1),
                               strokeWidth: 6,
                             ))
-                          : ReportsWidget(reports!),
+                          : ReportsWidget(),
                     ],
                   )
                 : Column(
