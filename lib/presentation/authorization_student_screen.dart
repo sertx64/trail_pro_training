@@ -1,24 +1,46 @@
+import 'dart:developer';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
-class Authorization extends StatelessWidget {
+class Authorization extends StatefulWidget {
   Authorization({super.key});
 
+  @override
+  State<Authorization> createState() => _AuthorizationState();
+}
+
+class _AuthorizationState extends State<Authorization> {
   final Management management = GetIt.instance<Management>();
+
+  final box = Hive.box('user');
+  final TextEditingController _pinTextController = TextEditingController();
+  final TextEditingController _loginTextController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Первичная иницализация из сохраненных значений
+    String login = box.get('login', defaultValue: '123');
+    String pin = box.get('pin', defaultValue: '');
+    _pinTextController.text = login;
+    _loginTextController.text = pin;
+  }
+
+  @override
+  void dispose() {
+    _pinTextController.dispose();
+    _loginTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    final box = Hive.box('user');
-    final login = box.get('login', defaultValue: '');
-    final pin = box.get('pin', defaultValue: '');
-
-    final TextEditingController _pin = TextEditingController(text: pin);
-    final TextEditingController _login = TextEditingController(text: login);
-
     return Scaffold(
         appBar: AppBar(
             actions: [
@@ -30,8 +52,7 @@ class Authorization extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(
-                    color: Color.fromRGBO(255, 132, 26, 1),
-                    Icons.info_outline),
+                    color: Color.fromRGBO(255, 132, 26, 1), Icons.info_outline),
                 onPressed: () => context.go('/infoscreen'),
               ),
             ],
@@ -60,7 +81,7 @@ class Authorization extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(30.0)),
                   ),
                 ),
-                controller: _login,
+                controller: _loginTextController,
               ),
             ),
             const SizedBox(height: 10),
@@ -81,7 +102,7 @@ class Authorization extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(30.0)),
                   ),
                 ),
-                controller: _pin,
+                controller: _pinTextController,
               ),
             ),
             const SizedBox(
@@ -91,24 +112,7 @@ class Authorization extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(200, 50),
                     backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-                onPressed: () {
-                  String login = _login.text;
-                  String pin = _pin.text;
-                  Map<String, String> aum = Management.authUserMap;
-                  if (aum.containsKey(login)) {
-                    if (pin == aum[login]) {
-                      Management.userLogin = login;
-                      box.put('login', login);
-                      box.put('pin', pin);
-                      management.loadWeekPlan(management.yearWeekIndex);
-                      context.go('/studentscreen');
-                    } else {
-                      return;
-                    }
-                  } else {
-                    return;
-                  }
-                },
+                onPressed: authClicked,
                 child: const Text(
                     style: TextStyle(fontSize: 24, color: Colors.white),
                     'Войти')),
@@ -117,5 +121,19 @@ class Authorization extends StatelessWidget {
             ),
           ],
         )));
+  }
+
+  void authClicked() {
+    String login = _loginTextController.text;
+    String pin = _pinTextController.text;
+    Map<String, String> aum = Management.authUserMap;
+
+    if (aum.containsKey(login) && pin == aum[login]) {
+      Management.userLogin = login;
+      box.put('login', login);
+      box.put('pin', pin);
+      management.loadWeekPlan(management.yearWeekIndex);
+      context.go('/studentscreen');
+    }
   }
 }
