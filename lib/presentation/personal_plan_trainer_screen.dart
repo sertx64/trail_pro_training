@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 
 class PersonalPlanTrainerScreen extends StatelessWidget {
-  const PersonalPlanTrainerScreen({super.key});
-
+  PersonalPlanTrainerScreen({super.key});
+  final Management management = GetIt.instance<Management>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +17,7 @@ class PersonalPlanTrainerScreen extends StatelessWidget {
                 const Text('Персональный план для'),
                 Text(
                   style: const TextStyle(fontSize: 26, color: Colors.white),
-                  Management.selectedUser,
+                  management.selectedUser,
                 ),
               ],
             ),
@@ -33,7 +33,7 @@ class PersonalWeekPlanTrainerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<WeekPlanModelPersonal>(
+    return ValueListenableBuilder<List<Map<String, String>>>(
         valueListenable: management.weekPlanPersonal,
         builder: (context, value, child) {
           return (!management.isLoadingPlans)
@@ -49,7 +49,7 @@ class PersonalWeekPlanTrainerWidget extends StatelessWidget {
                       ListView.separated(
                         itemBuilder: (context, index) {
                           Map<String, String> dayPlan =
-                              value.weekPlanPersonal[index];
+                              value[index];
                           return Container(
                               decoration: BoxDecoration(
                                 color: (management.yearWeekIndex * 10 + index <
@@ -164,7 +164,7 @@ class PersonalWeekPlanTrainerWidget extends StatelessWidget {
                                 },
                               ));
                         },
-                        itemCount: value.weekPlanPersonal.length,
+                        itemCount: 7,
                         separatorBuilder: (context, index) =>
                             const SizedBox(height: 8),
                       ),

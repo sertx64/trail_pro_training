@@ -41,7 +41,7 @@ class WeekPlanTrainerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<WeekPlanModelGroup>(
+    return ValueListenableBuilder<List<Map<String, String>>>(
         valueListenable: management.weekPlanGroup,
         builder: (context, value, child) {
           return (!management.isLoadingPlans)
@@ -56,7 +56,7 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                     ListView.separated(
                       itemBuilder: (context, index) {
                         Map<String, String> dayPlan =
-                            value.weekPlanGroup[index];
+                            value[index];
                         return Container(
                             decoration: BoxDecoration(
                               color: (management.yearWeekIndex * 10 + index <

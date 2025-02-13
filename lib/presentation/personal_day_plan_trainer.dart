@@ -145,7 +145,7 @@ class _PersonalDayPlanTrainerState extends State<PersonalDayPlanTrainer> {
                               management.updateWeekPlanTrainerPersonal();
 
                               WeekPlanSentList(
-                                  management.selUser,
+                                  management.selectedUser,
                                   management.yearWeekIndex,
                                   management.currentWeekPlanPersonal)
                                   .sentPlan();

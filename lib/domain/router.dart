@@ -51,11 +51,11 @@ final GoRouter router =
   GoRoute(
     path: '/personalplan',
     builder: (BuildContext context, GoRouterState state) =>
-        const PersonalPlanTrainerScreen()),
+        PersonalPlanTrainerScreen()),
   GoRoute(
     path: '/personaldayplantrainer',
     builder: (BuildContext context, GoRouterState state) =>
-        PersonalDayPlanTrainer()),
+        const PersonalDayPlanTrainer()),
   GoRoute(
     path: '/studentscreen',
     builder: (BuildContext context, GoRouterState state) =>

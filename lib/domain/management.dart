@@ -7,16 +7,16 @@ class Management {
   ValueNotifier<WeekPlansModel> weekPlans =
       ValueNotifier<WeekPlansModel>(WeekPlansModel([], []));
 
-  ValueNotifier<WeekPlanModelGroup> weekPlanGroup =
-  ValueNotifier<WeekPlanModelGroup>(WeekPlanModelGroup([]));
+  ValueNotifier<List<Map<String, String>>> weekPlanGroup =
+  ValueNotifier<List<Map<String, String>>>([]);
 
-  ValueNotifier<WeekPlanModelPersonal> weekPlanPersonal =
-  ValueNotifier<WeekPlanModelPersonal>(WeekPlanModelPersonal([]));
+  ValueNotifier<List<Map<String, String>>> weekPlanPersonal =
+  ValueNotifier<List<Map<String, String>>>([]);
 
   ValueNotifier<List<String>> reportsOfDay = ValueNotifier<List<String>>([]);
 
-String selUser = '';
-  static String selectedUser = '';
+  String selectedUser = '';
+
   static String userLogin = '';
 
   bool isLoadingPlans = false;
@@ -26,35 +26,40 @@ String selUser = '';
   void loadWeekPlan(int yWid) async {
     isLoadingPlans = false;
     weekPlans.value = WeekPlansModel([], []);
-    currentWeekPlanGroup = await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
-    currentWeekPlanPersonal = await WeekPlanMap(userLogin, yWid).weekPlanStudent();
-    weekPlans.value = WeekPlansModel(currentWeekPlanGroup, currentWeekPlanPersonal);
+    currentWeekPlanGroup =
+        await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
+    currentWeekPlanPersonal =
+        await WeekPlanMap(userLogin, yWid).weekPlanStudent();
+    weekPlans.value =
+        WeekPlansModel(currentWeekPlanGroup, currentWeekPlanPersonal);
     isLoadingPlans = true;
   }
 
   void loadWeekPlanTrainerPersonal(int yWid, String selecteduser) async {
     isLoadingPlans = false;
-    weekPlanPersonal.value = WeekPlanModelPersonal([]);
-    currentWeekPlanPersonal = await WeekPlanMap(selecteduser, yWid).weekPlanStudent();
-    weekPlanPersonal.value = WeekPlanModelPersonal(currentWeekPlanPersonal);
+    weekPlanPersonal.value = [];
+    currentWeekPlanPersonal =
+        await WeekPlanMap(selecteduser, yWid).weekPlanStudent();
+    weekPlanPersonal.value = currentWeekPlanPersonal;
     isLoadingPlans = true;
-    selUser = selecteduser;
+    selectedUser = selecteduser;
   }
 
   void loadWeekPlanTrainerGroup(int yWid) async {
     isLoadingPlans = false;
-    weekPlanGroup.value = WeekPlanModelGroup([]);
-    currentWeekPlanGroup = await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
-    weekPlanGroup.value = WeekPlanModelGroup(currentWeekPlanGroup);
+    weekPlanGroup.value = [];
+    currentWeekPlanGroup =
+        await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
+    weekPlanGroup.value = currentWeekPlanGroup;
     isLoadingPlans = true;
   }
 
   void updateWeekPlanTrainerGroup() async {
-    weekPlanGroup.value = WeekPlanModelGroup(currentWeekPlanGroup);
+    weekPlanGroup.value = currentWeekPlanGroup;
   }
 
   void updateWeekPlanTrainerPersonal() async {
-    weekPlanPersonal.value = WeekPlanModelPersonal(currentWeekPlanPersonal);
+    weekPlanPersonal.value = currentWeekPlanPersonal;
   }
 
   int yearWeekIndex = int.parse(yearWeekNow());
@@ -65,7 +70,9 @@ String selUser = '';
     if (yearWeekIndex == 202653) yearWeekIndex = 202701;
     if (who == 'student') loadWeekPlan(yearWeekIndex);
     if (who == 'trainergroup') loadWeekPlanTrainerGroup(yearWeekIndex);
-    if (who == 'trainerpersonal') loadWeekPlanTrainerPersonal(yearWeekIndex, selUser);
+    if (who == 'trainerpersonal') {
+      loadWeekPlanTrainerPersonal(yearWeekIndex, selectedUser);
+    }
   }
 
   void previousWeek(String who) {
@@ -76,7 +83,9 @@ String selUser = '';
     if (yearWeekIndex == 202700) yearWeekIndex = 202652;
     if (who == 'student') loadWeekPlan(yearWeekIndex);
     if (who == 'trainergroup') loadWeekPlanTrainerGroup(yearWeekIndex);
-    if (who == 'trainerpersonal') loadWeekPlanTrainerPersonal(yearWeekIndex, selUser);
+    if (who == 'trainerpersonal') {
+      loadWeekPlanTrainerPersonal(yearWeekIndex, selectedUser);
+    }
   }
 
   int currentDayWeekIndex = 0;
@@ -103,18 +112,14 @@ String selUser = '';
   void loadReports() async {
     isLoadingReports = false;
     reportsOfDay.value = [];
-    reportsOfDay.value = (await StudentReport().getReports(dayPlanStudentGroup['date']!))!;
+    reportsOfDay.value =
+        (await StudentReport().getReports(dayPlanStudentGroup['date']!))!;
     isLoadingReports = true;
   }
 
   static List<String> authUserList = [];
   static List<String> userList = [];
   static Map<String, String> authUserMap = {};
-
-  static int currentWeek = 0;
-  static List<Map<String, String>> currentWeekPlan = [];
-  static int currentDayWeek = 0;
-
 }
 
 class WeekPlansModel {
@@ -123,12 +128,3 @@ class WeekPlansModel {
   WeekPlansModel(this.weekPlanGroup, this.weekPlanPersonal);
 }
 
-class WeekPlanModelGroup {
-  List<Map<String, String>> weekPlanGroup;
-  WeekPlanModelGroup(this.weekPlanGroup);
-}
-
-class WeekPlanModelPersonal {
-  List<Map<String, String>> weekPlanPersonal;
-  WeekPlanModelPersonal(this.weekPlanPersonal);
-}
