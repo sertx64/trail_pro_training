@@ -14,83 +14,53 @@ import 'package:trailpro_planning/presentation/authorization_trainer_screen.dart
 import 'package:trailpro_planning/presentation/trainer_screen.dart';
 import 'package:trailpro_planning/presentation/user_list_screen.dart';
 
-final GoRouter router = GoRouter(
-  initialLocation: '/splashscreen',
-  routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) => Authorization(),
-      routes: <RouteBase>[
-        GoRoute(
-          path: 'splashscreen',
-          builder: (BuildContext context, GoRouterState state) =>
-              const SplashScreen(),
-        ),
-        GoRoute(
-            path: 'infoscreen',
-            builder: (BuildContext context, GoRouterState state) =>
-                const InfoScreen(),
-            routes: <RouteBase>[
-              GoRoute(
-                path: 'sitetrailpro',
-                builder: (BuildContext context, GoRouterState state) =>
-                    const SiteTrailpro(),
-              ),
-            ]),
-        GoRoute(
-            path: 'trainerauth',
-            builder: (BuildContext context, GoRouterState state) =>
-                TrainerAuth(),
-            routes: <RouteBase>[
-              GoRoute(
-                  path: 'trainerscreen',
-                  builder: (BuildContext context, GoRouterState state) =>
-                      const TrainerScreen(),
-                  routes: <RouteBase>[
-                    GoRoute(
-                      path: 'adduserscreen',
-                      builder: (BuildContext context, GoRouterState state) =>
-                          AddUserScreen(),
-                    ),
-                    GoRoute(
-                      path: 'dayplantrainer',
-                      builder: (BuildContext context, GoRouterState state) =>
-                          DayPlanTrainer(),
-                    ),
-                    GoRoute(
-                      path: 'userlistscreen',
-                      builder: (BuildContext context, GoRouterState state) =>
-                          UserListScreen(),
-                        routes: <RouteBase>[
-                          GoRoute(
-                            path: 'personalplan',
-                            builder: (BuildContext context, GoRouterState state) =>
-                            const PersonalPlanTrainerScreen(),
-                              routes: <RouteBase>[
-                                GoRoute(
-                                  path: 'personaldayplantrainer',
-                                  builder: (BuildContext context, GoRouterState state) =>
-                                      PersolalDayPlanTrainer(),
-                                ),
-                              ]
-                          ),
-                        ]
-                    ),
-                  ]),
-            ]),
-        GoRoute(
-            path: 'studentscreen',
-            builder: (BuildContext context, GoRouterState state) =>
-                const StudentScreen(),
-            routes: <RouteBase>[
-              GoRoute(
-                path: 'dayplan',
-                builder: (BuildContext context, GoRouterState state) {
-                  return DayPlan();
-                },
-              ),
-            ]),
-      ],
-    ),
-  ],
-);
+final GoRouter router =
+    GoRouter(initialLocation: '/splashscreen', routes: <RouteBase>[
+  GoRoute(
+    path: '/authorization',
+    builder: (BuildContext context, GoRouterState state) =>
+        const Authorization()),
+  GoRoute(
+    path: '/splashscreen',
+    builder: (BuildContext context, GoRouterState state) =>
+        const SplashScreen()),
+  GoRoute(
+    path: '/infoscreen',
+    builder: (BuildContext context, GoRouterState state) => const InfoScreen()),
+  GoRoute(
+    path: '/sitetrailpro',
+    builder: (BuildContext context, GoRouterState state) =>
+        const SiteTrailpro()),
+  GoRoute(
+    path: '/trainerauth',
+    builder: (BuildContext context, GoRouterState state) => TrainerAuth()),
+  GoRoute(
+    path: '/trainerscreen',
+    builder: (BuildContext context, GoRouterState state) =>
+        const TrainerScreen()),
+  GoRoute(
+    path: '/adduserscreen',
+    builder: (BuildContext context, GoRouterState state) => AddUserScreen()),
+  GoRoute(
+    path: '/dayplantrainer',
+    builder: (BuildContext context, GoRouterState state) => const DayPlanTrainer()),
+  GoRoute(
+    path: '/userlistscreen',
+    builder: (BuildContext context, GoRouterState state) =>
+        UserListScreen()),
+  GoRoute(
+    path: '/personalplan',
+    builder: (BuildContext context, GoRouterState state) =>
+        const PersonalPlanTrainerScreen()),
+  GoRoute(
+    path: '/personaldayplantrainer',
+    builder: (BuildContext context, GoRouterState state) =>
+        PersonalDayPlanTrainer()),
+  GoRoute(
+    path: '/studentscreen',
+    builder: (BuildContext context, GoRouterState state) =>
+        const StudentScreen()),
+  GoRoute(
+      path: '/dayplan',
+      builder: (BuildContext context, GoRouterState state) => DayPlan()),
+]);

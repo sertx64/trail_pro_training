@@ -20,7 +20,7 @@ class ReportsWidget extends StatelessWidget {
                   color: Color.fromRGBO(255, 132, 26, 1),
                   strokeWidth: 6,
                 ))
-              : (!value.contains(Management.userLogin))
+              : (!value.contains(Management.userLogin) && Management.userLogin != '')
                   ? SentReportWidget(management.dayPlanStudentGroup['date']!)
                   : SizedBox(
                       height: 300,

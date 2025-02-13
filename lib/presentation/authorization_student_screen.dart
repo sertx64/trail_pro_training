@@ -23,6 +23,7 @@ class _AuthorizationState extends State<Authorization> {
     final pin = box.get('pin', defaultValue: '');
     _login.text = login;
     _pin.text = pin;
+    print('INIT AUTHSCREEN!!!');
     super.initState();
   }
 
@@ -30,12 +31,14 @@ class _AuthorizationState extends State<Authorization> {
   void dispose() {
     _login.dispose();
     _pin.dispose();
+    print('DESPOSE AUTHSCREEN!!!');
     Hive.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('BILD AUTHSCREEN!!!');
     return Scaffold(
         appBar: AppBar(
             actions: [
@@ -43,12 +46,12 @@ class _AuthorizationState extends State<Authorization> {
                 icon: const Icon(
                     color: Color.fromRGBO(255, 132, 26, 1),
                     Icons.fitness_center_rounded),
-                onPressed: () => context.go('/trainerauth'),
+                onPressed: () => context.push('/trainerauth'),
               ),
               IconButton(
                 icon: const Icon(
                     color: Color.fromRGBO(255, 132, 26, 1), Icons.info_outline),
-                onPressed: () => context.go('/infoscreen'),
+                onPressed: () => context.push('/infoscreen'),
               ),
             ],
             centerTitle: true,
@@ -117,7 +120,8 @@ class _AuthorizationState extends State<Authorization> {
                       box.put('login', login);
                       box.put('pin', pin);
                       management.loadWeekPlan(management.yearWeekIndex);
-                      context.go('/studentscreen');
+                      context.push('/studentscreen');
+
                     } else {
                       return;
                     }

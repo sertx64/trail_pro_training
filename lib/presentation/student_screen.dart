@@ -194,7 +194,7 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                     : {
                                         management.newScreenDayPlan(index),
                                         context
-                                            .push('/studentscreen/dayplan'),
+                                            .push('/dayplan'),
                                       };
                               },
                             )),
@@ -223,7 +223,7 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                   backgroundColor: const Color.fromARGB(
                                       200, 1, 57, 104)),
                               onPressed: () {
-                                management.nextWeek();
+                                management.nextWeek('student');
                               },
                               child: const Text(
                                   style: TextStyle(
@@ -241,7 +241,7 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                   backgroundColor: const Color.fromARGB(
                                       200, 1, 57, 104)),
                               onPressed: () {
-                                management.previousWeek();
+                                management.previousWeek('student');
                               },
                               child: const Text(
                                   style: TextStyle(

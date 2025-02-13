@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
 class UserListScreen extends StatelessWidget {
-  const UserListScreen({super.key});
+  UserListScreen({super.key});
+  final Management management = GetIt.instance<Management>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +23,8 @@ class UserListScreen extends StatelessWidget {
             return ListTile(
               title: Text(Management.userList[index]),
               onTap: () {
-                Management.selectedUser = Management.userList[index];
-                context.go(
-                    '/trainerauth/trainerscreen/userlistscreen/personalplan');
+                management.loadWeekPlanTrainerPersonal(management.yearWeekIndex, Management.userList[index]);
+                context.push('/personalplan');
               },
             );
           },

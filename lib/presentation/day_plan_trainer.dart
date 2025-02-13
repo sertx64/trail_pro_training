@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
-import 'package:trailpro_planning/domain/student_report.dart';
 import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
 import 'package:trailpro_planning/presentation/reports_widget.dart';
 
@@ -14,48 +14,45 @@ class DayPlanTrainer extends StatefulWidget {
 }
 
 class _DayPlanTrainerState extends State<DayPlanTrainer> {
-  String? lable =
-      Management.currentWeekPlan[Management.currentDayWeek]['label_training'];
+  final Management management = GetIt.instance<Management>();
 
-  String? description = Management.currentWeekPlan[Management.currentDayWeek]
-      ['description_training'];
-
-  String? date = Management.currentWeekPlan[Management.currentDayWeek]['date'];
-
-  String? day = Management.currentWeekPlan[Management.currentDayWeek]['day'];
-
-  List<String>? reports;
+  final TextEditingController _controllerLabelTraining =
+      TextEditingController();
+  final TextEditingController _controllerDescriptionTraining =
+      TextEditingController();
 
   @override
   void initState() {
-    loadReports();
+    _controllerLabelTraining.text =
+        management.dayPlanStudentGroup['label_training']!;
+    _controllerDescriptionTraining.text =
+        management.dayPlanStudentGroup['description_training']!;
     super.initState();
   }
 
-  void loadReports() async {
-    reports = await StudentReport().getReports(date!);
-    setState(() {});
+  @override
+  void dispose() {
+    _controllerLabelTraining.dispose();
+    _controllerDescriptionTraining.dispose();
+    print('DISPOSE TR DAY!!!!');
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controllerLabelTraining =
-        TextEditingController(text: lable);
-    TextEditingController controllerDescriptionTraining =
-        TextEditingController(text: description);
-
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
           title: Text(
               style: const TextStyle(fontSize: 30, color: Colors.white),
-              'День $day $date'),
+              'День ${management.dayPlanStudentGroup['day']} ${management.dayPlanStudentGroup['date']}'),
           centerTitle: true,
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
-            child: (Management.currentWeek * 10 + Management.currentDayWeek <
+            child: (management.yearWeekIndex * 10 +
+                        management.currentDayWeekIndex <
                     int.parse(yearWeekNow()) * 10 + dayWeekNow())
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,25 +60,20 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                       Text(
                           style: const TextStyle(
                               color: Colors.black, fontSize: 20),
-                          lable!),
+                          management.dayPlanStudentGroup['label_training']!),
                       const SizedBox(
                         height: 10,
                       ),
                       Text(
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),
-                          description!),
+                          management
+                              .dayPlanStudentGroup['description_training']!),
                       const SizedBox(
                         height: 10,
                       ),
                       const Text('Обратная связь:'),
-                      (reports == null)
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                              color: Color.fromRGBO(255, 132, 26, 1),
-                              strokeWidth: 6,
-                            ))
-                          : ReportsWidget(),
+                      ReportsWidget(),
                     ],
                   )
                 : Column(
@@ -104,7 +96,7 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                               fontWeight: FontWeight.w600,
                               color: Color.fromRGBO(1, 57, 104, 1),
                               fontSize: 16),
-                          controller: controllerLabelTraining,
+                          controller: _controllerLabelTraining,
                         ),
                         const SizedBox(height: 8),
                         const Text('Описание'),
@@ -122,7 +114,7 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                               fontWeight: FontWeight.w600,
                               color: Color.fromRGBO(1, 57, 104, 1),
                               fontSize: 16),
-                          controller: controllerDescriptionTraining,
+                          controller: _controllerDescriptionTraining,
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -133,17 +125,21 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                                     backgroundColor:
                                         const Color.fromRGBO(1, 57, 104, 1)),
                                 onPressed: () async {
-                                  Management.currentWeekPlan[Management
-                                          .currentDayWeek]['label_training'] =
-                                      controllerLabelTraining.text;
-                                  Management.currentWeekPlan[Management
-                                          .currentDayWeek]['description_training'] =
-                                      controllerDescriptionTraining.text;
+                                  management.currentWeekPlanGroup[
+                                              management.currentDayWeekIndex]
+                                          ['label_training'] =
+                                      _controllerLabelTraining.text;
+                                  management.currentWeekPlanGroup[
+                                              management.currentDayWeekIndex]
+                                          ['description_training'] =
+                                      _controllerDescriptionTraining.text;
+
+                                  management.updateWeekPlanTrainerGroup();
 
                                   WeekPlanSentList(
                                           'tp_week_plan',
-                                          Management.currentWeek,
-                                          Management.currentWeekPlan)
+                                          management.yearWeekIndex,
+                                          management.currentWeekPlanGroup)
                                       .sentPlan();
                                   context.pop();
                                 },
@@ -153,11 +149,8 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                                     'Сохранить')),
                             ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                    Colors.green),
-                                onPressed: () async {
-
-                                },
+                                    backgroundColor: Colors.green),
+                                onPressed: () async {},
                                 child: const Text(
                                     style: TextStyle(
                                         fontSize: 24, color: Colors.black),

@@ -1,58 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
 
-class PersolalDayPlanTrainer extends StatelessWidget {
-  final String? lable =
-      Management.currentWeekPlan[Management.currentDayWeek]['label_training'];
+class PersonalDayPlanTrainer extends StatefulWidget {
+  const PersonalDayPlanTrainer({super.key});
 
-  final String? description = Management
-      .currentWeekPlan[Management.currentDayWeek]['description_training'];
+  @override
+  State<PersonalDayPlanTrainer> createState() => _PersonalDayPlanTrainerState();
+}
 
-  final String? date =
-      Management.currentWeekPlan[Management.currentDayWeek]['date'];
+class _PersonalDayPlanTrainerState extends State<PersonalDayPlanTrainer> {
+  final Management management = GetIt.instance<Management>();
 
-  final String? day =
-      Management.currentWeekPlan[Management.currentDayWeek]['day'];
+  // final String? lable =
+  //     Management.currentWeekPlan[Management.currentDayWeek]['label_training'];
+  //
+  // final String? description = Management
+  //     .currentWeekPlan[Management.currentDayWeek]['description_training'];
+  //
+  // final String? date =
+  //     Management.currentWeekPlan[Management.currentDayWeek]['date'];
+  //
+  // final String? day =
+  //     Management.currentWeekPlan[Management.currentDayWeek]['day'];
 
-  PersolalDayPlanTrainer({super.key});
+  final TextEditingController _controllerLabelTraining =
+      TextEditingController();
+  final TextEditingController _controllerDescriptionTraining =
+      TextEditingController();
+
+  @override
+  void initState() {
+    _controllerLabelTraining.text =
+    management.dayPlanStudentPersonal['label_training']!;
+    _controllerDescriptionTraining.text =
+    management.dayPlanStudentPersonal['description_training']!;
+    print('INIT PERS DAY!!!!');
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controllerLabelTraining.dispose();
+    _controllerDescriptionTraining.dispose();
+    print('DISPOSE PERS DAY!!!!');
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controllerLabelTraining =
-        TextEditingController(text: lable);
-    TextEditingController controllerDescriptionTraining =
-        TextEditingController(text: description);
-
+    print('BUILD PERS DAY!!!!');
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
           title: Text(
               style: const TextStyle(fontSize: 30, color: Colors.white),
-              'День $day $date'),
+              'День ${management.dayPlanStudentPersonal['day']} ${management.dayPlanStudentPersonal['date']}'),
           centerTitle: true,
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
-            child: (Management.currentWeek * 10 + Management.currentDayWeek <
-                    int.parse(yearWeekNow()) * 10 + dayWeekNow())
+            child: (management.yearWeekIndex * 10 +
+                management.currentDayWeekIndex <
+                int.parse(yearWeekNow()) * 10 + dayWeekNow())
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                           style: const TextStyle(
                               color: Colors.black, fontSize: 20),
-                          lable!),
+                          management.dayPlanStudentPersonal['label_training']!),
                       const SizedBox(
                         height: 10,
                       ),
                       Text(
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),
-                          description!),
+                          management.dayPlanStudentPersonal['description_training']!),
                       const SizedBox(
                         height: 10,
                       ),
@@ -78,7 +106,7 @@ class PersolalDayPlanTrainer extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: Color.fromRGBO(1, 57, 104, 1),
                               fontSize: 16),
-                          controller: controllerLabelTraining,
+                          controller: _controllerLabelTraining,
                         ),
                         const SizedBox(height: 8),
                         const Text('Описание'),
@@ -96,7 +124,7 @@ class PersolalDayPlanTrainer extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: Color.fromRGBO(1, 57, 104, 1),
                               fontSize: 16),
-                          controller: controllerDescriptionTraining,
+                          controller: _controllerDescriptionTraining,
                         ),
                         const SizedBox(height: 8),
                         ElevatedButton(
@@ -105,19 +133,22 @@ class PersolalDayPlanTrainer extends StatelessWidget {
                                 backgroundColor:
                                     const Color.fromRGBO(1, 57, 104, 1)),
                             onPressed: () async {
-                              Management.currentWeekPlan[Management
-                                      .currentDayWeek]['label_training'] =
-                                  controllerLabelTraining.text;
-                              Management.currentWeekPlan[Management
-                                      .currentDayWeek]['description_training'] =
-                                  controllerDescriptionTraining.text;
+                              management.currentWeekPlanPersonal[
+                              management.currentDayWeekIndex]
+                              ['label_training'] =
+                                  _controllerLabelTraining.text;
+                              management.currentWeekPlanPersonal[
+                              management.currentDayWeekIndex]
+                              ['description_training'] =
+                                  _controllerDescriptionTraining.text;
+
+                              management.updateWeekPlanTrainerPersonal();
 
                               WeekPlanSentList(
-                                      Management.selectedUser,
-                                      Management.currentWeek,
-                                      Management.currentWeekPlan)
+                                  management.selUser,
+                                  management.yearWeekIndex,
+                                  management.currentWeekPlanPersonal)
                                   .sentPlan();
-
                               context.pop();
                             },
                             child: const Text(

@@ -29,7 +29,7 @@ class InfoScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 18, color: Colors.black),
                   'Подробнее на нашем сайте:'),
               TextButton(
-                onPressed: () => context.go('/infoscreen/sitetrailpro'),
+                onPressed: () => context.push('/sitetrailpro'),
                 child: const Text(
                     style: TextStyle(
                         fontSize: 30,
