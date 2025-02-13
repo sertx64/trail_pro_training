@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/student_report.dart';
-import 'package:trailpro_planning/presentation/sent_report_widget.dart';
+import 'package:trailpro_planning/presentation/reports/sent_report_widget.dart';
 
 class ReportsWidget extends StatelessWidget {
   ReportsWidget({super.key});

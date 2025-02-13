@@ -112,6 +112,7 @@ final String date;
         ),
         ElevatedButton(
             style: ElevatedButton.styleFrom(
+              elevation: 8,
                 fixedSize: const Size(110, 40),
                 backgroundColor: const Color.fromRGBO(
                     1, 57, 104, 1)),

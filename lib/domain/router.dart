@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:trailpro_planning/presentation/add_user_screen.dart';
-import 'package:trailpro_planning/presentation/authorization_student_screen.dart';
+import 'package:trailpro_planning/presentation/trainer/add_user_screen.dart';
+import 'package:trailpro_planning/presentation/student/authorization_student_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/presentation/day_plan_student.dart';
-import 'package:trailpro_planning/presentation/day_plan_trainer.dart';
+import 'package:trailpro_planning/presentation/student/day_plan_student.dart';
+import 'package:trailpro_planning/presentation/trainer/day_plan_trainer.dart';
 import 'package:trailpro_planning/presentation/info_screen.dart';
-import 'package:trailpro_planning/presentation/personal_day_plan_trainer.dart';
-import 'package:trailpro_planning/presentation/personal_plan_trainer_screen.dart';
+import 'package:trailpro_planning/presentation/trainer/personal_day_plan_trainer.dart';
+import 'package:trailpro_planning/presentation/trainer/personal_plan_trainer_screen.dart';
 import 'package:trailpro_planning/presentation/site_trailpro.dart';
 import 'package:trailpro_planning/presentation/splash_screen.dart';
-import 'package:trailpro_planning/presentation/student_screen.dart';
-import 'package:trailpro_planning/presentation/authorization_trainer_screen.dart';
-import 'package:trailpro_planning/presentation/trainer_screen.dart';
-import 'package:trailpro_planning/presentation/user_list_screen.dart';
+import 'package:trailpro_planning/presentation/student/student_screen.dart';
+import 'package:trailpro_planning/presentation/trainer/authorization_trainer_screen.dart';
+import 'package:trailpro_planning/presentation/trainer/trainer_screen.dart';
+import 'package:trailpro_planning/presentation/trainer/user_list_screen.dart';
 
 final GoRouter router =
     GoRouter(initialLocation: '/splashscreen', routes: <RouteBase>[

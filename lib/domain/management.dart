@@ -4,21 +4,26 @@ import 'package:trailpro_planning/domain/student_report.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 
 class Management {
+  static String userLogin = '';
+  static List<String> authUserList = [];
+  static List<String> userList = [];
+  static Map<String, String> authUserMap = {};
+
   ValueNotifier<WeekPlansModel> weekPlans =
       ValueNotifier<WeekPlansModel>(WeekPlansModel([], []));
-
   ValueNotifier<List<Map<String, String>>> weekPlanGroup =
-  ValueNotifier<List<Map<String, String>>>([]);
-
+      ValueNotifier<List<Map<String, String>>>([]);
   ValueNotifier<List<Map<String, String>>> weekPlanPersonal =
-  ValueNotifier<List<Map<String, String>>>([]);
-
+      ValueNotifier<List<Map<String, String>>>([]);
   ValueNotifier<List<String>> reportsOfDay = ValueNotifier<List<String>>([]);
 
+
+  int yearWeekIndex = int.parse(yearWeekNow());
   String selectedUser = '';
-
-  static String userLogin = '';
-
+  bool isLoadingReports = false;
+  int currentDayWeekIndex = 0;
+  Map<String, String> dayPlanStudentGroup = {};
+  Map<String, String> dayPlanStudentPersonal = {};
   bool isLoadingPlans = false;
   List<Map<String, String>> currentWeekPlanGroup = [];
   List<Map<String, String>> currentWeekPlanPersonal = [];
@@ -62,7 +67,7 @@ class Management {
     weekPlanPersonal.value = currentWeekPlanPersonal;
   }
 
-  int yearWeekIndex = int.parse(yearWeekNow());
+
   void nextWeek(String who) {
     ++yearWeekIndex;
     if (yearWeekIndex == 202453) yearWeekIndex = 202501;
@@ -88,9 +93,7 @@ class Management {
     }
   }
 
-  int currentDayWeekIndex = 0;
-  Map<String, String> dayPlanStudentGroup = {};
-  Map<String, String> dayPlanStudentPersonal = {};
+
 
   void newScreenDayPlan(int dayIndex) {
     dayPlanStudentGroup = currentWeekPlanGroup[dayIndex];
@@ -108,7 +111,7 @@ class Management {
     currentDayWeekIndex = dayIndex;
   }
 
-  bool isLoadingReports = false;
+
   void loadReports() async {
     isLoadingReports = false;
     reportsOfDay.value = [];
@@ -116,10 +119,6 @@ class Management {
         (await StudentReport().getReports(dayPlanStudentGroup['date']!))!;
     isLoadingReports = true;
   }
-
-  static List<String> authUserList = [];
-  static List<String> userList = [];
-  static Map<String, String> authUserMap = {};
 }
 
 class WeekPlansModel {
@@ -127,4 +126,3 @@ class WeekPlansModel {
   List<Map<String, String>> weekPlanPersonal;
   WeekPlansModel(this.weekPlanGroup, this.weekPlanPersonal);
 }
-

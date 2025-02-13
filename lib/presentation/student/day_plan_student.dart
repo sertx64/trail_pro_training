@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
-import 'package:trailpro_planning/presentation/reports_widget.dart';
+import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
 class DayPlan extends StatelessWidget {
   DayPlan({super.key});
@@ -33,7 +33,7 @@ class DayPlan extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('групповая тренировка'),
+                      const Text('Групповая тренировка'),
                       Text(
                           style: const TextStyle(
                               color: Color.fromRGBO(255, 132, 26, 1),

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
-import 'package:trailpro_planning/presentation/reports_widget.dart';
+import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
 class DayPlanTrainer extends StatefulWidget {
   const DayPlanTrainer({super.key});
