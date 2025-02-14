@@ -24,7 +24,7 @@ class TrainerScreen extends StatelessWidget {
               IconButton(
                 icon: const Icon(
                     color: Color.fromRGBO(255, 132, 26, 1), Icons.person_add),
-                onPressed: () => context.go('/adduserscreen'),
+                onPressed: () => context.push('/adduserscreen'),
               ),
               IconButton(
                 icon: const Icon(

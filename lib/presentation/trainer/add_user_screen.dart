@@ -73,7 +73,7 @@ class AddUserScreen extends StatelessWidget {
                     return;
                   } else {
                     Users().addUser(_login.text, _pin.text);
-                    context.go('/trainerauth/trainerscreen');
+                    context.go('/trainerscreen');
                   }
                 },
                 child: const Text(
