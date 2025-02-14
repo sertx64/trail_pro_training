@@ -23,6 +23,7 @@ class _AuthorizationState extends State<Authorization> {
     Map<String, String> aum = Management.authUserMap;
     if (aum.containsKey(login)) {
       if (pin == aum[login]) {
+        management.setNowYearWeek();
         Management.userLogin = login;
         box.put('login', login);
         box.put('pin', pin);
