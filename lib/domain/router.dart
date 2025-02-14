@@ -37,7 +37,7 @@ final GoRouter router =
   GoRoute(
     path: '/trainerscreen',
     builder: (BuildContext context, GoRouterState state) =>
-        const TrainerScreen()),
+        TrainerScreen()),
   GoRoute(
     path: '/adduserscreen',
     builder: (BuildContext context, GoRouterState state) => AddUserScreen()),

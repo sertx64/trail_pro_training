@@ -5,7 +5,9 @@ import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
 class TrainerScreen extends StatelessWidget {
-  const TrainerScreen({super.key});
+  TrainerScreen({super.key});
+
+  final Management management = GetIt.instance<Management>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,15 @@ class TrainerScreen extends StatelessWidget {
               IconButton(
                 icon: const Icon(
                     color: Color.fromRGBO(255, 132, 26, 1), Icons.person_add),
-                onPressed: () => context.push('/adduserscreen'),
+                onPressed: () => context.go('/adduserscreen'),
+              ),
+              IconButton(
+                icon: const Icon(
+                    color: Color.fromRGBO(255, 132, 26, 1), Icons.exit_to_app),
+                onPressed: () {
+                  management.setNowYearWeek();
+                  context.go('/authorization');
+                },
               ),
             ],
             centerTitle: true,
@@ -38,6 +48,20 @@ class WeekPlanTrainerWidget extends StatelessWidget {
   WeekPlanTrainerWidget({super.key});
 
   final Management management = GetIt.instance<Management>();
+
+  void goToDayTrainer(BuildContext context, int index, String lableTrain) {
+    (lableTrain == '' &&
+            management.yearWeekIndex * 10 + index <
+                int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow())
+        ? null
+        : {
+            management.newScreenDayPlanGroupTrainer(index),
+            if (management.yearWeekIndex * 10 + index <
+                int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow())
+              management.loadReports(),
+            context.push('/dayplantrainer')
+          };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,16 +79,15 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                   child: Stack(children: [
                     ListView.separated(
                       itemBuilder: (context, index) {
-                        Map<String, String> dayPlan =
-                            value[index];
+                        Map<String, String> dayPlan = value[index];
                         return Container(
                             decoration: BoxDecoration(
                               color: (management.yearWeekIndex * 10 + index <
-                                      int.parse(yearWeekNow()) * 10 +
-                                          dayWeekNow() -
+                                      int.parse(DatePasing().yearWeekNow()) * 10 +
+                                          DatePasing().dayWeekNow() -
                                           1)
                                   ? Colors.grey[350]
-                                  : (dayPlan['date'] == dateNow())
+                                  : (dayPlan['date'] == DatePasing().dateNow())
                                       ? Colors.green[100]
                                       : Colors.white,
                               border: Border.all(
@@ -153,17 +176,8 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              onTap: () {
-                                (dayPlan['label_training'] == '' && management.yearWeekIndex * 10 +
-                                    index <
-                                    int.parse(yearWeekNow()) * 10 + dayWeekNow())
-                                    ? null
-                                    : {
-                                        management.newScreenDayPlanGroupTrainer(
-                                            index),
-                                        context.push('/dayplantrainer')
-                                      };
-                              },
+                              onTap: () => goToDayTrainer(context, index,
+                                    (dayPlan['label_training']!)),
                             ));
                       },
                       itemCount: 7,

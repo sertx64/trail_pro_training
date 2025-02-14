@@ -11,6 +11,7 @@ class UserListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+
             centerTitle: true,
             title: const Text(
                 style: TextStyle(fontSize: 30, color: Colors.white),
@@ -21,9 +22,13 @@ class UserListScreen extends StatelessWidget {
           separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(Management.userList[index]),
+              title: Text(
+                  style: const TextStyle(fontSize: 20, color: Colors.brown),
+                  Management.userList[index]),
               onTap: () {
-                management.loadWeekPlanTrainerPersonal(management.yearWeekIndex, Management.userList[index]);
+                management.setNowYearWeek();
+                management.loadWeekPlanTrainerPersonal(
+                    management.yearWeekIndex, Management.userList[index]);
                 context.push('/personalplan');
               },
             );

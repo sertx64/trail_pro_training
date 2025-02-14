@@ -15,17 +15,19 @@ class PersonalDayPlanTrainer extends StatefulWidget {
 class _PersonalDayPlanTrainerState extends State<PersonalDayPlanTrainer> {
   final Management management = GetIt.instance<Management>();
 
-  // final String? lable =
-  //     Management.currentWeekPlan[Management.currentDayWeek]['label_training'];
-  //
-  // final String? description = Management
-  //     .currentWeekPlan[Management.currentDayWeek]['description_training'];
-  //
-  // final String? date =
-  //     Management.currentWeekPlan[Management.currentDayWeek]['date'];
-  //
-  // final String? day =
-  //     Management.currentWeekPlan[Management.currentDayWeek]['day'];
+  void savePlanDay() {
+    management.currentWeekPlanPersonal[management.currentDayWeekIndex]
+        ['label_training'] = _controllerLabelTraining.text;
+    management.currentWeekPlanPersonal[management.currentDayWeekIndex]
+        ['description_training'] = _controllerDescriptionTraining.text;
+
+    management.updateWeekPlanTrainerPersonal();
+
+    WeekPlanSentList(management.selectedUser, management.yearWeekIndex,
+            management.currentWeekPlanPersonal)
+        .sentPlan();
+    context.pop();
+  }
 
   final TextEditingController _controllerLabelTraining =
       TextEditingController();
@@ -35,10 +37,9 @@ class _PersonalDayPlanTrainerState extends State<PersonalDayPlanTrainer> {
   @override
   void initState() {
     _controllerLabelTraining.text =
-    management.dayPlanStudentPersonal['label_training']!;
+        management.dayPlanStudentPersonal['label_training']!;
     _controllerDescriptionTraining.text =
-    management.dayPlanStudentPersonal['description_training']!;
-    print('INIT PERS DAY!!!!');
+        management.dayPlanStudentPersonal['description_training']!;
     super.initState();
   }
 
@@ -52,7 +53,6 @@ class _PersonalDayPlanTrainerState extends State<PersonalDayPlanTrainer> {
 
   @override
   Widget build(BuildContext context) {
-    print('BUILD PERS DAY!!!!');
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
@@ -65,8 +65,8 @@ class _PersonalDayPlanTrainerState extends State<PersonalDayPlanTrainer> {
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
             child: (management.yearWeekIndex * 10 +
-                management.currentDayWeekIndex <
-                int.parse(yearWeekNow()) * 10 + dayWeekNow())
+                        management.currentDayWeekIndex <
+                    int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow())
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -80,7 +80,8 @@ class _PersonalDayPlanTrainerState extends State<PersonalDayPlanTrainer> {
                       Text(
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),
-                          management.dayPlanStudentPersonal['description_training']!),
+                          management
+                              .dayPlanStudentPersonal['description_training']!),
                       const SizedBox(
                         height: 10,
                       ),
@@ -132,25 +133,7 @@ class _PersonalDayPlanTrainerState extends State<PersonalDayPlanTrainer> {
                                 //fixedSize: const Size(200, 50),
                                 backgroundColor:
                                     const Color.fromRGBO(1, 57, 104, 1)),
-                            onPressed: () async {
-                              management.currentWeekPlanPersonal[
-                              management.currentDayWeekIndex]
-                              ['label_training'] =
-                                  _controllerLabelTraining.text;
-                              management.currentWeekPlanPersonal[
-                              management.currentDayWeekIndex]
-                              ['description_training'] =
-                                  _controllerDescriptionTraining.text;
-
-                              management.updateWeekPlanTrainerPersonal();
-
-                              WeekPlanSentList(
-                                  management.selectedUser,
-                                  management.yearWeekIndex,
-                                  management.currentWeekPlanPersonal)
-                                  .sentPlan();
-                              context.pop();
-                            },
+                            onPressed: savePlanDay,
                             child: const Text(
                                 style: TextStyle(
                                     fontSize: 24, color: Colors.white),

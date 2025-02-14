@@ -43,7 +43,6 @@ class _AuthorizationState extends State<Authorization> {
     final pin = box.get('pin', defaultValue: '');
     _login.text = login;
     _pin.text = pin;
-    print('INIT AUTHSCREEN!!!');
     //Future.delayed(const Duration(seconds: 4), () => goToStudentScreen);
     super.initState();
   }
@@ -58,7 +57,6 @@ class _AuthorizationState extends State<Authorization> {
 
   @override
   Widget build(BuildContext context) {
-    print('BILD AUTHSCREEN!!!');
     return Scaffold(
         appBar: AppBar(
             actions: [

@@ -18,7 +18,7 @@ class Management {
   ValueNotifier<List<String>> reportsOfDay = ValueNotifier<List<String>>([]);
 
 
-  int yearWeekIndex = int.parse(yearWeekNow());
+  int yearWeekIndex = int.parse(DatePasing().yearWeekNow());
   String selectedUser = '';
   bool isLoadingReports = false;
   int currentDayWeekIndex = 0;
@@ -41,13 +41,13 @@ class Management {
   }
 
   void loadWeekPlanTrainerPersonal(int yWid, String selecteduser) async {
+    selectedUser = selecteduser;
     isLoadingPlans = false;
     weekPlanPersonal.value = [];
     currentWeekPlanPersonal =
         await WeekPlanMap(selecteduser, yWid).weekPlanStudent();
     weekPlanPersonal.value = currentWeekPlanPersonal;
     isLoadingPlans = true;
-    selectedUser = selecteduser;
   }
 
   void loadWeekPlanTrainerGroup(int yWid) async {
@@ -57,6 +57,10 @@ class Management {
         await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
     weekPlanGroup.value = currentWeekPlanGroup;
     isLoadingPlans = true;
+  }
+
+  void setNowYearWeek() {
+    yearWeekIndex = int.parse(DatePasing().yearWeekNow());
   }
 
   void updateWeekPlanTrainerGroup() async {
@@ -114,6 +118,7 @@ class Management {
 
   void loadReports() async {
     isLoadingReports = false;
+    print('LOAD REPORTS!!!');
     reportsOfDay.value = [];
     reportsOfDay.value =
         (await StudentReport().getReports(dayPlanStudentGroup['date']!))!;

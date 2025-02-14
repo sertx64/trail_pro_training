@@ -14,8 +14,7 @@ class StudentScreen extends StatelessWidget {
           actions: [
             IconButton(
               icon: const Icon(
-                  color: Color.fromRGBO(255, 132, 26, 1),
-                  Icons.exit_to_app),
+                  color: Color.fromRGBO(255, 132, 26, 1), Icons.exit_to_app),
               onPressed: () => context.go('/authorization'),
             ),
           ],
@@ -66,11 +65,13 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                   ),
                                 ],
                                 color: (management.yearWeekIndex * 10 + index <
-                                        int.parse(yearWeekNow()) * 10 +
-                                            dayWeekNow() -
+                                        int.parse(DatePasing().yearWeekNow()) *
+                                                10 +
+                                            DatePasing().dayWeekNow() -
                                             1)
                                     ? Colors.grey[350]
-                                    : (dayPlanGroup['date'] == dateNow())
+                                    : (dayPlanGroup['date'] ==
+                                            DatePasing().dateNow())
                                         ? Colors.green[100]
                                         : Colors.white,
                                 border: Border.all(
@@ -131,7 +132,7 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                                 dayPlanGroup['date']!),
                                             const SizedBox(width: 10),
                                             if (dayPlanGroup['date'] ==
-                                                dateNow())
+                                                DatePasing().dateNow())
                                               const Text(
                                                   style: TextStyle(
                                                     color: Colors.green,

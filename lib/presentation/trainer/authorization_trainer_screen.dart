@@ -56,14 +56,22 @@ class TrainerAuth extends StatelessWidget {
                   onPressed: () {
                     management
                         .loadWeekPlanTrainerGroup(management.yearWeekIndex);
-                    String pinCode = _pin.text;
-                    (pinCode == '1050')
-                        ? context.push('/trainerscreen')
-                        : () {};
+                    (_pin.text == '1050') ? context.go('/trainerscreen') : () {};
                   },
                   child: const Text(
                       style: TextStyle(fontSize: 24, color: Colors.white),
-                      'Вход'))
+                      'Вход')),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      fixedSize: const Size(200, 50),
+                      backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+                  onPressed: () {
+                    context.go('/authorization');
+                  },
+                  child: const Text(
+                      style: TextStyle(fontSize: 24, color: Colors.white),
+                      'Назад'))
             ],
           ),
         )));

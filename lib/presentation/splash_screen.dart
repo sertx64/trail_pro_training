@@ -7,7 +7,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    createAuthUserMap();
+    Users().createAuthUserMap();
     Future.delayed(const Duration(seconds: 4), () => context.go('/authorization'));
     return Scaffold(
       body: Container(

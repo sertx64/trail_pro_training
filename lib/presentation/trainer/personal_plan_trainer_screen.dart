@@ -6,7 +6,9 @@ import 'package:trailpro_planning/domain/date_format.dart';
 
 class PersonalPlanTrainerScreen extends StatelessWidget {
   PersonalPlanTrainerScreen({super.key});
+
   final Management management = GetIt.instance<Management>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +33,16 @@ class PersonalWeekPlanTrainerWidget extends StatelessWidget {
 
   final Management management = GetIt.instance<Management>();
 
+  void goToDayPlan(BuildContext context, int index) {
+    (management.yearWeekIndex * 10 + index <
+            int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow())
+        ? null
+        : {
+            management.newScreenDayPlanPersonalTrainer(index),
+            context.push('/personaldayplantrainer'),
+          };
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<Map<String, String>>>(
@@ -48,16 +60,15 @@ class PersonalWeekPlanTrainerWidget extends StatelessWidget {
                     children: [
                       ListView.separated(
                         itemBuilder: (context, index) {
-                          Map<String, String> dayPlan =
-                              value[index];
+                          Map<String, String> dayPlan = value[index];
                           return Container(
                               decoration: BoxDecoration(
                                 color: (management.yearWeekIndex * 10 + index <
-                                        int.parse(yearWeekNow()) * 10 +
-                                            dayWeekNow() -
+                                        int.parse(DatePasing().yearWeekNow()) * 10 +
+                                            DatePasing().dayWeekNow() -
                                             1)
                                     ? Colors.grey[350]
-                                    : (dayPlan['date'] == dateNow())
+                                    : (dayPlan['date'] == DatePasing().dateNow())
                                         ? Colors.green[100]
                                         : Colors.white,
                                 border: Border.all(
@@ -149,19 +160,7 @@ class PersonalWeekPlanTrainerWidget extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                onTap: () {
-                                  (management.yearWeekIndex * 10 + index <
-                                          int.parse(yearWeekNow()) * 10 +
-                                              dayWeekNow())
-                                      ? null
-                                      : {
-                                          management
-                                              .newScreenDayPlanPersonalTrainer(
-                                                  index),
-                                          context
-                                              .push('/personaldayplantrainer'),
-                                        };
-                                },
+                                onTap: () => goToDayPlan(context, index),
                               ));
                         },
                         itemCount: 7,

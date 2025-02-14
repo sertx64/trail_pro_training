@@ -53,7 +53,7 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
           child: SingleChildScrollView(
             child: (management.yearWeekIndex * 10 +
                         management.currentDayWeekIndex <
-                    int.parse(yearWeekNow()) * 10 + dayWeekNow())
+                    int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow())
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -141,7 +141,7 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                                           management.yearWeekIndex,
                                           management.currentWeekPlanGroup)
                                       .sentPlan();
-                                  context.pop();
+                                  context.go('/trainerscreen');
                                 },
                                 child: const Text(
                                     style: TextStyle(
