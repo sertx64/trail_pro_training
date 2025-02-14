@@ -11,6 +11,14 @@ class StudentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          actions: [
+            IconButton(
+              icon: const Icon(
+                  color: Color.fromRGBO(255, 132, 26, 1),
+                  Icons.exit_to_app),
+              onPressed: () => context.go('/authorization'),
+            ),
+          ],
           centerTitle: true,
           title: const Text(
               style: TextStyle(fontSize: 27, color: Colors.white),
@@ -126,10 +134,10 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                                 dateNow())
                                               const Text(
                                                   style: TextStyle(
-                                                      color: Colors.green,
-                                                      fontSize: 20,
-                                                    fontWeight:
-                                                    FontWeight.w800,),
+                                                    color: Colors.green,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w800,
+                                                  ),
                                                   'Сегодня!'),
                                           ],
                                         ),
@@ -206,6 +214,7 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                       ? null
                                       : {
                                           management.newScreenDayPlan(index),
+                                          management.loadReports(),
                                           context.push('/dayplan'),
                                         };
                                 },

@@ -18,12 +18,39 @@ final String date;
     String textFeedback = '';
     double _load = 3.0;
     double _feeling = 3.0;
+    final TextEditingController controllerFeedback =
+    TextEditingController();
+
+    void sentReport() {
+      if (controllerFeedback.text == '') {
+        controllerFeedback.text =
+        'нет комментария';
+      }
+      StudentReport().sentReport(
+          widget.date,
+          _load.toStringAsFixed(0),
+          _feeling.toStringAsFixed(0),
+          controllerFeedback.text);
+      context.go('/studentscreen');
+    }
+
+    @override
+  void initState() {
+      controllerFeedback.text = textFeedback;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controllerFeedback.dispose();
+    print('DISPOSE REPORT WIDGET!');
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    final TextEditingController controllerFeedback =
-    TextEditingController(text: textFeedback);
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,18 +143,7 @@ final String date;
                 fixedSize: const Size(110, 40),
                 backgroundColor: const Color.fromRGBO(
                     1, 57, 104, 1)),
-            onPressed: () {
-              if (controllerFeedback.text == '') {
-                controllerFeedback.text =
-                'нет комментария';
-              }
-              StudentReport().sentReport(
-                  widget.date,
-                  _load.toStringAsFixed(0),
-                  _feeling.toStringAsFixed(0),
-                  controllerFeedback.text);
-              context.pop;
-            },
+            onPressed: sentReport,
             child: const Text(
                 style: TextStyle(
                     fontSize: 20,

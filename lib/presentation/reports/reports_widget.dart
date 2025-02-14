@@ -10,7 +10,6 @@ class ReportsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    management.loadReports();
     return ValueListenableBuilder<List<String>>(
         valueListenable: management.reportsOfDay,
         builder: (context, value, child) {

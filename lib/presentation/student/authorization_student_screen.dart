@@ -17,6 +17,26 @@ class _AuthorizationState extends State<Authorization> {
   final TextEditingController _pin = TextEditingController();
   final TextEditingController _login = TextEditingController();
 
+  void goToStudentScreen() {
+    String login = _login.text;
+    String pin = _pin.text;
+    Map<String, String> aum = Management.authUserMap;
+    if (aum.containsKey(login)) {
+      if (pin == aum[login]) {
+        Management.userLogin = login;
+        box.put('login', login);
+        box.put('pin', pin);
+        management.loadWeekPlan(management.yearWeekIndex);
+        context.go('/studentscreen');
+
+      } else {
+        return;
+      }
+    } else {
+      return;
+    }
+  }
+
   @override
   void initState() {
     final login = box.get('login', defaultValue: '');
@@ -24,6 +44,7 @@ class _AuthorizationState extends State<Authorization> {
     _login.text = login;
     _pin.text = pin;
     print('INIT AUTHSCREEN!!!');
+    //Future.delayed(const Duration(seconds: 4), () => goToStudentScreen);
     super.initState();
   }
 
@@ -32,7 +53,6 @@ class _AuthorizationState extends State<Authorization> {
     _login.dispose();
     _pin.dispose();
     print('DESPOSE AUTHSCREEN!!!');
-    Hive.close();
     super.dispose();
   }
 
@@ -110,25 +130,7 @@ class _AuthorizationState extends State<Authorization> {
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(200, 50),
                     backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-                onPressed: () {
-                  String login = _login.text;
-                  String pin = _pin.text;
-                  Map<String, String> aum = Management.authUserMap;
-                  if (aum.containsKey(login)) {
-                    if (pin == aum[login]) {
-                      Management.userLogin = login;
-                      box.put('login', login);
-                      box.put('pin', pin);
-                      management.loadWeekPlan(management.yearWeekIndex);
-                      context.push('/studentscreen');
-
-                    } else {
-                      return;
-                    }
-                  } else {
-                    return;
-                  }
-                },
+                onPressed: goToStudentScreen,
                 child: const Text(
                     style: TextStyle(fontSize: 24, color: Colors.white),
                     'Войти')),
