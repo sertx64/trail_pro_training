@@ -1,42 +1,36 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/domain/student_report.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trailpro_planning/domain/report_cubit.dart';
+import 'package:trailpro_planning/domain/sent_report.dart';
 
 class SentReportWidget extends StatefulWidget {
   const SentReportWidget(this.date, {super.key});
-final String date;
+  final String date;
 
   @override
   State<SentReportWidget> createState() => _SentReportWidgetState();
 }
 
-  class _SentReportWidgetState extends State<SentReportWidget> {
+class _SentReportWidgetState extends State<SentReportWidget> {
+  List<String>? reports;
+  String textFeedback = '';
+  double _load = 3.0;
+  double _feeling = 3.0;
+  final TextEditingController controllerFeedback = TextEditingController();
 
-    List<String>? reports;
-    String textFeedback = '';
-    double _load = 3.0;
-    double _feeling = 3.0;
-    final TextEditingController controllerFeedback =
-    TextEditingController();
-
-    void sentReport() {
-      if (controllerFeedback.text == '') {
-        controllerFeedback.text =
-        'нет комментария';
-      }
-      StudentReport().sentReport(
-          widget.date,
-          _load.toStringAsFixed(0),
-          _feeling.toStringAsFixed(0),
-          controllerFeedback.text);
-      context.go('/studentscreen');
+  void sentReport() {
+    if (controllerFeedback.text == '') {
+      controllerFeedback.text = 'нет комментария';
     }
+    SentStudentReport().sentReport(widget.date, _load.toStringAsFixed(0),
+        _feeling.toStringAsFixed(0), controllerFeedback.text);
+    context.read<ReportCubit>().renewReportsOnWidget(_load.toStringAsFixed(0),
+        _feeling.toStringAsFixed(0), controllerFeedback.text);
+  }
 
-    @override
+  @override
   void initState() {
-      controllerFeedback.text = textFeedback;
+    controllerFeedback.text = textFeedback;
     super.initState();
   }
 
@@ -49,24 +43,17 @@ final String date;
 
   @override
   Widget build(BuildContext context) {
-
-
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-            style: const TextStyle(
-                color: Colors.red, fontSize: 20),
+            style: const TextStyle(color: Colors.red, fontSize: 20),
             'Нагрузка: ${_load.toStringAsFixed(0)}'),
         SliderTheme(
           data: SliderThemeData(
             trackHeight: 15.0,
-            thumbShape: const RoundSliderThumbShape(
-                enabledThumbRadius: 15.0),
-            overlayShape:
-            const RoundSliderOverlayShape(
-                overlayRadius: 20.0),
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 15.0),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 20.0),
             activeTrackColor: Colors.red,
             inactiveTrackColor: Colors.grey.withOpacity(0.5),
             overlayColor: Colors.green.withAlpha(52),
@@ -77,8 +64,7 @@ final String date;
             divisions: 4,
             value: _load,
             label: _load.toStringAsFixed(0),
-            thumbColor:
-            const Color.fromRGBO(255, 132, 26, 1),
+            thumbColor: const Color.fromRGBO(255, 132, 26, 1),
             onChanged: (newValue) {
               textFeedback = controllerFeedback.text;
               _load = newValue;
@@ -88,17 +74,13 @@ final String date;
         ),
         const SizedBox(height: 10),
         Text(
-            style: const TextStyle(
-                color: Colors.blue, fontSize: 20),
+            style: const TextStyle(color: Colors.blue, fontSize: 20),
             'Самочуствие: ${_feeling.toStringAsFixed(0)}'),
         SliderTheme(
           data: SliderThemeData(
             trackHeight: 15.0,
-            thumbShape: const RoundSliderThumbShape(
-                enabledThumbRadius: 15.0),
-            overlayShape:
-            const RoundSliderOverlayShape(
-                overlayRadius: 20.0),
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 15.0),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 20.0),
             activeTrackColor: Colors.blue,
             inactiveTrackColor: Colors.grey.withOpacity(0.5),
             overlayColor: Colors.green.withAlpha(52),
@@ -109,8 +91,7 @@ final String date;
             divisions: 4,
             value: _feeling,
             label: _feeling.toStringAsFixed(0),
-            thumbColor:
-            const Color.fromRGBO(255, 132, 26, 1),
+            thumbColor: const Color.fromRGBO(255, 132, 26, 1),
             onChanged: (newValue) {
               textFeedback = controllerFeedback.text;
               _feeling = newValue;
@@ -127,8 +108,7 @@ final String date;
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                  Radius.circular(16.0)),
+              borderRadius: BorderRadius.all(Radius.circular(16.0)),
             ),
           ),
           style: const TextStyle(
@@ -139,22 +119,15 @@ final String date;
         ),
         ElevatedButton(
             style: ElevatedButton.styleFrom(
-              elevation: 8,
+                elevation: 8,
                 fixedSize: const Size(110, 40),
-                backgroundColor: const Color.fromRGBO(
-                    1, 57, 104, 1)),
+                backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
             onPressed: sentReport,
             child: const Text(
                 style: TextStyle(
-                    fontSize: 20,
-                    color: Color.fromRGBO(
-                        255, 132, 26, 1)),
+                    fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
                 'Отчёт')),
       ],
     );
   }
-
-  }
-
-
-
+}

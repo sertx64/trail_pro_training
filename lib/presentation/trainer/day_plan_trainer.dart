@@ -73,7 +73,7 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                         height: 10,
                       ),
                       const Text('Обратная связь:'),
-                      ReportsWidget(),
+                      ReportsWidget(management.dayPlanStudentGroup['date']!),
                     ],
                   )
                 : Column(

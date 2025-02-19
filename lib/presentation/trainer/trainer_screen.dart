@@ -56,9 +56,6 @@ class WeekPlanTrainerWidget extends StatelessWidget {
         ? null
         : {
             management.newScreenDayPlanGroupTrainer(index),
-            if (management.yearWeekIndex * 10 + index <
-                int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow())
-              management.loadReports(),
             context.push('/dayplantrainer')
           };
   }

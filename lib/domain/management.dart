@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
-import 'package:trailpro_planning/domain/student_report.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 
 class Management {
@@ -15,12 +14,9 @@ class Management {
       ValueNotifier<List<Map<String, String>>>([]);
   ValueNotifier<List<Map<String, String>>> weekPlanPersonal =
       ValueNotifier<List<Map<String, String>>>([]);
-  ValueNotifier<List<String>> reportsOfDay = ValueNotifier<List<String>>([]);
-
 
   int yearWeekIndex = int.parse(DatePasing().yearWeekNow());
   String selectedUser = '';
-  bool isLoadingReports = false;
   int currentDayWeekIndex = 0;
   Map<String, String> dayPlanStudentGroup = {};
   Map<String, String> dayPlanStudentPersonal = {};
@@ -33,11 +29,23 @@ class Management {
     weekPlans.value = WeekPlansModel([], []);
     currentWeekPlanGroup =
         await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
+
+    //костыль помогающий грузить в 2 раза быстрее групповой план тренировок
+    weekPlans.value = WeekPlansModel(currentWeekPlanGroup, [
+      {'label_training': ''},
+      {'label_training': ''},
+      {'label_training': ''},
+      {'label_training': ''},
+      {'label_training': ''},
+      {'label_training': ''},
+      {'label_training': ''},
+    ]);
+    isLoadingPlans = true;
+
     currentWeekPlanPersonal =
         await WeekPlanMap(userLogin, yWid).weekPlanStudent();
     weekPlans.value =
         WeekPlansModel(currentWeekPlanGroup, currentWeekPlanPersonal);
-    isLoadingPlans = true;
   }
 
   void loadWeekPlanTrainerPersonal(int yWid, String selecteduser) async {
@@ -71,7 +79,6 @@ class Management {
     weekPlanPersonal.value = currentWeekPlanPersonal;
   }
 
-
   void nextWeek(String who) {
     ++yearWeekIndex;
     if (yearWeekIndex == 202453) yearWeekIndex = 202501;
@@ -97,8 +104,6 @@ class Management {
     }
   }
 
-
-
   void newScreenDayPlan(int dayIndex) {
     dayPlanStudentGroup = currentWeekPlanGroup[dayIndex];
     dayPlanStudentPersonal = currentWeekPlanPersonal[dayIndex];
@@ -113,16 +118,6 @@ class Management {
   void newScreenDayPlanPersonalTrainer(int dayIndex) {
     dayPlanStudentPersonal = currentWeekPlanPersonal[dayIndex];
     currentDayWeekIndex = dayIndex;
-  }
-
-
-  void loadReports() async {
-    isLoadingReports = false;
-    print('LOAD REPORTS!!!');
-    reportsOfDay.value = [];
-    reportsOfDay.value =
-        (await StudentReport().getReports(dayPlanStudentGroup['date']!))!;
-    isLoadingReports = true;
   }
 }
 

@@ -75,7 +75,7 @@ class DayPlan extends StatelessWidget {
                           int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow())
                       ? true
                       : false,
-                  child: ReportsWidget(),
+                  child: ReportsWidget(dayPlanGroup['date']!),
                 ),
               ],
             ),
