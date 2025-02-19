@@ -72,7 +72,7 @@ class DayPlan extends StatelessWidget {
                 Visibility(
                   visible: (management.yearWeekIndex * 10 +
                               management.currentDayWeekIndex <
-                          int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow())
+                          int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow() && dayPlanGroup['label_training']! != '')
                       ? true
                       : false,
                   child: ReportsWidget(dayPlanGroup['date']!),
