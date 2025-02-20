@@ -28,6 +28,26 @@ class _SentReportWidgetState extends State<SentReportWidget> {
         _feeling.toStringAsFixed(0), controllerFeedback.text);
   }
 
+  void _showInfoModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Справка'),
+          content: const Text('Это пример модального окна с информацией.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Закрываем модальное окно
+              },
+              child: const Center(child: Text('Понятно')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     controllerFeedback.text = textFeedback;
@@ -46,6 +66,21 @@ class _SentReportWidgetState extends State<SentReportWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Row(
+          children: [
+            const Text('Оставьте обратную связь'),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    elevation: 8,
+                    fixedSize: const Size(110, 40),
+                    backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+                onPressed: () {
+                  _showInfoModal(context); // Открываем модальное окно
+                },
+                child: const Text('справка')),
+          ],
+        ),
+        Text('Оставьте обратную связь'),
         Text(
             style: const TextStyle(color: Colors.red, fontSize: 20),
             'Нагрузка: ${_load.toStringAsFixed(0)}'),
