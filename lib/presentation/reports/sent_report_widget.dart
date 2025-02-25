@@ -28,19 +28,196 @@ class _SentReportWidgetState extends State<SentReportWidget> {
         _feeling.toStringAsFixed(0), controllerFeedback.text);
   }
 
+  void sentReportSkip() {
+    SentStudentReport()
+        .sentReport(widget.date, '0', '0', 'Пропустил тренировку. День отдыха');
+    context
+        .read<ReportCubit>()
+        .renewReportsOnWidget('0', '0', 'Пропустил тренировку. День отдыха');
+  }
+
   void _showInfoModal(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Справка'),
-          content: const Text('Это пример модального окна с информацией.'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                    style: TextStyle(color: Colors.red, fontSize: 20),
+                    'Нагрузка'),
+                const Text(
+                    'Воспринимаемые усилия позволяют измерить по шкале от 1 до 5 объем усилий, которые, по вашему мнению, вы приложили к занятию. Диапазон шкалы: от «Очень легко» до «Очень тяжело».'),
+                const Text(
+                    style: TextStyle(color: Colors.blue, fontSize: 12),
+                    '1 - Очень легко'),
+                const Text(
+                    style: TextStyle(color: Colors.green, fontSize: 12),
+                    '2 - Легко'),
+                Text(
+                    style: TextStyle(color: Colors.orange[700], fontSize: 12),
+                    '3 - Умеренно'),
+                const Text(
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                    '4 - Трудно'),
+                Text(
+                    style: TextStyle(color: Colors.red[700], fontSize: 12),
+                    '5 - Очень тяжело'),
+                const SizedBox(height: 10),
+                const Text(
+                    style: TextStyle(color: Colors.blue, fontSize: 20),
+                    'Самочуствие'),
+                const Text(
+                    'Бывают хорошие и плохие дни, нужно быть готовым к тому, что вы не будете чувствовать себя отлично во время каждого занятия. Оцените своё самочуствие по пятибалльной шкале.'),
+                const Text(
+                    style: TextStyle(fontSize: 14), '1 - 😞 Очень слабым'),
+                const Text(style: TextStyle(fontSize: 14), '2 - ☹️ Слабым'),
+                const Text(style: TextStyle(fontSize: 14), '3 - 😐 Нормально'),
+                const Text(style: TextStyle(fontSize: 14), '4 - 🙂 Сильным'),
+                const Text(
+                    style: TextStyle(fontSize: 14), '5 - 😄 Очень сильным'),
+              ],
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Закрываем модальное окно
+                Navigator.of(context).pop();
               },
-              child: const Center(child: Text('Понятно')),
+              child: const Center(
+                  child:
+                      Text(style: TextStyle(color: Colors.black), 'Понятно')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSentReportModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Отправить отчёт?'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                        style: const TextStyle(color: Colors.red),
+                        'Нагрузка ${_load.toStringAsFixed(0)}: '),
+                    Text(
+                      _load == 1
+                          ? 'Очень легко'
+                          : _load == 2
+                              ? 'Легко'
+                              : _load == 3
+                                  ? 'Умеренно'
+                                  : _load == 4
+                                      ? 'Трудно'
+                                      : _load == 5
+                                          ? 'Очень тяжело'
+                                          : '',
+                      style: TextStyle(
+                        color: _load == 1
+                            ? Colors.blue
+                            : _load == 2
+                                ? Colors.green
+                                : _load == 3
+                                    ? Colors.orange[700]
+                                    : _load == 4
+                                        ? Colors.red
+                                        : _load == 5
+                                            ? Colors.red[700]
+                                            : Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                        style: TextStyle(color: Colors.blue),
+                        'Ощущаете себя '),
+                    Text(
+                      _feeling == 1
+                          ? 'Очень слабым'
+                          : _feeling == 2
+                              ? 'Слабым'
+                              : _feeling == 3
+                                  ? 'Нормально'
+                                  : _feeling == 4
+                                      ? 'Сильным'
+                                      : _feeling == 5
+                                          ? 'Очень сильным'
+                                          : '',
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                Text((controllerFeedback.text == '')
+                    ? 'Без комментария'
+                    : 'Комментарий: ${controllerFeedback.text}'),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                sentReport();
+                Navigator.of(context).pop();
+              },
+              child: const Center(
+                  child: Text(
+                      style: TextStyle(color: Colors.black), 'Да, всё верно')),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Center(
+                  child: Text(style: TextStyle(color: Colors.black), 'Нет')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSkipModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Вы пропустили тренировку?'),
+          content: const Text(
+              'Будет отправлен отчёт о том, что у Вас был день отдыха.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                sentReportSkip();
+                Navigator.of(context).pop();
+              },
+              child: const Center(
+                  child: Text(
+                      style: TextStyle(color: Colors.red), 'Да, продолжить')),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Center(
+                  child: Text(
+                      style: TextStyle(color: Colors.black),
+                      'Нет, я тренировался')),
             ),
           ],
         );
@@ -68,22 +245,52 @@ class _SentReportWidgetState extends State<SentReportWidget> {
       children: [
         Row(
           children: [
-            const Text('Оставьте обратную связь'),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    elevation: 8,
-                    fixedSize: const Size(110, 40),
-                    backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-                onPressed: () {
-                  _showInfoModal(context); // Открываем модальное окно
-                },
-                child: const Text('справка')),
+            const SizedBox(
+                width: 210,
+                child: Text(
+                    'После тренировки оставьте пожалуйста обратную связь')),
+            IconButton(
+              icon: const Icon(color: Colors.blueAccent, Icons.help_outline),
+              onPressed: () {
+                _showInfoModal(context);
+              },
+            ),
           ],
         ),
-        Text('Оставьте обратную связь'),
-        Text(
-            style: const TextStyle(color: Colors.red, fontSize: 20),
-            'Нагрузка: ${_load.toStringAsFixed(0)}'),
+        Row(
+          children: [
+            const Text(
+                style: TextStyle(color: Colors.red, fontSize: 20),
+                'Нагрузка: '),
+            Text(
+              _load == 1
+                  ? 'Очень легко'
+                  : _load == 2
+                      ? 'Легко'
+                      : _load == 3
+                          ? 'Умеренно'
+                          : _load == 4
+                              ? 'Трудно'
+                              : _load == 5
+                                  ? 'Очень тяжело'
+                                  : '',
+              style: TextStyle(
+                color: _load == 1
+                    ? Colors.blue
+                    : _load == 2
+                        ? Colors.green
+                        : _load == 3
+                            ? Colors.orange[700]
+                            : _load == 4
+                                ? Colors.red
+                                : _load == 5
+                                    ? Colors.red[700]
+                                    : Colors.black,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        ),
         SliderTheme(
           data: SliderThemeData(
             trackHeight: 15.0,
@@ -98,7 +305,7 @@ class _SentReportWidgetState extends State<SentReportWidget> {
             max: 5,
             divisions: 4,
             value: _load,
-            label: _load.toStringAsFixed(0),
+            //label: _load.toStringAsFixed(0),
             thumbColor: const Color.fromRGBO(255, 132, 26, 1),
             onChanged: (newValue) {
               textFeedback = controllerFeedback.text;
@@ -108,9 +315,30 @@ class _SentReportWidgetState extends State<SentReportWidget> {
           ),
         ),
         const SizedBox(height: 10),
-        Text(
-            style: const TextStyle(color: Colors.blue, fontSize: 20),
-            'Самочуствие: ${_feeling.toStringAsFixed(0)}'),
+        Row(
+          children: [
+            const Text(
+                style: TextStyle(color: Colors.blue, fontSize: 20),
+                'Самочуствие: '),
+            Text(
+              _feeling == 1
+                  ? '😞'
+                  : _feeling == 2
+                      ? '☹️'
+                      : _feeling == 3
+                          ? '😐'
+                          : _feeling == 4
+                              ? '🙂'
+                              : _feeling == 5
+                                  ? '😄'
+                                  : '',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 30,
+              ),
+            ),
+          ],
+        ),
         SliderTheme(
           data: SliderThemeData(
             trackHeight: 15.0,
@@ -125,7 +353,7 @@ class _SentReportWidgetState extends State<SentReportWidget> {
             max: 5,
             divisions: 4,
             value: _feeling,
-            label: _feeling.toStringAsFixed(0),
+            //label: _feeling.toStringAsFixed(0),
             thumbColor: const Color.fromRGBO(255, 132, 26, 1),
             onChanged: (newValue) {
               textFeedback = controllerFeedback.text;
@@ -152,16 +380,31 @@ class _SentReportWidgetState extends State<SentReportWidget> {
               fontSize: 16),
           controller: controllerFeedback,
         ),
-        ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                elevation: 8,
-                fixedSize: const Size(110, 40),
-                backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-            onPressed: sentReport,
-            child: const Text(
-                style: TextStyle(
-                    fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
-                'Отчёт')),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    elevation: 8,
+                    backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+                onPressed: () {
+                  _showSentReportModal(context);
+                },
+                child: const Text(
+                    style: TextStyle(
+                        fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
+                    'Отправить')),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    elevation: 8, backgroundColor: Colors.red),
+                onPressed: () {
+                  _showSkipModal(context);
+                },
+                child: const Text(
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                    'Пропустил')),
+          ],
+        ),
       ],
     );
   }
