@@ -1,0 +1,177 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trailpro_planning/domain/samples_cubit.dart';
+
+class AddSamplesScreen extends StatelessWidget {
+  const AddSamplesScreen({super.key});
+
+
+
+  void _showModalAddSample(BuildContext context, String label, String description) {
+    final addSamplesCubit = context.read<AddSamplesCubit>();
+
+    final TextEditingController controllerLabelTraining =
+    TextEditingController(text: label);
+    final TextEditingController controllerDescriptionTraining =
+    TextEditingController(text: description);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BlocProvider.value(
+          value: addSamplesCubit,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+                //crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Название'),
+                  TextField(
+                    maxLength: 27,
+                    decoration: const InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                      ),
+                    ),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromRGBO(1, 57, 104, 1),
+                        fontSize: 16),
+                    controller: controllerLabelTraining,
+                  ),
+                  const SizedBox(height: 8),
+                  const Text('Описание'),
+                  TextField(
+                    maxLines: 8,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                      ),
+                    ),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromRGBO(1, 57, 104, 1),
+                        fontSize: 16),
+                    controller: controllerDescriptionTraining,
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+                      onPressed: () {
+                        addSamplesCubit.addSample(controllerLabelTraining.text,
+                            controllerDescriptionTraining.text);
+                        controllerLabelTraining.clear();
+                        controllerDescriptionTraining.clear();
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                          'Добавить')),
+                ]),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDeleteModal(BuildContext context, String label, String description, int index) {
+    final addSamplesCubit = context.read<AddSamplesCubit>();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Builder(
+          builder: (context) {
+            return BlocProvider.value(
+
+              value: addSamplesCubit,
+              child: AlertDialog(
+                title: const Text('Удалить шаблон?'),
+                content: const Text(
+                    'Шаблон будет удалён без возвратно.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      addSamplesCubit.deleteSample(label, description, index);
+                      Navigator.of(context).pop();
+                    },
+                    child: const Center(
+                        child: Text(
+                            style: TextStyle(color: Colors.red), 'Да, продолжить')),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Center(
+                        child: Text(
+                            style: TextStyle(color: Colors.black),
+                            'Нет, я передумал')),
+                  ),
+                ],
+              ),
+            );
+          }
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    context.read<AddSamplesCubit>().loadSamples();
+    return BlocBuilder<AddSamplesCubit, AddSamplesModel>(
+        builder: (context, value) {
+      return Scaffold(
+        appBar: AppBar(
+            centerTitle: true,
+            title: const Text(
+                style: TextStyle(fontSize: 30, color: Colors.white), 'Шаблоны'),
+            backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+        body: (!value.isLoading)
+            ? const Center(
+                child: CircularProgressIndicator(
+                color: Color.fromRGBO(255, 132, 26, 1),
+                strokeWidth: 3,
+              ))
+            : ListView.separated(
+                itemCount: value.samplesSplit.length,
+                separatorBuilder: (context, index) => const SizedBox(height: 2),
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(value.samplesSplit[index][0]),
+                        IconButton(
+                            onPressed: (){
+                              _showDeleteModal(context, value.samplesSplit[index][0], value.samplesSplit[index][1], index);
+                            },
+                            icon: const Icon(
+                                color: Color.fromRGBO(255, 132, 26, 1),
+                                Icons.delete),)
+                      ],
+                    ),
+                    onTap: () {
+                      _showModalAddSample(context, value.samplesSplit[index][0], value.samplesSplit[index][1]);
+                    },
+                  );
+                },
+              ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
+          onPressed: () {
+            _showModalAddSample(context, '', '');
+          },
+          child: const Icon(color: Colors.white, Icons.add),
+        ),
+      );
+    });
+  }
+}

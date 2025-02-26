@@ -7,6 +7,8 @@ class Management {
   static List<String> authUserList = [];
   static List<String> userList = [];
   static Map<String, String> authUserMap = {};
+  static List<String> samplesList = [];
+  static List<List<String>> samplesSlitList = [];
 
   ValueNotifier<WeekPlansModel> weekPlans =
       ValueNotifier<WeekPlansModel>(WeekPlansModel([], []));

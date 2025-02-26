@@ -392,7 +392,7 @@ class _SentReportWidgetState extends State<SentReportWidget> {
                 },
                 child: const Text(
                     style: TextStyle(
-                        fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
+                        fontSize: 20, color: Colors.white),
                     'Отправить')),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(

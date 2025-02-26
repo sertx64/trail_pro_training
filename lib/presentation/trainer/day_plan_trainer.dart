@@ -6,7 +6,6 @@ import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
-
 class DayPlanTrainer extends StatefulWidget {
   const DayPlanTrainer({super.key});
 
@@ -21,6 +20,7 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
       TextEditingController();
   final TextEditingController _controllerDescriptionTraining =
       TextEditingController();
+  final List samples = Management.samplesSlitList;
 
   @override
   void initState() {
@@ -144,20 +144,18 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                               style:
                                   TextStyle(fontSize: 24, color: Colors.white),
                               'Сохранить')),
-                      Builder(
-                        builder: (context) {
-                          return ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green),
-                              onPressed: () {
-                                Scaffold.of(context).openEndDrawer();
-                              },
-                              child: const Text(
-                                  style:
-                                      TextStyle(fontSize: 24, color: Colors.black),
-                                  'Шаблоны'));
-                        }
-                      ),
+                      Builder(builder: (context) {
+                        return ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green),
+                            onPressed: () {
+                              Scaffold.of(context).openEndDrawer();
+                            },
+                            child: const Text(
+                                style: TextStyle(
+                                    fontSize: 24, color: Colors.black),
+                                'Шаблоны'));
+                      }),
                     ],
                   ),
                 ]),
@@ -172,33 +170,25 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                 color: Colors.blue,
               ),
               child: Text(
-                  style:
-                  TextStyle(fontSize: 24, color: Colors.black),
+                  style: TextStyle(fontSize: 24, color: Colors.black),
                   'Шаблоны тренировок'),
             ),
-            ListTile(
-              title: const Text('Интервальная'),
-              onTap: () {
-                _controllerLabelTraining.text = 'Интервальная';
-                _controllerDescriptionTraining.text = 'Время и место: \nРазминка: 10-15 минут в лёгком темпе.\nИнтервалы: \nКоличество: \nРабота:     ';
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Длительная'),
-              onTap: () {
-                _controllerLabelTraining.text = 'Длительная';
-                _controllerDescriptionTraining.text = 'Время и место: \nРазминка: 10-15 минут в лёгком темпе.\nВремя работы: \nЗаминка: 10-15 минут в лёгком темпе.';
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Тренировка с упражнениями'),
-              onTap: () {
-                _controllerLabelTraining.text = 'Тренировка с упражнениями';
-                _controllerDescriptionTraining.text = 'Время и место: \nРазминка: 10-15 минут в лёгком темпе.\nУпражнения: \nЗаминка: 10-15 минут в лёгком темпе.';
-                Navigator.pop(context);
-              },
+            SizedBox(
+              height: 400,
+              child: ListView.separated(
+                separatorBuilder: (context, index) => const SizedBox(height: 8),
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(samples[index][0]),
+                    onTap: () {
+                      _controllerLabelTraining.text = samples[index][0];
+                      _controllerDescriptionTraining.text = samples[index][1];
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+                itemCount: samples.length,
+              ),
             ),
           ],
         ),

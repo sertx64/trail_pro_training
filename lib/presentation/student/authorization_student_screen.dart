@@ -127,6 +127,7 @@ class _AuthorizationState extends State<Authorization> {
             ),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
+                    elevation: 8,
                     fixedSize: const Size(200, 50),
                     backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
                 onPressed: goToStudentScreen,

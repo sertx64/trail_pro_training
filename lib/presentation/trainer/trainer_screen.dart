@@ -18,6 +18,12 @@ class TrainerScreen extends StatelessWidget {
               IconButton(
                 icon: const Icon(
                     color: Color.fromRGBO(255, 132, 26, 1),
+                    Icons.menu_book),
+                onPressed: () => context.push('/creatsamlescreen'),
+              ),
+              IconButton(
+                icon: const Icon(
+                    color: Color.fromRGBO(255, 132, 26, 1),
                     Icons.person_search),
                 onPressed: () => context.push('/userlistscreen'),
               ),

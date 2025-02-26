@@ -64,4 +64,20 @@ class ApiGSheet {
 
     await sheet!.values.insertRowByKey(date, reportList);
   }
+
+  Future<List<String>?> getSamples() async {
+    final ss = await gSheets.spreadsheet(_spreadsheetId);
+    final sheet = ss.worksheetByTitle('samples');
+    final authUserList = await sheet!.values.columnByKey('samples_list');
+
+    return authUserList;
+  }
+
+  void sendSamplesList(List samplesList) async {
+    final ss = await gSheets.spreadsheet(_spreadsheetId);
+    final sheet = ss.worksheetByTitle('samples');
+
+    await sheet!.values.insertColumnByKey('samples_list', samplesList);
+  }
+
 }

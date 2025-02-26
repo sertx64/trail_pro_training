@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/domain/auth_student_map.dart';
+import 'package:trailpro_planning/domain/auth_student.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
 class AddUserScreen extends StatelessWidget {
