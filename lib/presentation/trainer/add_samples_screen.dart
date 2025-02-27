@@ -5,120 +5,125 @@ import 'package:trailpro_planning/domain/samples_cubit.dart';
 class AddSamplesScreen extends StatelessWidget {
   const AddSamplesScreen({super.key});
 
-
-
-  void _showModalAddSample(BuildContext context, String label, String description) {
+  void _showModalAddSample(
+      BuildContext context, String label, String description) {
     final addSamplesCubit = context.read<AddSamplesCubit>();
-
+    final List<String> labelControl = addSamplesCubit.samples;
     final TextEditingController controllerLabelTraining =
-    TextEditingController(text: label);
+        TextEditingController(text: label);
     final TextEditingController controllerDescriptionTraining =
-    TextEditingController(text: description);
-
+        TextEditingController(text: description);
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (BuildContext context) {
         return BlocProvider.value(
           value: addSamplesCubit,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Название'),
-                  TextField(
-                    maxLength: 27,
-                    decoration: const InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                      ),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                const Text('Название'),
+                TextField(
+                  maxLength: 27,
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16.0)),
                     ),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Color.fromRGBO(1, 57, 104, 1),
-                        fontSize: 16),
-                    controller: controllerLabelTraining,
                   ),
-                  const SizedBox(height: 8),
-                  const Text('Описание'),
-                  TextField(
-                    maxLines: 8,
-                    decoration: const InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                      ),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Color.fromRGBO(1, 57, 104, 1),
+                      fontSize: 16),
+                  controller: controllerLabelTraining,
+                ),
+                const SizedBox(height: 8),
+                const Text('Описание'),
+                TextField(
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16.0)),
                     ),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Color.fromRGBO(1, 57, 104, 1),
-                        fontSize: 16),
-                    controller: controllerDescriptionTraining,
                   ),
-                  const SizedBox(height: 8),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-                      onPressed: () {
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Color.fromRGBO(1, 57, 104, 1),
+                      fontSize: 16),
+                  controller: controllerDescriptionTraining,
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+                    onPressed: () {
+                      if (!labelControl
+                              .contains(controllerLabelTraining.text) && !labelControl
+                          .contains(controllerDescriptionTraining.text) &&
+                          controllerLabelTraining.text != '' &&
+                          controllerDescriptionTraining.text != '') {
                         addSamplesCubit.addSample(controllerLabelTraining.text,
                             controllerDescriptionTraining.text);
                         controllerLabelTraining.clear();
                         controllerDescriptionTraining.clear();
                         Navigator.pop(context);
-                      },
-                      child: const Text(
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                          'Добавить')),
-                ]),
+                      }
+                    },
+                    child: const Text(
+                        style: TextStyle(fontSize: 24, color: Colors.white),
+                        'Добавить')),
+              ]),
+            ),
           ),
         );
       },
     );
   }
 
-  void _showDeleteModal(BuildContext context, String label, String description, int index) {
+  void _showDeleteModal(BuildContext context, int index) {
     final addSamplesCubit = context.read<AddSamplesCubit>();
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Builder(
-          builder: (context) {
-            return BlocProvider.value(
-
-              value: addSamplesCubit,
-              child: AlertDialog(
-                title: const Text('Удалить шаблон?'),
-                content: const Text(
-                    'Шаблон будет удалён без возвратно.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      addSamplesCubit.deleteSample(label, description, index);
-                      Navigator.of(context).pop();
-                    },
-                    child: const Center(
-                        child: Text(
-                            style: TextStyle(color: Colors.red), 'Да, продолжить')),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Center(
-                        child: Text(
-                            style: TextStyle(color: Colors.black),
-                            'Нет, я передумал')),
-                  ),
-                ],
-              ),
-            );
-          }
-        );
+        return Builder(builder: (context) {
+          return BlocProvider.value(
+            value: addSamplesCubit,
+            child: AlertDialog(
+              title: const Text('Удалить шаблон?'),
+              content: const Text('Шаблон будет удалён без возвратно.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    addSamplesCubit.deleteSample(index);
+                    Navigator.of(context).pop();
+                  },
+                  child: const Center(
+                      child: Text(
+                          style: TextStyle(color: Colors.red),
+                          'Да, продолжить')),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Center(
+                      child: Text(
+                          style: TextStyle(color: Colors.black),
+                          'Нет, я передумал')),
+                ),
+              ],
+            ),
+          );
+        });
       },
     );
   }
@@ -140,29 +145,47 @@ class AddSamplesScreen extends StatelessWidget {
                 color: Color.fromRGBO(255, 132, 26, 1),
                 strokeWidth: 3,
               ))
-            : ListView.separated(
-                itemCount: value.samplesSplit.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 2),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Row(
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.separated(
+                  itemCount: value.samplesSplit.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 2),
+                  itemBuilder: (context, index) {
+                    return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(value.samplesSplit[index][0]),
-                        IconButton(
-                            onPressed: (){
-                              _showDeleteModal(context, value.samplesSplit[index][0], value.samplesSplit[index][1], index);
-                            },
-                            icon: const Icon(
-                                color: Color.fromRGBO(255, 132, 26, 1),
-                                Icons.delete),)
+                        Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                    color: Color.fromRGBO(255, 132, 26, 1),
+                                    Icons.edit)),
+                            IconButton(
+                                onPressed: () {
+                                  _showModalAddSample(
+                                      context,
+                                      value.samplesSplit[index][0],
+                                      value.samplesSplit[index][1]);
+                                },
+                                icon: const Icon(
+                                    color: Color.fromRGBO(255, 132, 26, 1),
+                                    Icons.copy)),
+                            IconButton(
+                                onPressed: () {
+                                  _showDeleteModal(context, index);
+                                },
+                                icon: const Icon(
+                                    color: Color.fromRGBO(255, 132, 26, 1),
+                                    Icons.delete)),
+                          ],
+                        ),
                       ],
-                    ),
-                    onTap: () {
-                      _showModalAddSample(context, value.samplesSplit[index][0], value.samplesSplit[index][1]);
-                    },
-                  );
-                },
+                    );
+                  },
+                ),
               ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: const Color.fromRGBO(1, 57, 104, 1),

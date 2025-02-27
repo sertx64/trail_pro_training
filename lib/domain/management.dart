@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gsheets/gsheets.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/week_plan_map.dart';
 
 class Management {
+  static late Spreadsheet forGSheetsApi;
   static String userLogin = '';
   static List<String> authUserList = [];
   static List<String> userList = [];

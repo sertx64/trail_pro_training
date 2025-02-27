@@ -246,28 +246,23 @@ class WeekPlanStudentWidget extends StatelessWidget {
                                 onPressed: () {
                                   management.nextWeek('student');
                                 },
-                                child: const Text(
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: Color.fromRGBO(255, 132, 26, 1)),
-                                    '>>>')),
+                                child: const Icon(
+                                    color: Colors.white,
+                                    Icons.arrow_forward_sharp)),
                             ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    elevation: 8,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    fixedSize: const Size(80, 40),
-                                    backgroundColor:
-                                        const Color.fromARGB(200, 1, 57, 104)),
-                                onPressed: () {
-                                  management.previousWeek('student');
-                                },
-                                child: const Text(
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: Color.fromRGBO(255, 132, 26, 1)),
-                                    '<<<')),
+                              style: ElevatedButton.styleFrom(
+                                  elevation: 8,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  fixedSize: const Size(80, 40),
+                                  backgroundColor:
+                                      const Color.fromARGB(200, 1, 57, 104)),
+                              onPressed: () {
+                                management.previousWeek('student');
+                              },
+                              child: const Icon(
+                                  color: Colors.white,
+                                  Icons.arrow_back_sharp)),
                           ],
                         ),
                       ),

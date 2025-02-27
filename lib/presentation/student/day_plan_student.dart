@@ -44,7 +44,7 @@ class DayPlan extends StatelessWidget {
                               color: Color.fromRGBO(1, 57, 104, 1),
                               fontSize: 20),
                           dayPlanGroup['description_training']!),
-                      const SizedBox(height: 18),
+                      //const SizedBox(height: 18),
                     ],
                   ),
                 ),

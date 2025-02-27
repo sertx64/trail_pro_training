@@ -24,7 +24,7 @@ class TrainerAuth extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 200),
+              const SizedBox(height: 180),
               const Text(
                   style: TextStyle(color: Color.fromRGBO(255, 132, 26, 1)),
                   'введите ПИН'),
@@ -48,7 +48,7 @@ class TrainerAuth extends StatelessWidget {
                   controller: _pin,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       fixedSize: const Size(200, 50),
@@ -61,7 +61,7 @@ class TrainerAuth extends StatelessWidget {
                   child: const Text(
                       style: TextStyle(fontSize: 24, color: Colors.white),
                       'Вход')),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       fixedSize: const Size(200, 50),

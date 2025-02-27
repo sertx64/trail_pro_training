@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/data/gsheets_api.dart';
+import 'package:trailpro_planning/domain/management.dart';
 
 
 class AddSamplesCubit extends Cubit<AddSamplesModel> {
@@ -27,6 +28,7 @@ class AddSamplesCubit extends Cubit<AddSamplesModel> {
     List<List<String>> samplesSplit = state.samplesSplit;
     List<String> newSample = [label, description];
     samplesSplit.add(newSample);
+    Management.samplesSlitList = samplesSplit;
     final AddSamplesModel newSamples = AddSamplesModel(samplesSplit, true);
     emit(newSamples);
     samples.add(label);
@@ -34,15 +36,16 @@ class AddSamplesCubit extends Cubit<AddSamplesModel> {
     ApiGSheet().sendSamplesList(samples);
   }
 
-  void deleteSample(String label, String description, int index) async {
+  void deleteSample(int index) async {
     List<List<String>> samplesSplit = state.samplesSplit;
+    samples.remove(samplesSplit[index][0]);
+    samples.remove(samplesSplit[index][1]);
+    samples.add('');
+    samples.add('');
     samplesSplit.removeAt(index);
+    Management.samplesSlitList = samplesSplit;
     final AddSamplesModel newSamples = AddSamplesModel(samplesSplit, true);
     emit(newSamples);
-    samples.remove(label);
-    samples.remove(description);
-    samples.add('');
-    samples.add('');
     ApiGSheet().sendSamplesList(samples);
   }
 
