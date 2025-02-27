@@ -74,7 +74,6 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                     const SizedBox(
                       height: 10,
                     ),
-                    const Text('Обратная связь:'),
                     ReportsWidget(management.dayPlanStudentGroup['date']!),
                   ],
                 )
