@@ -7,7 +7,7 @@ class ReportCubit extends Cubit<ReportModel> {
 
   void loadReports(String date) async {
     List<String> reports = (await getReports(date))!;
-    print('LOAD REPORTS!!!');
+    print(reports);
     final ReportModel newReport = ReportModel(reports, true);
     emit(newReport);
   }

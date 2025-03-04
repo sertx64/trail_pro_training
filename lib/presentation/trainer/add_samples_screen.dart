@@ -5,8 +5,7 @@ import 'package:trailpro_planning/domain/samples_cubit.dart';
 class AddSamplesScreen extends StatelessWidget {
   const AddSamplesScreen({super.key});
 
-  void _showModalAddSample(
-      BuildContext context, String label, String description) {
+  void _showModalAddSample(BuildContext context, String label, String description) {
     final addSamplesCubit = context.read<AddSamplesCubit>();
     final List<String> labelControl = addSamplesCubit.samples;
     final TextEditingController controllerLabelTraining =
@@ -67,12 +66,12 @@ class AddSamplesScreen extends StatelessWidget {
                         backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
                     onPressed: () {
                       if (!labelControl
-                              .contains(controllerLabelTraining.text) && !labelControl
-                          .contains(controllerDescriptionTraining.text) &&
-                          controllerLabelTraining.text != '' &&
-                          controllerDescriptionTraining.text != '') {
-                        addSamplesCubit.addSample(controllerLabelTraining.text,
-                            controllerDescriptionTraining.text);
+                              .contains(controllerLabelTraining.text.trim()) && !labelControl
+                          .contains(controllerDescriptionTraining.text.trim()) &&
+                          controllerLabelTraining.text.trim() != '' &&
+                          controllerDescriptionTraining.text.trim() != '') {
+                        addSamplesCubit.addSample(controllerLabelTraining.text.trim(),
+                            controllerDescriptionTraining.text.trim());
                         controllerLabelTraining.clear();
                         controllerDescriptionTraining.clear();
                         Navigator.pop(context);

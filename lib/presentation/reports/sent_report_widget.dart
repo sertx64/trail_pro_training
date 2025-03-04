@@ -305,7 +305,6 @@ class _SentReportWidgetState extends State<SentReportWidget> {
             max: 5,
             divisions: 4,
             value: _load,
-            //label: _load.toStringAsFixed(0),
             thumbColor: const Color.fromRGBO(255, 132, 26, 1),
             onChanged: (newValue) {
               textFeedback = controllerFeedback.text;

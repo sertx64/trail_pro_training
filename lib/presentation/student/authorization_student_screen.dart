@@ -27,7 +27,7 @@ class _AuthorizationState extends State<Authorization> {
         Management.userLogin = login;
         box.put('login', login);
         box.put('pin', pin);
-        management.loadWeekPlan(management.yearWeekIndex);
+        //management.loadWeekPlan(management.yearWeekIndex);
         context.go('/studentscreen');
 
       } else {

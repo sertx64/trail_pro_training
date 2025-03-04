@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/domain/samples_cubit.dart';
+import 'package:trailpro_planning/domain/student_cubit.dart';
 import 'package:trailpro_planning/presentation/trainer/add_samples_screen.dart';
 import 'package:trailpro_planning/presentation/trainer/add_user_screen.dart';
 import 'package:trailpro_planning/presentation/student/authorization_student_screen.dart';
@@ -55,7 +56,7 @@ final GoRouter router =
       path: '/creatsamlescreen',
       builder: (BuildContext context, GoRouterState state) => BlocProvider(
           create: (context) => AddSamplesCubit(),
-          child: AddSamplesScreen())),
+          child: const AddSamplesScreen())),
   GoRoute(
       path: '/personalplan',
       builder: (BuildContext context, GoRouterState state) =>
@@ -67,8 +68,11 @@ final GoRouter router =
   GoRoute(
       path: '/studentscreen',
       builder: (BuildContext context, GoRouterState state) =>
-          const StudentScreen()),
+          BlocProvider(
+              create: (context) => StudentScreenCubit(),
+              child: const StudentScreen())
+  ),
   GoRoute(
       path: '/dayplan',
-      builder: (BuildContext context, GoRouterState state) => DayPlan()),
+      builder: (BuildContext context, GoRouterState state) => const DayPlan()),
 ]);

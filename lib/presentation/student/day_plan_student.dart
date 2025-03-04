@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
 class DayPlan extends StatelessWidget {
-  DayPlan({super.key});
+  const DayPlan({super.key});
 
-  final Management management = GetIt.instance<Management>();
+
+
+
 
   @override
   Widget build(BuildContext context) {
-    Map<String, String> dayPlanGroup = management.dayPlanStudentGroup;
-    Map<String, String> dayPlanPersonal = management.dayPlanStudentPersonal;
+    print('BILD DAYPLAN!');
+
+    final Map<String, String> dayPlanGroup = Management.dayPlanStudentGroup1;
+    final Map<String, String> dayPlanPersonal = Management.dayPlanStudentPersonal1;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -70,8 +73,8 @@ class DayPlan extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible: (management.yearWeekIndex * 10 +
-                              management.currentDayWeekIndex <
+                  visible: (Management.yearWeekIndex1 * 10 +
+                      Management.currentDayWeekIndex1 <
                           int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow() && dayPlanGroup['label_training']! != '')
                       ? true
                       : false,

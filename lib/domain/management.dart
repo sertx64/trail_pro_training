@@ -5,6 +5,8 @@ import 'package:trailpro_planning/domain/week_plan_map.dart';
 
 class Management {
   static late Spreadsheet forGSheetsApi;
+
+
   static String userLogin = '';
   static List<String> authUserList = [];
   static List<String> userList = [];
@@ -12,8 +14,13 @@ class Management {
   static List<String> samplesList = [];
   static List<List<String>> samplesSlitList = [];
 
-  ValueNotifier<WeekPlansModel> weekPlans =
-      ValueNotifier<WeekPlansModel>(WeekPlansModel([], []));
+
+  static Map<String, String> dayPlanStudentGroup1 = {};
+  static Map<String, String> dayPlanStudentPersonal1 = {};
+  static int yearWeekIndex1 = 0;
+  static int currentDayWeekIndex1 = 0;
+//костыль для экрана День Студента
+
   ValueNotifier<List<Map<String, String>>> weekPlanGroup =
       ValueNotifier<List<Map<String, String>>>([]);
   ValueNotifier<List<Map<String, String>>> weekPlanPersonal =
@@ -28,29 +35,7 @@ class Management {
   List<Map<String, String>> currentWeekPlanGroup = [];
   List<Map<String, String>> currentWeekPlanPersonal = [];
 
-  void loadWeekPlan(int yWid) async {
-    isLoadingPlans = false;
-    weekPlans.value = WeekPlansModel([], []);
-    currentWeekPlanGroup =
-        await WeekPlanMap('tp_week_plan', yWid).weekPlanStudent();
 
-    //костыль помогающий грузить в 2 раза быстрее групповой план тренировок
-    weekPlans.value = WeekPlansModel(currentWeekPlanGroup, [
-      {'label_training': ''},
-      {'label_training': ''},
-      {'label_training': ''},
-      {'label_training': ''},
-      {'label_training': ''},
-      {'label_training': ''},
-      {'label_training': ''},
-    ]);
-    isLoadingPlans = true;
-
-    currentWeekPlanPersonal =
-        await WeekPlanMap(userLogin, yWid).weekPlanStudent();
-    weekPlans.value =
-        WeekPlansModel(currentWeekPlanGroup, currentWeekPlanPersonal);
-  }
 
   void loadWeekPlanTrainerPersonal(int yWid, String selecteduser) async {
     selectedUser = selecteduser;
@@ -88,7 +73,6 @@ class Management {
     if (yearWeekIndex == 202453) yearWeekIndex = 202501;
     if (yearWeekIndex == 202553) yearWeekIndex = 202601;
     if (yearWeekIndex == 202653) yearWeekIndex = 202701;
-    if (who == 'student') loadWeekPlan(yearWeekIndex);
     if (who == 'trainergroup') loadWeekPlanTrainerGroup(yearWeekIndex);
     if (who == 'trainerpersonal') {
       loadWeekPlanTrainerPersonal(yearWeekIndex, selectedUser);
@@ -101,7 +85,6 @@ class Management {
     if (yearWeekIndex == 202500) yearWeekIndex = 202452;
     if (yearWeekIndex == 202600) yearWeekIndex = 202552;
     if (yearWeekIndex == 202700) yearWeekIndex = 202652;
-    if (who == 'student') loadWeekPlan(yearWeekIndex);
     if (who == 'trainergroup') loadWeekPlanTrainerGroup(yearWeekIndex);
     if (who == 'trainerpersonal') {
       loadWeekPlanTrainerPersonal(yearWeekIndex, selectedUser);
