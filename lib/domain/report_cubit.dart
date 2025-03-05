@@ -5,14 +5,18 @@ import 'package:trailpro_planning/domain/management.dart';
 class ReportCubit extends Cubit<ReportModel> {
   ReportCubit() : super(ReportModel([], false));
 
+  bool isLoadReport = false;
+
   void loadReports(String date) async {
-    List<String> reports = (await getReports(date))!;
-    print(reports);
-    final ReportModel newReport = ReportModel(reports, true);
-    emit(newReport);
+    if (!isLoadReport) {
+      List<String> reports = (await getReports(date))!;
+      isLoadReport = true;
+      final ReportModel newReport = ReportModel(reports, true);
+      emit(newReport);
+    }
   }
 
-  void renewReportsOnWidget(String load, String feeling, String feedback){
+  void renewReportsOnWidget(String load, String feeling, String feedback) {
     List<String> reports = state.reports;
     reports.add(Management.userLogin);
     reports.add(load);
@@ -32,7 +36,6 @@ class ReportCubit extends Cubit<ReportModel> {
       splitList.add(
           reports.sublist(i, i + 4 > reports.length ? reports.length : i + 4));
     }
-    print('SPLIT REPORTS!!! $splitList');
     return splitList;
   }
 }

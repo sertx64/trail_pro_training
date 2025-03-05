@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/student_cubit.dart';
+import 'package:trailpro_planning/presentation/models/models.dart';
 
 
 class StudentScreen extends StatelessWidget {
@@ -13,7 +14,6 @@ class StudentScreen extends StatelessWidget {
     context.read<StudentScreenCubit>().loadWeekPlan(context.read<StudentScreenCubit>().yearWeekIndex);
     return BlocBuilder<StudentScreenCubit, StudentDataModel>(
       builder: (context, value) {
-        int yearWeekIndex = context.read<StudentScreenCubit>().yearWeekIndex;
         return Scaffold(
             appBar: AppBar(
                 actions: [
@@ -38,9 +38,9 @@ class StudentScreen extends StatelessWidget {
                     children: [
                       ListView.separated(
                         itemBuilder: (context, index) {
-                          Map<String, String> dayPlanGroup =
+                          DayPlanModel dayPlanGroup =
                               value.weekPlanGroup[index];
-                          Map<String, String> dayPlanPersonal =
+                          DayPlanModel dayPlanPersonal =
                               value.weekPlanPersonal[index];
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -55,16 +55,10 @@ class StudentScreen extends StatelessWidget {
                                     ),
                                   ],
                                   color:
-                                      (yearWeekIndex * 10 + index <
-                                              int.parse(DatePasing()
-                                                          .yearWeekNow()) *
-                                                      10 +
-                                                  DatePasing().dayWeekNow() -
-                                                  1)
-                                          ? Colors.grey[350]
-                                          : (dayPlanGroup['date'] ==
-                                                  DatePasing().dateNow())
-                                              ? Colors.green[100]
+                                  (dayPlanGroup.date == DatePasing().dateNow())
+                                          ? Colors.green[100]
+                                          : (DatePasing().isAfterDay(dayPlanGroup.date))
+                                              ? Colors.grey[350]
                                               : Colors.white,
                                   border: Border.all(
                                       width: 3.0,
@@ -85,18 +79,15 @@ class StudentScreen extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             border: Border.all(
                                                 width: 5.0,
-                                                color: (dayPlanGroup[
-                                                            'label_training'] ==
+                                                color: (dayPlanGroup.label ==
                                                         '')
                                                     ? Colors.blueGrey
                                                     : const Color.fromRGBO(
                                                         1, 57, 104, 1)),
                                             shape: BoxShape.circle,
-                                            color: (dayPlanGroup[
-                                                        'label_training'] ==
+                                            color: (dayPlanGroup.label ==
                                                     '')
-                                                ? (dayPlanPersonal[
-                                                            'label_training'] ==
+                                                ? (dayPlanPersonal.label ==
                                                         '')
                                                     ? Colors.blueGrey
                                                     : Colors.green
@@ -110,7 +101,7 @@ class StudentScreen extends StatelessWidget {
                                                         FontWeight.w600,
                                                     color: Colors.white,
                                                     fontSize: 22),
-                                                dayPlanGroup['day']!),
+                                                dayPlanGroup.day),
                                           )),
                                       const SizedBox(width: 8),
                                       Column(
@@ -124,9 +115,9 @@ class StudentScreen extends StatelessWidget {
                                                       color: Color.fromRGBO(
                                                           1, 57, 104, 1),
                                                       fontSize: 20),
-                                                  dayPlanGroup['date']!),
+                                                  dayPlanGroup.date),
                                               const SizedBox(width: 10),
-                                              if (dayPlanGroup['date'] ==
+                                              if (dayPlanGroup.date ==
                                                   DatePasing().dateNow())
                                                 const Text(
                                                     style: TextStyle(
@@ -139,8 +130,7 @@ class StudentScreen extends StatelessWidget {
                                             ],
                                           ),
                                           Visibility(
-                                            visible: (dayPlanGroup[
-                                                        'label_training'] ==
+                                            visible: (dayPlanGroup.label ==
                                                     '')
                                                 ? false
                                                 : true,
@@ -155,14 +145,12 @@ class StudentScreen extends StatelessWidget {
                                                         color: Color.fromRGBO(
                                                             1, 57, 104, 1),
                                                         fontSize: 18),
-                                                    dayPlanGroup[
-                                                        'label_training']!),
+                                                    dayPlanGroup.label),
                                               ],
                                             ),
                                           ),
                                           Visibility(
-                                            visible: (dayPlanPersonal[
-                                                        'label_training'] ==
+                                            visible: (dayPlanPersonal.label ==
                                                     '')
                                                 ? false
                                                 : true,
@@ -178,17 +166,14 @@ class StudentScreen extends StatelessWidget {
                                                         color: Color.fromRGBO(
                                                             1, 57, 104, 1),
                                                         fontSize: 18),
-                                                    dayPlanPersonal[
-                                                        'label_training']!),
+                                                    dayPlanPersonal.label),
                                               ],
                                             ),
                                           ),
                                           Visibility(
-                                            visible: (dayPlanGroup[
-                                                            'label_training'] ==
+                                            visible: (dayPlanGroup.label ==
                                                         '' &&
-                                                    dayPlanPersonal[
-                                                            'label_training'] ==
+                                                    dayPlanPersonal.label ==
                                                         '')
                                                 ? true
                                                 : false,
@@ -206,15 +191,15 @@ class StudentScreen extends StatelessWidget {
                                     ],
                                   ),
                                   onTap: () {
-                                    (dayPlanGroup['label_training'] == '' &&
-                                            dayPlanPersonal[
-                                                    'label_training'] ==
+                                    (dayPlanGroup.label == '' &&
+                                            dayPlanPersonal.label ==
                                                 '')
                                         ? null
                                         : {
-                                      context.read<StudentScreenCubit>()
-                                                .newScreenDayPlan(index),
-                                            context.push('/dayplan'),
+                                      // context.read<StudentScreenCubit>()
+                                      //           .newScreenDayPlan(index),
+
+                                            context.push('/dayplan', extra: [dayPlanGroup, dayPlanPersonal]),
                                           };
                                   },
                                 )),

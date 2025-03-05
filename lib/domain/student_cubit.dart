@@ -2,30 +2,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/data/gsheets_api.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
+import 'package:trailpro_planning/presentation/models/models.dart';
 
 class StudentScreenCubit extends Cubit<StudentDataModel> {
   StudentScreenCubit() : super(StudentDataModel([],[], false));
 
   int yearWeekIndex = int.parse(DatePasing().yearWeekNow());
-  Map<String, String> dayPlanStudentGroup = {};
-  Map<String, String> dayPlanStudentPersonal = {};
-  int currentDayWeekIndex = 0;
+  //int currentDayWeekIndex = 0;
 
   void loadWeekPlan(int yWid) async {
     emit(StudentDataModel([], [], false));
-    List<Map<String, String>> currentWeekPlanGroup =
+    List<DayPlanModel> currentWeekPlanGroup =
     await weekPlanStudent('tp_week_plan', yWid);
     emit(StudentDataModel(currentWeekPlanGroup, [
-      {'label_training': ''},
-      {'label_training': ''},
-      {'label_training': ''},
-      {'label_training': ''},
-      {'label_training': ''},
-      {'label_training': ''},
-      {'label_training': ''},
+      DayPlanModel('','','',''),
+      DayPlanModel('','','',''),
+      DayPlanModel('','','',''),
+      DayPlanModel('','','',''),
+      DayPlanModel('','','',''),
+      DayPlanModel('','','',''),
+      DayPlanModel('','','',''),
     ], true));
     //костыль помогающий грузить в 2 раза быстрее групповой план тренировок
-    List<Map<String, String>> currentWeekPlanPersonal =
+    List<DayPlanModel> currentWeekPlanPersonal =
     await weekPlanStudent(Management.userLogin, yWid);
     emit(StudentDataModel(currentWeekPlanGroup, currentWeekPlanPersonal, true));
   }
@@ -49,71 +48,24 @@ class StudentScreenCubit extends Cubit<StudentDataModel> {
 
 
 
-  Future<List<Map<String, String>>> weekPlanStudent(String plan, int yearweek) async {
+  Future<List<DayPlanModel>> weekPlanStudent(String plan, int yearweek) async {
     List<String>? weekPlanList = await ApiGSheet().getWeekPlanList(plan, '$yearweek');
 
-    final List<Map<String, String>> weekPlan = [
-      {
-        'day': 'ПН',
-        'date': weekPlanList![0],
-        'label_training': weekPlanList[1],
-        'description_training': weekPlanList[2],
-      },
-      {
-        'day': 'ВТ',
-        'date': weekPlanList[3],
-        'label_training': weekPlanList[4],
-        'description_training': weekPlanList[5],
-      },
-      {
-        'day': 'СР',
-        'date': weekPlanList[6],
-        'label_training': weekPlanList[7],
-        'description_training': weekPlanList[8],
-      },
-      {
-        'day': 'ЧТ',
-        'date': weekPlanList[9],
-        'label_training': weekPlanList[10],
-        'description_training': weekPlanList[11],
-      },
-      {
-        'day': 'ПТ',
-        'date': weekPlanList[12],
-        'label_training': weekPlanList[13],
-        'description_training': weekPlanList[14],
-      },
-      {
-        'day': 'СБ',
-        'date': weekPlanList[15],
-        'label_training': weekPlanList[16],
-        'description_training': weekPlanList[17],
-      },
-      {
-        'day': 'ВС',
-        'date': weekPlanList[18],
-        'label_training': weekPlanList[19],
-        'description_training': weekPlanList[20],
-      }
+    final List<DayPlanModel> weekPlan = [
+      DayPlanModel('ПН', weekPlanList![0],weekPlanList[1],weekPlanList[2]),
+      DayPlanModel('ВТ', weekPlanList[3],weekPlanList[4],weekPlanList[5]),
+      DayPlanModel('СР', weekPlanList[6],weekPlanList[7],weekPlanList[8]),
+      DayPlanModel('ЧТ', weekPlanList[9],weekPlanList[10],weekPlanList[11]),
+      DayPlanModel('ПТ', weekPlanList[12],weekPlanList[13],weekPlanList[14]),
+      DayPlanModel('СБ', weekPlanList[15],weekPlanList[16],weekPlanList[17]),
+      DayPlanModel('ВС', weekPlanList[18],weekPlanList[19],weekPlanList[20]),
     ];
 
     return weekPlan;
   }
 
-  void newScreenDayPlan(int dayIndex) {
-    Management.dayPlanStudentGroup1 = state.weekPlanGroup[dayIndex];
-    Management.dayPlanStudentPersonal1 = state.weekPlanPersonal[dayIndex];
-    Management.yearWeekIndex1 = yearWeekIndex;
-    currentDayWeekIndex = dayIndex;
-    Management.currentDayWeekIndex1 = currentDayWeekIndex;
-  }
 
 }
 
 
-class StudentDataModel {
-  bool isLoading;
-  List<Map<String, String>> weekPlanGroup;
-  List<Map<String, String>> weekPlanPersonal;
-  StudentDataModel(this.weekPlanGroup, this.weekPlanPersonal, this.isLoading);
-}
+

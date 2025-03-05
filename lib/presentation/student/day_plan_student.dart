@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
-import 'package:trailpro_planning/domain/management.dart';
+import 'package:trailpro_planning/presentation/models/models.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
+
+
+
 
 class DayPlan extends StatelessWidget {
   const DayPlan({super.key});
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
-    print('BILD DAYPLAN!');
-
-    final Map<String, String> dayPlanGroup = Management.dayPlanStudentGroup1;
-    final Map<String, String> dayPlanPersonal = Management.dayPlanStudentPersonal1;
+    final List<DayPlanModel> dayPlan = GoRouterState.of(context).extra as List<DayPlanModel>;
+    final DayPlanModel dayPlanGroup = dayPlan[0];
+    final DayPlanModel dayPlanPersonal = dayPlan[1];
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
         title: Text(
             style: const TextStyle(color: Colors.white, fontSize: 27),
-            dayPlanGroup['date']!),
+            dayPlanGroup.date),
       ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -32,7 +31,7 @@ class DayPlan extends StatelessWidget {
               children: [
                 Visibility(
                   visible:
-                      (dayPlanGroup['label_training']! == '') ? false : true,
+                      (dayPlanGroup.label == '') ? false : true,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -41,19 +40,18 @@ class DayPlan extends StatelessWidget {
                           style: const TextStyle(
                               color: Color.fromRGBO(255, 132, 26, 1),
                               fontSize: 19),
-                          dayPlanGroup['label_training']!),
+                          dayPlanGroup.label),
                       Text(
                           style: const TextStyle(
                               color: Color.fromRGBO(1, 57, 104, 1),
                               fontSize: 20),
-                          dayPlanGroup['description_training']!),
-                      //const SizedBox(height: 18),
+                          dayPlanGroup.description),
                     ],
                   ),
                 ),
                 Visibility(
                   visible:
-                      (dayPlanPersonal['label_training']! == '') ? false : true,
+                      (dayPlanPersonal.label == '') ? false : true,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -62,23 +60,21 @@ class DayPlan extends StatelessWidget {
                           style: const TextStyle(
                               color: Color.fromRGBO(255, 132, 26, 1),
                               fontSize: 19),
-                          dayPlanPersonal['label_training']!),
+                          dayPlanPersonal.label),
                       Text(
                           style: const TextStyle(
                               color: Color.fromRGBO(1, 57, 104, 1),
                               fontSize: 20),
-                          dayPlanPersonal['description_training']!),
+                          dayPlanPersonal.description),
                       const SizedBox(height: 18),
                     ],
                   ),
                 ),
                 Visibility(
-                  visible: (Management.yearWeekIndex1 * 10 +
-                      Management.currentDayWeekIndex1 <
-                          int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow() && dayPlanGroup['label_training']! != '')
+                  visible: (DatePasing().isAfterDay(dayPlanGroup.date) && dayPlanGroup.label != '')
                       ? true
                       : false,
-                  child: ReportsWidget(dayPlanGroup['date']!),
+                  child: ReportsWidget(dayPlanGroup.date),
                 ),
               ],
             ),

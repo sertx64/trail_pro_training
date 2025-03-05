@@ -15,12 +15,6 @@ class Management {
   static List<List<String>> samplesSlitList = [];
 
 
-  static Map<String, String> dayPlanStudentGroup1 = {};
-  static Map<String, String> dayPlanStudentPersonal1 = {};
-  static int yearWeekIndex1 = 0;
-  static int currentDayWeekIndex1 = 0;
-//костыль для экрана День Студента
-
   ValueNotifier<List<Map<String, String>>> weekPlanGroup =
       ValueNotifier<List<Map<String, String>>>([]);
   ValueNotifier<List<Map<String, String>>> weekPlanPersonal =
@@ -106,10 +100,4 @@ class Management {
     dayPlanStudentPersonal = currentWeekPlanPersonal[dayIndex];
     currentDayWeekIndex = dayIndex;
   }
-}
-
-class WeekPlansModel {
-  List<Map<String, String>> weekPlanGroup;
-  List<Map<String, String>> weekPlanPersonal;
-  WeekPlansModel(this.weekPlanGroup, this.weekPlanPersonal);
 }
