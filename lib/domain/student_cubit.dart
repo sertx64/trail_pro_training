@@ -8,7 +8,7 @@ class StudentScreenCubit extends Cubit<StudentDataModel> {
   StudentScreenCubit() : super(StudentDataModel([],[], false));
 
   int yearWeekIndex = int.parse(DatePasing().yearWeekNow());
-  //int currentDayWeekIndex = 0;
+
 
   void loadWeekPlan(int yWid) async {
     emit(StudentDataModel([], [], false));
@@ -60,7 +60,6 @@ class StudentScreenCubit extends Cubit<StudentDataModel> {
       DayPlanModel('СБ', weekPlanList[15],weekPlanList[16],weekPlanList[17]),
       DayPlanModel('ВС', weekPlanList[18],weekPlanList[19],weekPlanList[20]),
     ];
-
     return weekPlan;
   }
 

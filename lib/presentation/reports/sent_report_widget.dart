@@ -18,7 +18,7 @@ class _SentReportWidgetState extends State<SentReportWidget> {
   double _feeling = 3.0;
   final TextEditingController controllerFeedback = TextEditingController();
 
-  void sentReport() {
+  void _sentReport() {
     if (controllerFeedback.text == '') {
       controllerFeedback.text = 'нет комментария';
     }
@@ -172,7 +172,7 @@ class _SentReportWidgetState extends State<SentReportWidget> {
           actions: [
             TextButton(
               onPressed: () {
-                sentReport();
+                _sentReport();
                 Navigator.of(context).pop();
               },
               child: const Center(

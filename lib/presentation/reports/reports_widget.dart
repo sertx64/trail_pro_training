@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/report_cubit.dart';
+import 'package:trailpro_planning/presentation/models/models.dart';
 import 'package:trailpro_planning/presentation/reports/sent_report_widget.dart';
 
 class ReportsWidget extends StatelessWidget {
@@ -22,15 +23,14 @@ class _ReportsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<ReportCubit>().loadReports(date);
-    return BlocBuilder<ReportCubit, ReportModel>(builder: (context, value) {
-      List reports = context.read<ReportCubit>().splitReports(value.reports);
+    return BlocBuilder<ReportCubit, ReportsForView>(builder: (context, value) {
       return (!value.isLoading)
           ? const Center(
               child: CircularProgressIndicator(
               color: Color.fromRGBO(255, 132, 26, 1),
               strokeWidth: 3,
             ))
-          : (!value.reports.contains(Management.userLogin) &&
+          : (!value.reports.any((report) => report.name == Management.userLogin) &&
                   Management.userLogin != '')
               ? SentReportWidget(date)
               : Column(
@@ -44,14 +44,15 @@ class _ReportsWidget extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
+                      ReportModel report = value.reports[index];
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                               style: const TextStyle(
                                   color: Colors.green, fontSize: 20),
-                              reports[index][0]),
-                          if (reports[index][1] != '0') Column(
+                              report.name),
+                          if (report.load != '0') Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                                Row(
@@ -59,30 +60,30 @@ class _ReportsWidget extends StatelessWidget {
                                   Text(
                                       style: const TextStyle(
                                           color: Colors.red, fontSize: 16),
-                                      'Нагрузка ${reports[index][1]} '),
+                                      'Нагрузка ${report.load} '),
                                   Text(
-                                    reports[index][1] == '1'
+                                    report.load == '1'
                                         ? 'Очень легко'
-                                        : reports[index][1] == '2'
+                                        : report.load == '2'
                                             ? 'Легко'
-                                            : reports[index][1] == '3'
+                                            : report.load == '3'
                                                 ? 'Умеренно'
-                                                : reports[index][1] == '4'
+                                                : report.load == '4'
                                                     ? 'Трудно'
-                                                    : reports[index][1] == '5'
+                                                    : report.load == '5'
                                                         ? 'Очень тяжело'
                                                         : '',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: reports[index][1] == '1'
+                                      color: report.load == '1'
                                           ? Colors.blue
-                                          : reports[index][1] == '2'
+                                          : report.load == '2'
                                               ? Colors.green
-                                              : reports[index][1] == '3'
+                                              : report.load == '3'
                                                   ? Colors.orange[700]
-                                                  : reports[index][1] == '4'
+                                                  : report.load == '4'
                                                       ? Colors.red
-                                                      : reports[index][1] == '5'
+                                                      : report.load == '5'
                                                           ? Colors.red[700]
                                                           : Colors.black,
                                     ),
@@ -94,17 +95,17 @@ class _ReportsWidget extends StatelessWidget {
                                   Text(
                                       style: const TextStyle(
                                           color: Colors.blue, fontSize: 16),
-                                      'Самочуствие ${reports[index][2]} '),
+                                      'Самочуствие ${report.feeling} '),
                                   Text(
-                                    reports[index][2] == '1'
+                                    report.feeling == '1'
                                         ? 'Очень слабым'
-                                        : reports[index][2] == '2'
+                                        : report.feeling == '2'
                                             ? 'Слабым'
-                                            : reports[index][2] == '3'
+                                            : report.feeling == '3'
                                                 ? 'Нормально'
-                                                : reports[index][2] == '4'
+                                                : report.feeling == '4'
                                                     ? 'Сильным'
-                                                    : reports[index][2] == '5'
+                                                    : report.feeling == '5'
                                                         ? 'Очень сильным'
                                                         : '',
                                     style: const TextStyle(
@@ -119,13 +120,13 @@ class _ReportsWidget extends StatelessWidget {
                           Text(
                               style: const TextStyle(
                                   color: Colors.black),
-                              reports[index][3]),
+                              report.feedback),
                         ],
                       );
                     },
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
-                    itemCount: reports.length,
+                    itemCount: value.reports.length,
                   ),
                 ],
               );

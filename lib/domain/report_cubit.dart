@@ -1,28 +1,27 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/data/gsheets_api.dart';
 import 'package:trailpro_planning/domain/management.dart';
+import 'package:trailpro_planning/presentation/models/models.dart';
 
-class ReportCubit extends Cubit<ReportModel> {
-  ReportCubit() : super(ReportModel([], false));
+class ReportCubit extends Cubit<ReportsForView> {
+  ReportCubit() : super(ReportsForView([], false));
 
   bool isLoadReport = false;
 
   void loadReports(String date) async {
     if (!isLoadReport) {
-      List<String> reports = (await getReports(date))!;
+      List<String> reportsList = (await getReports(date))!;
       isLoadReport = true;
-      final ReportModel newReport = ReportModel(reports, true);
+      List<ReportModel> reports = splitReports(reportsList);
+      final ReportsForView newReport = ReportsForView(reports, true);
       emit(newReport);
     }
   }
 
   void renewReportsOnWidget(String load, String feeling, String feedback) {
-    List<String> reports = state.reports;
-    reports.add(Management.userLogin);
-    reports.add(load);
-    reports.add(feeling);
-    reports.add(feedback);
-    final ReportModel newReport = ReportModel(reports, true);
+    List<ReportModel> reports = state.reports;
+    reports.add(ReportModel(Management.userLogin, load, feeling, feedback));
+    final ReportsForView newReport = ReportsForView(reports, true);
     emit(newReport);
   }
 
@@ -30,18 +29,14 @@ class ReportCubit extends Cubit<ReportModel> {
     return await ApiGSheet().getReportsList(dayDate);
   }
 
-  List<List<String>> splitReports(List<String> reports) {
-    List<List<String>> splitList = [];
+  List<ReportModel> splitReports(List<String> reports) {
+    List<ReportModel> splitList = [];
     for (var i = 0; i < reports.length; i += 4) {
-      splitList.add(
-          reports.sublist(i, i + 4 > reports.length ? reports.length : i + 4));
+      splitList.add(ReportModel(reports[i], reports[i+1], reports[i+2], reports[i+3]));
     }
     return splitList;
   }
+
 }
 
-class ReportModel {
-  List<String> reports;
-  bool isLoading;
-  ReportModel(this.reports, this.isLoading);
-}
+

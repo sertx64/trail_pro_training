@@ -52,10 +52,7 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          child: (management.yearWeekIndex * 10 +
-                      management.currentDayWeekIndex <
-                  int.parse(DatePasing().yearWeekNow()) * 10 +
-                      DatePasing().dayWeekNow())
+          child: (DatePasing().isAfterDay(management.dayPlanStudentGroup['date']!))
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

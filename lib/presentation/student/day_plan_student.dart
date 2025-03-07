@@ -10,6 +10,7 @@ import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 class DayPlan extends StatelessWidget {
   const DayPlan({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     final List<DayPlanModel> dayPlan = GoRouterState.of(context).extra as List<DayPlanModel>;

@@ -7,8 +7,23 @@ class DayPlanModel {
 }
 
 class StudentDataModel {
+  StudentDataModel(this.weekPlanGroup, this.weekPlanPersonal, this.isLoading);
   bool isLoading;
   List<DayPlanModel> weekPlanGroup;
   List<DayPlanModel> weekPlanPersonal;
-  StudentDataModel(this.weekPlanGroup, this.weekPlanPersonal, this.isLoading);
+
+}
+
+class ReportModel {
+  ReportModel(this.name, this.load, this.feeling, this.feedback);
+  String name;
+  String load;
+  String feeling;
+  String feedback;
+}
+
+class ReportsForView {
+  List<ReportModel> reports;
+  bool isLoading;
+  ReportsForView(this.reports, this.isLoading);
 }
