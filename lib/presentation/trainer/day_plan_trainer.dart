@@ -1,77 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
-import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
+import 'package:trailpro_planning/presentation/models/models.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
-class DayPlanTrainer extends StatefulWidget {
-  const DayPlanTrainer({super.key});
-
-  @override
-  State<DayPlanTrainer> createState() => _DayPlanTrainerState();
-}
-
-class _DayPlanTrainerState extends State<DayPlanTrainer> {
-  final Management management = GetIt.instance<Management>();
+class DayPlanTrainer extends StatelessWidget {
+  DayPlanTrainer({super.key});
 
   final TextEditingController _controllerLabelTraining =
       TextEditingController();
   final TextEditingController _controllerDescriptionTraining =
       TextEditingController();
+
   final List samples = Management.samplesSlitList;
 
   @override
-  void initState() {
-    _controllerLabelTraining.text =
-        management.dayPlanStudentGroup['label_training']!;
-    _controllerDescriptionTraining.text =
-        management.dayPlanStudentGroup['description_training']!;
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controllerLabelTraining.dispose();
-    _controllerDescriptionTraining.dispose();
-    print('DISPOSE TR DAY!!!!');
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    DayPlanModel dayPlan = GoRouterState.of(context).extra as DayPlanModel;
+    _controllerLabelTraining.text = dayPlan.label;
+    _controllerDescriptionTraining.text = dayPlan.description;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
         title: Text(
             style: const TextStyle(fontSize: 20, color: Colors.white),
-            'День ${management.dayPlanStudentGroup['day']} ${management.dayPlanStudentGroup['date']}'),
+            'День ${dayPlan.day} ${dayPlan.date}'),
         centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          child: (DatePasing().isAfterDay(management.dayPlanStudentGroup['date']!))
+          child: (DatePasing().isAfterDay(dayPlan.date))
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                         style:
                             const TextStyle(color: Colors.black, fontSize: 20),
-                        management.dayPlanStudentGroup['label_training']!),
+                        dayPlan.label),
                     const SizedBox(
                       height: 10,
                     ),
                     Text(
                         style:
                             const TextStyle(color: Colors.black, fontSize: 16),
-                        management
-                            .dayPlanStudentGroup['description_training']!),
+                        dayPlan.description),
                     const SizedBox(
                       height: 10,
                     ),
-                    ReportsWidget(management.dayPlanStudentGroup['date']!),
+                    ReportsWidget(dayPlan.date),
                   ],
                 )
               : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -119,21 +97,21 @@ class _DayPlanTrainerState extends State<DayPlanTrainer> {
                               backgroundColor:
                                   const Color.fromRGBO(1, 57, 104, 1)),
                           onPressed: () async {
-                            management.currentWeekPlanGroup[management
-                                    .currentDayWeekIndex]['label_training'] =
-                                _controllerLabelTraining.text;
-                            management.currentWeekPlanGroup[
-                                        management.currentDayWeekIndex]
-                                    ['description_training'] =
-                                _controllerDescriptionTraining.text;
-
-                            management.updateWeekPlanTrainerGroup();
-
-                            WeekPlanSentList(
-                                    'tp_week_plan',
-                                    management.yearWeekIndex,
-                                    management.currentWeekPlanGroup)
-                                .sentPlan();
+                            // management.currentWeekPlanGroup[management
+                            //         .currentDayWeekIndex]['label_training'] =
+                            //     _controllerLabelTraining.text;
+                            // management.currentWeekPlanGroup[
+                            //             management.currentDayWeekIndex]
+                            //         ['description_training'] =
+                            //     _controllerDescriptionTraining.text;
+                            //
+                            // management.updateWeekPlanTrainerGroup();
+                            //
+                            // WeekPlanSentList(
+                            //         'tp_week_plan',
+                            //         management.yearWeekIndex,
+                            //         management.currentWeekPlanGroup)
+                            //     .sentPlan();
                             context.go('/trainerscreen');
                           },
                           child: const Text(

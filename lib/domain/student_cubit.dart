@@ -24,9 +24,12 @@ class StudentScreenCubit extends Cubit<StudentDataModel> {
       DayPlanModel('','','',''),
     ], true));
     //костыль помогающий грузить в 2 раза быстрее групповой план тренировок
-    List<DayPlanModel> currentWeekPlanPersonal =
-    await weekPlanStudent(Management.userLogin, yWid);
-    emit(StudentDataModel(currentWeekPlanGroup, currentWeekPlanPersonal, true));
+    if (Management.userLogin != '')  {
+      List<DayPlanModel> currentWeekPlanPersonal =
+          await weekPlanStudent(Management.userLogin, yWid);
+      emit(StudentDataModel(
+          currentWeekPlanGroup, currentWeekPlanPersonal, true));
+    }
   }
 
   void nextWeek() {

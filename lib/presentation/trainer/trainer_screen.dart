@@ -1,77 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
-import 'package:trailpro_planning/domain/management.dart';
+import 'package:trailpro_planning/domain/student_cubit.dart';
+import 'package:trailpro_planning/presentation/models/models.dart';
 
 class TrainerScreen extends StatelessWidget {
-  TrainerScreen({super.key});
-
-  final Management management = GetIt.instance<Management>();
+  const TrainerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.grey[300],
-        appBar: AppBar(
-            actions: [
-              IconButton(
-                icon: const Icon(
-                    color: Color.fromRGBO(255, 132, 26, 1),
-                    Icons.menu_book),
-                onPressed: () => context.push('/creatsamlescreen'),
-              ),
-              IconButton(
-                icon: const Icon(
-                    color: Color.fromRGBO(255, 132, 26, 1),
-                    Icons.person_search),
-                onPressed: () => context.push('/userlistscreen'),
-              ),
-              IconButton(
-                icon: const Icon(
-                    color: Color.fromRGBO(255, 132, 26, 1), Icons.person_add),
-                onPressed: () => context.push('/adduserscreen'),
-              ),
-              IconButton(
-                icon: const Icon(
-                    color: Color.fromRGBO(255, 132, 26, 1), Icons.exit_to_app),
-                onPressed: () {
-                  management.setNowYearWeek();
-                  context.go('/authorization');
-                },
-              ),
-            ],
-            centerTitle: true,
-            title: const Text(
-                style: TextStyle(fontSize: 22, color: Colors.white),
-                'План для группы'),
-            backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-        body: WeekPlanTrainerWidget());
-  }
-}
-
-class WeekPlanTrainerWidget extends StatelessWidget {
-  WeekPlanTrainerWidget({super.key});
-
-  final Management management = GetIt.instance<Management>();
-
-  void goToDayTrainer(BuildContext context, int index, String lableTrain) {
-    (lableTrain == '' &&
-            management.yearWeekIndex * 10 + index <
-                int.parse(DatePasing().yearWeekNow()) * 10 + DatePasing().dayWeekNow())
-        ? null
-        : {
-            management.newScreenDayPlanGroupTrainer(index),
-            context.push('/dayplantrainer')
-          };
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<Map<String, String>>>(
-        valueListenable: management.weekPlanGroup,
-        builder: (context, value, child) {
-          return (!management.isLoadingPlans)
+    context
+        .read<StudentScreenCubit>()
+        .loadWeekPlan(context.read<StudentScreenCubit>().yearWeekIndex);
+    return BlocBuilder<StudentScreenCubit, StudentDataModel>(
+        builder: (context, value) {
+      return Scaffold(
+          backgroundColor: Colors.grey[300],
+          appBar: AppBar(
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                      color: Color.fromRGBO(255, 132, 26, 1), Icons.menu_book),
+                  onPressed: () => context.push('/creatsamlescreen'),
+                ),
+                IconButton(
+                  icon: const Icon(
+                      color: Color.fromRGBO(255, 132, 26, 1),
+                      Icons.person_search),
+                  onPressed: () => context.push('/userlistscreen'),
+                ),
+                IconButton(
+                  icon: const Icon(
+                      color: Color.fromRGBO(255, 132, 26, 1), Icons.person_add),
+                  onPressed: () => context.push('/adduserscreen'),
+                ),
+                IconButton(
+                  icon: const Icon(
+                      color: Color.fromRGBO(255, 132, 26, 1),
+                      Icons.exit_to_app),
+                  onPressed: () => context.go('/authorization'),
+                ),
+              ],
+              centerTitle: true,
+              title: const Text(
+                  style: TextStyle(fontSize: 22, color: Colors.white),
+                  'План для группы'),
+              backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+          body: (!value.isLoading)
               ? const Center(
                   child: CircularProgressIndicator(
                   color: Color.fromRGBO(255, 132, 26, 1),
@@ -82,16 +58,13 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                   child: Stack(children: [
                     ListView.separated(
                       itemBuilder: (context, index) {
-                        Map<String, String> dayPlan = value[index];
+                        DayPlanModel dayPlan = value.weekPlanGroup[index];
                         return Container(
                             decoration: BoxDecoration(
-                              color: (management.yearWeekIndex * 10 + index <
-                                      int.parse(DatePasing().yearWeekNow()) * 10 +
-                                          DatePasing().dayWeekNow() -
-                                          1)
-                                  ? Colors.grey[350]
-                                  : (dayPlan['date'] == DatePasing().dateNow())
-                                      ? Colors.green[100]
+                              color: (dayPlan.date == DatePasing().dateNow())
+                                  ? Colors.green[100]
+                                  : (DatePasing().isAfterDay(dayPlan.date))
+                                      ? Colors.grey[350]
                                       : Colors.white,
                               border: Border.all(
                                   width: 3.0,
@@ -112,14 +85,13 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             border: Border.all(
                                                 width: 5.0,
-                                                color: (dayPlan[
-                                                            'label_training'] ==
+                                                color: (dayPlan.label ==
                                                         '')
                                                     ? Colors.blueGrey
                                                     : const Color.fromRGBO(
                                                         1, 57, 104, 1)),
                                             shape: BoxShape.circle,
-                                            color: (dayPlan['label_training'] ==
+                                            color: (dayPlan.label ==
                                                     '')
                                                 ? Colors.blueGrey
                                                 : const Color.fromRGBO(
@@ -131,7 +103,7 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                                                     fontWeight: FontWeight.w600,
                                                     color: Colors.white,
                                                     fontSize: 22),
-                                                dayPlan['day']!),
+                                                dayPlan.day),
                                           )),
                                       const SizedBox(width: 8),
                                       Column(
@@ -143,22 +115,22 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                                                   color: Color.fromRGBO(
                                                       1, 57, 104, 1),
                                                   fontSize: 22),
-                                              dayPlan['date']!),
+                                              dayPlan.date),
                                           Text(
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   color: Color.fromRGBO(
                                                       1, 57, 104, 1),
                                                   fontSize: 18),
-                                              (dayPlan['label_training'] == '')
+                                              (dayPlan.label == '')
                                                   ? 'День отдыха'
-                                                  : dayPlan['label_training']!),
+                                                  : dayPlan.label),
                                         ],
                                       ),
                                     ],
                                   ),
                                   Visibility(
-                                    visible: (dayPlan['label_training'] == '')
+                                    visible: (dayPlan.label == '')
                                         ? false
                                         : true,
                                     child: Column(
@@ -173,14 +145,17 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                                                 color: Color.fromRGBO(
                                                     1, 57, 104, 1),
                                                 fontSize: 18),
-                                            dayPlan['description_training']!),
+                                            dayPlan.description),
                                       ],
                                     ),
                                   ),
                                 ],
                               ),
-                              onTap: () => goToDayTrainer(context, index,
-                                    (dayPlan['label_training']!)),
+                              onTap: () {
+                                (dayPlan.label == '' && DatePasing().isAfterDay(dayPlan.date))
+                                    ? null
+                                    : context.push('/dayplantrainer', extra: dayPlan);
+                              },
                             ));
                       },
                       itemCount: 7,
@@ -188,7 +163,7 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                           const SizedBox(height: 7),
                     ),
                     Positioned(
-                        bottom: 16, // Отступ от нижнего края экрана
+                        bottom: 16,
                         left: 0,
                         right: 0,
                         child: Padding(
@@ -206,7 +181,7 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                                           backgroundColor: const Color.fromARGB(
                                               200, 1, 57, 104)),
                                       onPressed: () {
-                                        management.nextWeek('trainergroup');
+                                        context.read<StudentScreenCubit>().nextWeek();
                                       },
                                       child: const Text(
                                           style: TextStyle(
@@ -224,7 +199,7 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                                           backgroundColor: const Color.fromARGB(
                                               200, 1, 57, 104)),
                                       onPressed: () {
-                                        management.previousWeek('trainergroup');
+                                        context.read<StudentScreenCubit>().previousWeek();
                                       },
                                       child: const Text(
                                           style: TextStyle(
@@ -233,7 +208,7 @@ class WeekPlanTrainerWidget extends StatelessWidget {
                                                   255, 132, 26, 1)),
                                           '<<<')),
                                 ]))),
-                  ]));
-        });
+                  ])));
+    });
   }
 }

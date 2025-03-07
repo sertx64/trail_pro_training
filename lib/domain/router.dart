@@ -41,14 +41,16 @@ final GoRouter router =
       builder: (BuildContext context, GoRouterState state) => TrainerAuth()),
   GoRoute(
       path: '/trainerscreen',
-      builder: (BuildContext context, GoRouterState state) => TrainerScreen()),
+      builder: (BuildContext context, GoRouterState state) => BlocProvider(
+          create: (context) => StudentScreenCubit(),
+          child: TrainerScreen())),
   GoRoute(
       path: '/adduserscreen',
       builder: (BuildContext context, GoRouterState state) => AddUserScreen()),
   GoRoute(
       path: '/dayplantrainer',
       builder: (BuildContext context, GoRouterState state) =>
-          const DayPlanTrainer()),
+          DayPlanTrainer()),
   GoRoute(
       path: '/userlistscreen',
       builder: (BuildContext context, GoRouterState state) => UserListScreen()),

@@ -196,9 +196,6 @@ class StudentScreen extends StatelessWidget {
                                                 '')
                                         ? null
                                         : {
-                                      // context.read<StudentScreenCubit>()
-                                      //           .newScreenDayPlan(index),
-
                                             context.push('/dayplan', extra: [dayPlanGroup, dayPlanPersonal]),
                                           };
                                   },
