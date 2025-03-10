@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/data/gsheets_api.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
-import 'package:trailpro_planning/presentation/models/models.dart';
+import 'package:trailpro_planning/domain/models/models.dart';
 
 class StudentScreenCubit extends Cubit<StudentDataModel> {
   StudentScreenCubit() : super(StudentDataModel([],[], false));

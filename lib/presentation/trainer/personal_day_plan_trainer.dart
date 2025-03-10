@@ -16,16 +16,16 @@ class _PersonalDayPlanTrainerState extends State<PersonalDayPlanTrainer> {
   final Management management = GetIt.instance<Management>();
 
   void savePlanDay() {
-    management.currentWeekPlanPersonal[management.currentDayWeekIndex]
-        ['label_training'] = _controllerLabelTraining.text;
-    management.currentWeekPlanPersonal[management.currentDayWeekIndex]
-        ['description_training'] = _controllerDescriptionTraining.text;
-
-    management.updateWeekPlanTrainerPersonal();
-
-    WeekPlanSentList(management.selectedUser, management.yearWeekIndex,
-            management.currentWeekPlanPersonal)
-        .sentPlan();
+    // management.currentWeekPlanPersonal[management.currentDayWeekIndex]
+    //     ['label_training'] = _controllerLabelTraining.text;
+    // management.currentWeekPlanPersonal[management.currentDayWeekIndex]
+    //     ['description_training'] = _controllerDescriptionTraining.text;
+    //
+    // management.updateWeekPlanTrainerPersonal();
+    //
+    // WeekPlanSentList(management.selectedUser, management.yearWeekIndex,
+    //         management.currentWeekPlanPersonal)
+    //     .sentPlan();
     context.pop();
   }
 

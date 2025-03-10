@@ -1,36 +1,37 @@
 import 'package:trailpro_planning/data/gsheets_api.dart';
 
 class WeekPlanSentList {
-  final List<Map<String, String>> weekPlanSent;
+  final String day;
+  final String label;
+  final String description;
   final int yearWeek;
   String planIdInTab;
 
-  WeekPlanSentList(this.planIdInTab, this.yearWeek, this.weekPlanSent);
+  WeekPlanSentList(
+      this.planIdInTab, this.yearWeek, this.day, this.label, this.description);
 
-  void sentPlan() {
-    List<String> planList = [];
-    planList.add(weekPlanSent[0]['date']!);
-    planList.add(weekPlanSent[0]['label_training']!);
-    planList.add(weekPlanSent[0]['description_training']!);
-    planList.add(weekPlanSent[1]['date']!);
-    planList.add(weekPlanSent[1]['label_training']!);
-    planList.add(weekPlanSent[1]['description_training']!);
-    planList.add(weekPlanSent[2]['date']!);
-    planList.add(weekPlanSent[2]['label_training']!);
-    planList.add(weekPlanSent[2]['description_training']!);
-    planList.add(weekPlanSent[3]['date']!);
-    planList.add(weekPlanSent[3]['label_training']!);
-    planList.add(weekPlanSent[3]['description_training']!);
-    planList.add(weekPlanSent[4]['date']!);
-    planList.add(weekPlanSent[4]['label_training']!);
-    planList.add(weekPlanSent[4]['description_training']!);
-    planList.add(weekPlanSent[5]['date']!);
-    planList.add(weekPlanSent[5]['label_training']!);
-    planList.add(weekPlanSent[5]['description_training']!);
-    planList.add(weekPlanSent[6]['date']!);
-    planList.add(weekPlanSent[6]['label_training']!);
-    planList.add(weekPlanSent[6]['description_training']!);
-
-    ApiGSheet().sendWeekPlanList(planIdInTab, '$yearWeek', planList);
+  void sentPlan() async {
+    int indexDay = (day == 'ПН')
+        ? 0
+        : (day == 'ВТ')
+            ? 1
+            : (day =='СР')
+                ? 2
+                : (day == 'ЧТ')
+                    ? 3
+                    : (day == 'ПТ')
+                        ? 4
+                        : (day == 'СБ')
+                            ? 5
+                            : (day == 'ВС')
+                                ? 6
+                                : 7;
+    int indexLabel = (indexDay*3)+1;
+    int indexDescription = (indexDay*3)+2;
+    List<String>? planList =
+        await ApiGSheet().getWeekPlanList(planIdInTab, '$yearWeek');
+    planList?[indexLabel] = label;
+    planList?[indexDescription] = description;
+    ApiGSheet().sendWeekPlanList(planIdInTab, '$yearWeek', planList!);
   }
 }

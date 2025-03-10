@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
-import 'package:trailpro_planning/presentation/models/models.dart';
+import 'package:trailpro_planning/domain/models/models.dart';
+import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
 class DayPlanTrainer extends StatelessWidget {
@@ -17,7 +18,10 @@ class DayPlanTrainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DayPlanModel dayPlan = GoRouterState.of(context).extra as DayPlanModel;
+    List<dynamic> dayPlanPlusYearWeek =
+        GoRouterState.of(context).extra as List<dynamic>;
+    DayPlanModel dayPlan = dayPlanPlusYearWeek[0];
+    int yearWeekIndex = dayPlanPlusYearWeek[1];
     _controllerLabelTraining.text = dayPlan.label;
     _controllerDescriptionTraining.text = dayPlan.description;
     return Scaffold(
@@ -97,21 +101,13 @@ class DayPlanTrainer extends StatelessWidget {
                               backgroundColor:
                                   const Color.fromRGBO(1, 57, 104, 1)),
                           onPressed: () async {
-                            // management.currentWeekPlanGroup[management
-                            //         .currentDayWeekIndex]['label_training'] =
-                            //     _controllerLabelTraining.text;
-                            // management.currentWeekPlanGroup[
-                            //             management.currentDayWeekIndex]
-                            //         ['description_training'] =
-                            //     _controllerDescriptionTraining.text;
-                            //
-                            // management.updateWeekPlanTrainerGroup();
-                            //
-                            // WeekPlanSentList(
-                            //         'tp_week_plan',
-                            //         management.yearWeekIndex,
-                            //         management.currentWeekPlanGroup)
-                            //     .sentPlan();
+                            WeekPlanSentList(
+                                    'tp_week_plan',
+                                    yearWeekIndex,
+                                    dayPlan.day,
+                                    _controllerLabelTraining.text,
+                                    _controllerDescriptionTraining.text)
+                                .sentPlan();
                             context.go('/trainerscreen');
                           },
                           child: const Text(

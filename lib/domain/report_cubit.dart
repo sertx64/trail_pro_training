@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/data/gsheets_api.dart';
 import 'package:trailpro_planning/domain/management.dart';
-import 'package:trailpro_planning/presentation/models/models.dart';
+import 'package:trailpro_planning/domain/models/models.dart';
 
 class ReportCubit extends Cubit<ReportsForView> {
   ReportCubit() : super(ReportsForView([], false));

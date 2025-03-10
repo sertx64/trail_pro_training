@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/student_cubit.dart';
-import 'package:trailpro_planning/presentation/models/models.dart';
+import 'package:trailpro_planning/domain/models/models.dart';
 
 class TrainerScreen extends StatelessWidget {
   const TrainerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    print('БИЛД ЭКРАНА ТРЕНЕРА!!!');
     context
         .read<StudentScreenCubit>()
         .loadWeekPlan(context.read<StudentScreenCubit>().yearWeekIndex);
@@ -154,7 +155,7 @@ class TrainerScreen extends StatelessWidget {
                               onTap: () {
                                 (dayPlan.label == '' && DatePasing().isAfterDay(dayPlan.date))
                                     ? null
-                                    : context.push('/dayplantrainer', extra: dayPlan);
+                                    : context.push('/dayplantrainer', extra: [dayPlan, context.read<StudentScreenCubit>().yearWeekIndex]);
                               },
                             ));
                       },

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/domain/management.dart';
+import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/domain/report_cubit.dart';
-import 'package:trailpro_planning/presentation/models/models.dart';
 import 'package:trailpro_planning/presentation/reports/sent_report_widget.dart';
 
 class ReportsWidget extends StatelessWidget {
