@@ -6,9 +6,10 @@ class DayPlanModel {
   String description;
 }
 
-class StudentDataModel {
-  StudentDataModel(this.weekPlanGroup, this.weekPlanPersonal, this.isLoading);
-  bool isLoading;
+class PlanDataModel {
+  PlanDataModel(this.isDay, this.planLoaded, this.weekPlanGroup, this.weekPlanPersonal);
+  bool isDay;
+  bool planLoaded;
   List<DayPlanModel> weekPlanGroup;
   List<DayPlanModel> weekPlanPersonal;
 

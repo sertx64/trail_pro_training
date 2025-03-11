@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
 class TrainerAuth extends StatelessWidget {
   TrainerAuth({super.key});
-  final Management management = GetIt.instance<Management>();
   final TextEditingController _pin = TextEditingController();
 
   @override
@@ -54,8 +52,6 @@ class TrainerAuth extends StatelessWidget {
                       fixedSize: const Size(200, 50),
                       backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
                   onPressed: () {
-                    management
-                        .loadWeekPlanTrainerGroup(management.yearWeekIndex);
                     (_pin.text == '1050') ? context.go('/trainerscreen') : () {};
                   },
                   child: const Text(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
 import 'package:gsheets/gsheets.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -26,7 +25,6 @@ const _spreadsheetId = '182H6VT_Phx-4by5_fWefCMLdUPTaR6cXwPt5FD-OjZs';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  GetIt.I.registerSingleton<Management>(Management());
 
   final GSheets gSheets = GSheets(_credentials);
   Management.forGSheetsApi = await gSheets.spreadsheet(_spreadsheetId);

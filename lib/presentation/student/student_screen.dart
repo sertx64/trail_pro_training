@@ -11,8 +11,8 @@ class StudentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<StudentScreenCubit>().loadWeekPlan(context.read<StudentScreenCubit>().yearWeekIndex);
-    return BlocBuilder<StudentScreenCubit, StudentDataModel>(
+    context.read<StudentScreenCubit>().loadWeekPlan();
+    return BlocBuilder<StudentScreenCubit, PlanDataModel>(
       builder: (context, value) {
         return Scaffold(
             appBar: AppBar(
@@ -28,7 +28,7 @@ class StudentScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 27, color: Colors.white),
                     'План тренировок'),
                 backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-            body: (!value.isLoading)
+            body: (!value.planLoaded)
                 ? const Center(
                     child: CircularProgressIndicator(
                     color: Color.fromRGBO(255, 132, 26, 1),

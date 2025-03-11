@@ -37,20 +37,4 @@ class DatePasing {
     }
   }
 
-  // bool isBeforeDay (String dateString) {
-  //
-  //   // Преобразование строки в объект DateTime
-  //   DateTime date = DateFormat("dd.MM.yyyy").parse(dateString);
-  //
-  //   // Получение текущей даты
-  //   DateTime now = DateTime.now();
-  //
-  //   // Проверка, ли этот день
-  //   if (now.isBefore(date)) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
 }

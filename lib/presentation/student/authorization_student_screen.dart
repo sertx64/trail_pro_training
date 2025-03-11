@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:trailpro_planning/domain/management.dart';
@@ -12,7 +11,6 @@ class Authorization extends StatefulWidget {
 }
 
 class _AuthorizationState extends State<Authorization> {
-  final Management management = GetIt.instance<Management>();
   final box = Hive.box('user');
   final TextEditingController _pin = TextEditingController();
   final TextEditingController _login = TextEditingController();
@@ -23,11 +21,9 @@ class _AuthorizationState extends State<Authorization> {
     Map<String, String> aum = Management.authUserMap;
     if (aum.containsKey(login)) {
       if (pin == aum[login]) {
-        management.setNowYearWeek();
         Management.userLogin = login;
         box.put('login', login);
         box.put('pin', pin);
-        //management.loadWeekPlan(management.yearWeekIndex);
         context.go('/studentscreen');
 
       } else {
@@ -44,7 +40,6 @@ class _AuthorizationState extends State<Authorization> {
     final pin = box.get('pin', defaultValue: '');
     _login.text = login;
     _pin.text = pin;
-    //Future.delayed(const Duration(seconds: 4), () => goToStudentScreen);
     super.initState();
   }
 
@@ -52,7 +47,6 @@ class _AuthorizationState extends State<Authorization> {
   void dispose() {
     _login.dispose();
     _pin.dispose();
-    print('DESPOSE AUTHSCREEN!!!');
     super.dispose();
   }
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
-import 'package:trailpro_planning/domain/week_plan_sent_list.dart';
+import 'package:trailpro_planning/domain/student_cubit.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
 class DayPlanTrainer extends StatelessWidget {
@@ -18,14 +18,20 @@ class DayPlanTrainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> dayPlanPlusYearWeek =
-        GoRouterState.of(context).extra as List<dynamic>;
-    DayPlanModel dayPlan = dayPlanPlusYearWeek[0];
-    int yearWeekIndex = dayPlanPlusYearWeek[1];
+    DayPlanModel dayPlan = context.read<StudentScreenCubit>().selectDay;
     _controllerLabelTraining.text = dayPlan.label;
     _controllerDescriptionTraining.text = dayPlan.description;
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          TextButton(
+            onPressed: () => context.read<StudentScreenCubit>().backToWeek(),
+            child: const Text(
+                style: TextStyle(
+                    fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
+                'Назад'),
+          ),
+        ],
         backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
         title: Text(
             style: const TextStyle(fontSize: 20, color: Colors.white),
@@ -57,7 +63,20 @@ class DayPlanTrainer extends StatelessWidget {
                   ],
                 )
               : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Text('Название'),
+                  Row(
+                    children: [
+                      const Text(
+                          style: TextStyle(color: Colors.black, fontSize: 14),
+                          'Название'),
+                      TextButton(
+                          onPressed: () {
+                            _controllerLabelTraining.text = '';
+                          },
+                          child: const Text(
+                              style: TextStyle(color: Colors.black, fontSize: 14),
+                              '(очистить)'))
+                    ],
+                  ),
                   TextField(
                     maxLength: 27,
                     decoration: const InputDecoration(
@@ -75,8 +94,21 @@ class DayPlanTrainer extends StatelessWidget {
                         fontSize: 16),
                     controller: _controllerLabelTraining,
                   ),
-                  const SizedBox(height: 8),
-                  const Text('Описание'),
+                  Row(
+                    children: [
+                      const Text(
+                          style: TextStyle(color: Colors.black, fontSize: 14),
+                          'Описание'),
+                      TextButton(
+                          onPressed: () {
+                            _controllerDescriptionTraining.text = '';
+                          },
+                          child: const Text(
+                              style:
+                              TextStyle(color: Colors.black, fontSize: 14),
+                              '(очистить)'))
+                    ],
+                  ),
                   TextField(
                     maxLines: null,
                     decoration: const InputDecoration(
@@ -101,14 +133,11 @@ class DayPlanTrainer extends StatelessWidget {
                               backgroundColor:
                                   const Color.fromRGBO(1, 57, 104, 1)),
                           onPressed: () async {
-                            WeekPlanSentList(
-                                    'tp_week_plan',
-                                    yearWeekIndex,
-                                    dayPlan.day,
+                            context
+                                .read<StudentScreenCubit>()
+                                .applyAndBackToWeek(
                                     _controllerLabelTraining.text,
-                                    _controllerDescriptionTraining.text)
-                                .sentPlan();
-                            context.go('/trainerscreen');
+                                    _controllerDescriptionTraining.text);
                           },
                           child: const Text(
                               style:
