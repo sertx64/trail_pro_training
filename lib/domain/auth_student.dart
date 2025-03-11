@@ -6,13 +6,13 @@ class Users {
   void createAuthUserMap() async {
     List<String>? authUserList = await ApiGSheet().getAuthUserList();
     Management.authUserList = authUserList!;
-    Map<String, String> authusermap = {};
+    final Map<String, String> authUserMap = {};
 
     for (int i = 0; i < authUserList.length; i = i + 2) {
-      authusermap[authUserList[i]] = authUserList[i + 1];
+      authUserMap[authUserList[i]] = authUserList[i + 1];
     }
 
-    Management.authUserMap = authusermap;
+    Management.authUserMap = authUserMap;
     Management.userList = Management.authUserMap.keys.toList();
   }
 
