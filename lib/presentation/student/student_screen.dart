@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/student_cubit.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
+import 'package:trailpro_planning/presentation/climbing_animation.dart';
+
 
 
 class StudentScreen extends StatelessWidget {
@@ -30,10 +32,7 @@ class StudentScreen extends StatelessWidget {
                 backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
             body: (!value.planLoaded)
                 ? const Center(
-                    child: CircularProgressIndicator(
-                    color: Color.fromRGBO(255, 132, 26, 1),
-                    strokeWidth: 6,
-                  ))
+                    child: LottieAnimationLoadBar())
                 : Stack(
                     children: [
                       ListView.separated(

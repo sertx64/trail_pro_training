@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trailpro_planning/presentation/climbing_animation.dart';
 
 class InfoScreen extends StatelessWidget {
   const InfoScreen({super.key});
@@ -42,6 +43,8 @@ class InfoScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 20, color: Colors.black),
                   'Для регистрации в приложении нужно обратится к Лаптеву Сергею.'),
               const SizedBox(height: 10),
+              const SizedBox(height: 300,
+              child: Center(child: LottieAnimationLoadBar()),)
             ],
           ),
         ));
