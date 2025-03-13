@@ -28,3 +28,12 @@ class ReportsForView {
   bool isLoading;
   ReportsForView(this.reports, this.isLoading);
 }
+
+class User {
+  User(this.login, this.name, this.pin, this.role, this.groups);
+  String login;
+  String name;
+  String pin;
+  String role;
+  List<String> groups;
+}

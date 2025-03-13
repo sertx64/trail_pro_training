@@ -16,11 +16,4 @@ class Samples {
     Management.samplesSlitList = samplessplitlist;
   }
 
-  // void addSamples(String lable, String discription) {
-  //   List<String> samplesList = Management.samplesList;
-  //   samplesList.add(lable);
-  //   samplesList.add(discription);
-  //   Management.samplesList = samplesList;
-  //   ApiGSheet().sendSamplesList(samplesList);
-  // }
 }

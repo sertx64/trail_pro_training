@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trailpro_planning/domain/auth_student.dart';
+import 'package:trailpro_planning/domain/users.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
 class AddUserScreen extends StatelessWidget {
@@ -69,11 +69,11 @@ class AddUserScreen extends StatelessWidget {
                     fixedSize: const Size(200, 50),
                     backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
                 onPressed: () {
-                  if (Management.authUserList.contains(_login.text) || _pin.text == '' || _login.text == '') {
+                  if (Management.userList.contains(_login.text) || _pin.text.trim() == '' || _login.text.trim() == '') {
                     return;
                   } else {
                     Management.userList.add(_login.text);
-                    Users().addUser(_login.text, _pin.text);
+                    Users().addUser(_login.text, _pin.text, 'student', ['tp_week_plan']);
                     context.go('/trainerscreen');
                   }
                 },

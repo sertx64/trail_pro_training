@@ -31,8 +31,8 @@ class _ReportsWidget extends StatelessWidget {
               strokeWidth: 3,
             ))
           : (!value.reports
-                      .any((report) => report.name == Management.userLogin) &&
-                  Management.userLogin != '')
+                      .any((report) => report.name == Management.user.login) &&
+                  Management.user.role == 'student')
               ? SentReportWidget(date)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

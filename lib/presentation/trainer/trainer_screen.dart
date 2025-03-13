@@ -13,6 +13,7 @@ class TrainerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     context.read<StudentScreenCubit>().loadWeekPlan();
     return BlocBuilder<StudentScreenCubit, PlanDataModel>(
         builder: (context, value) {
@@ -378,20 +379,20 @@ class TrainerScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Expanded(
                   child: ListView.separated(
-                    itemCount: Management.groupsList.length,
+                    itemCount: Management.user.groups.length,
                     separatorBuilder: (dialogContext, index) =>
                     const SizedBox(height: 8),
                     itemBuilder: (dialogContext, index) {
                       return TextButton(
                         child: Text(
                           style: const TextStyle(fontSize: 20, color: Colors.black),
-                          Management.groupsList[index],
+                          Management.user.groups[index],
                         ),
                         onPressed: () {
                           Navigator.of(dialogContext).pop();
                           context
                               .read<StudentScreenCubit>()
-                              .choosingPlanType(Management.groupsList[index]);
+                              .choosingPlanType(Management.user.groups[index]);
                         },
                       );
                     },

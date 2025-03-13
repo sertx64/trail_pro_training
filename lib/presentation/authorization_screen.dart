@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:trailpro_planning/domain/management.dart';
+import 'package:trailpro_planning/domain/models/models.dart';
+import 'package:trailpro_planning/domain/users.dart';
 
 class Authorization extends StatefulWidget {
   const Authorization({super.key});
@@ -15,19 +17,19 @@ class _AuthorizationState extends State<Authorization> {
   final TextEditingController _pin = TextEditingController();
   final TextEditingController _login = TextEditingController();
 
-  void goToStudentScreen() {
+  void goToStudentScreen() async {
     String login = _login.text;
     String pin = _pin.text;
-    Map<String, String> aum = Management.authUserMap;
-    if (aum.containsKey(login)) {
-      if (pin == aum[login]) {
-        Management.userLogin = login;
-        box.put('login', login);
-        box.put('pin', pin);
-        context.go('/studentscreen');
+    User user = await Users().user(login);
 
+    if (user.pin == pin) {
+
+      box.put('login', login);
+      box.put('pin', pin);
+      if (user.role == 'student') {
+        context.go('/studentscreen');
       } else {
-        return;
+        context.go('/trainerscreen');
       }
     } else {
       return;
@@ -55,12 +57,12 @@ class _AuthorizationState extends State<Authorization> {
     return Scaffold(
         appBar: AppBar(
             actions: [
-              IconButton(
-                icon: const Icon(
-                    color: Color.fromRGBO(255, 132, 26, 1),
-                    Icons.fitness_center_rounded),
-                onPressed: () => context.push('/trainerauth'),
-              ),
+              // IconButton(
+              //   icon: const Icon(
+              //       color: Color.fromRGBO(255, 132, 26, 1),
+              //       Icons.fitness_center_rounded),
+              //   onPressed: () => context.push('/trainerauth'),
+              // ),
               IconButton(
                 icon: const Icon(
                     color: Color.fromRGBO(255, 132, 26, 1), Icons.info_outline),

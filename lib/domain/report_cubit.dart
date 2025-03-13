@@ -20,7 +20,7 @@ class ReportCubit extends Cubit<ReportsForView> {
 
   void renewReportsOnWidget(String load, String feeling, String feedback) {
     List<ReportModel> reports = state.reports;
-    reports.add(ReportModel(Management.userLogin, load, feeling, feedback));
+    reports.add(ReportModel(Management.user.login, load, feeling, feedback));
     final ReportsForView newReport = ReportsForView(reports, true);
     emit(newReport);
   }

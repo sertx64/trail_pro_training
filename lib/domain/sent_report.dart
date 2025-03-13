@@ -5,7 +5,7 @@ class SentStudentReport {
   void sentReport(
       String dayDate, String load, String feeling, String feedback) async {
     List<String>? reportsList = await ApiGSheet().getReportsList(dayDate);
-    reportsList!.add(Management.userLogin);
+    reportsList!.add(Management.user.login);
     reportsList.add(load);
     reportsList.add(feeling);
     reportsList.add(feedback);

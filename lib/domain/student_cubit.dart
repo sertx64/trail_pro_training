@@ -31,9 +31,9 @@ class StudentScreenCubit extends Cubit<PlanDataModel> {
       (index) => DayPlanModel('', '', '', ''),
     );
     emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal));
-    if (Management.userLogin != '') {
+    if (Management.user.role == 'student') {
       List<DayPlanModel> currentWeekPlanPersonal =
-          await weekPlanStudent(Management.userLogin, yearWeekIndex);
+          await weekPlanStudent(Management.user.login, yearWeekIndex);
       currentPlanData.weekPlanPersonal = currentWeekPlanPersonal;
       emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal));
     }
