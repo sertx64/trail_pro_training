@@ -9,7 +9,7 @@ class LottieAnimationLoadBar extends StatelessWidget {
     return Center(
         child: Lottie.asset(
           'assets/animations/anim2.json', // Путь к вашему JSON-файлу с анимацией
-          height: 100,
+          height: 200,
           fit: BoxFit.fill,
         ));
   }

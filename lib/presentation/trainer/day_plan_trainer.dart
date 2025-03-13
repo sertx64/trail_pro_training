@@ -43,25 +43,56 @@ class DayPlanTrainer extends StatelessWidget {
         child: SingleChildScrollView(
           child: (DatePasing().isAfterDay(dayPlan.date))
               ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 20),
-                        dayPlan.label),
-                    const SizedBox(
-                      height: 10,
+                children: [
+                  Container(
+                              decoration: BoxDecoration(
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.grey,
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(3, 7),
                     ),
-                    Text(
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 16),
-                        dayPlan.description),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ReportsWidget(dayPlan.date),
                   ],
-                )
+                  color: (dayPlan.date ==
+                      DatePasing().dateNow())
+                      ? Colors.green[100]
+                      : (DatePasing().isAfterDay(dayPlan.date))
+                      ? Colors.grey[350]
+                      : Colors.white,
+                  border: Border.all(
+                      width: 3.0,
+                      color:
+                      const Color.fromRGBO(1, 57, 104, 1)),
+                  borderRadius: BorderRadius.circular(16),
+                              ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                style:
+                                    const TextStyle(color: Colors.black, fontSize: 20),
+                                dayPlan.label),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                                style:
+                                    const TextStyle(color: Colors.black, fontSize: 16),
+                                dayPlan.description),
+                            const SizedBox(
+                              height: 10,
+                            ),
+
+                          ],
+                        ),
+                    ),
+                  ),
+                  ReportsWidget(dayPlan.date),
+                ],
+              )
               : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(
                     children: [

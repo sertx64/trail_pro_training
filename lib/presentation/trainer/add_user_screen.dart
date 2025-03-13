@@ -72,6 +72,7 @@ class AddUserScreen extends StatelessWidget {
                   if (Management.authUserList.contains(_login.text) || _pin.text == '' || _login.text == '') {
                     return;
                   } else {
+                    Management.userList.add(_login.text);
                     Users().addUser(_login.text, _pin.text);
                     context.go('/trainerscreen');
                   }

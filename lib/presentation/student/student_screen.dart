@@ -208,7 +208,7 @@ class StudentScreen extends StatelessWidget {
                       Positioned(
                         bottom: 16,
                         left: 0,
-                        right: 0,
+                        right: 8,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
