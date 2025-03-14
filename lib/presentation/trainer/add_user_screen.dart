@@ -3,11 +3,19 @@ import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/users.dart';
 import 'package:trailpro_planning/domain/management.dart';
 
-class AddUserScreen extends StatelessWidget {
-  AddUserScreen({super.key});
+class AddUserScreen extends StatefulWidget {
+  const AddUserScreen({super.key});
 
+  @override
+  State<AddUserScreen> createState() => _AddUserScreenState();
+}
+
+class _AddUserScreenState extends State<AddUserScreen> {
   final TextEditingController _pin = TextEditingController();
+
   final TextEditingController _login = TextEditingController();
+
+  bool _isTrainer = false;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +72,23 @@ class AddUserScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: _isTrainer,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _isTrainer = value ?? false; // Обновляем состояние
+                    });
+                  },
+                ),
+                const Text('Роль "тренер"'),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(200, 50),
@@ -73,7 +98,8 @@ class AddUserScreen extends StatelessWidget {
                     return;
                   } else {
                     Management.userList.add(_login.text);
-                    Users().addUser(_login.text, _pin.text, 'student', ['tp_week_plan']);
+                    String role = _isTrainer ? 'trainer' : 'student';
+                    Users().addUser(_login.text, _pin.text, role, ['tp_week_plan']);
                     context.go('/trainerscreen');
                   }
                 },

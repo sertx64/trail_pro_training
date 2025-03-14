@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
-import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
+import 'package:trailpro_planning/domain/samples.dart';
 import 'package:trailpro_planning/domain/users.dart';
 
 class Authorization extends StatefulWidget {
@@ -17,7 +17,7 @@ class _AuthorizationState extends State<Authorization> {
   final TextEditingController _pin = TextEditingController();
   final TextEditingController _login = TextEditingController();
 
-  void goToStudentScreen() async {
+  void goToRoleScreen() async {
     String login = _login.text;
     String pin = _pin.text;
     User user = await Users().user(login);
@@ -29,6 +29,8 @@ class _AuthorizationState extends State<Authorization> {
       if (user.role == 'student') {
         context.go('/studentscreen');
       } else {
+        Samples().createSamplesSplitList();
+        Users().createUserAndGroupsList();
         context.go('/trainerscreen');
       }
     } else {
@@ -126,7 +128,7 @@ class _AuthorizationState extends State<Authorization> {
                     elevation: 8,
                     fixedSize: const Size(200, 50),
                     backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-                onPressed: goToStudentScreen,
+                onPressed: goToRoleScreen,
                 child: const Text(
                     style: TextStyle(fontSize: 24, color: Colors.white),
                     'Войти')),

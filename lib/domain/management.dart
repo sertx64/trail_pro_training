@@ -18,5 +18,5 @@ class Management {
   static Map<String, String> authUserMap = {};
   static List<String> samplesList = [];
   static List<List<String>> samplesSlitList = [];
-  //static List<String> groupsList = ['tp_week_plan'];
+  static List<String> groupsList = [];
 }

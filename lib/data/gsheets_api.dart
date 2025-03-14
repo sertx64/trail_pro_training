@@ -27,6 +27,12 @@ class ApiGSheet {
     return userList;
   }
 
+  Future<List<String>?> getGroupsList() async {
+    final sheet = ss.worksheetByTitle('groups_sheet');
+    final groupsList = await sheet!.values.columnByKey('groups_id');
+    return groupsList;
+  }
+
   void addUser(String login, List<String> userList) async {
     final sheet = ss.worksheetByTitle('users');
     await sheet!.values.insertRowByKey(login, userList);
@@ -53,4 +59,21 @@ class ApiGSheet {
     final sheet = ss.worksheetByTitle('samples');
     await sheet!.values.insertColumnByKey('samples_list', samplesList);
   }
+
+  void createNewSheetPlan(String nameSheet) async{
+    // Получение исходного листа
+    final Worksheet sourceSheet = ss.worksheetByTitle('service')!;
+
+    // Чтение данных с исходного листа
+    final List<List<String>>data = await sourceSheet.values.allRows();
+
+    // Создание нового листа
+    final Worksheet newSheet = await ss.addWorksheet(nameSheet);
+
+    // Запись данных в новый лист
+    await newSheet.values.insertRows(1, data);
+  }
+
+
+
 }

@@ -43,8 +43,7 @@ class InfoScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 20, color: Colors.black),
                   'Для регистрации в приложении нужно обратится к Лаптеву Сергею.'),
               const SizedBox(height: 10),
-              const SizedBox(height: 300,
-              child: Center(child: LottieAnimationLoadBar()),)
+              const Center(child: LottieAnimationLoadBar()),
             ],
           ),
         ));

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trailpro_planning/domain/samples_cubit.dart';
-import 'package:trailpro_planning/domain/student_cubit.dart';
 import 'package:trailpro_planning/presentation/trainer/add_samples_screen.dart';
 import 'package:trailpro_planning/presentation/trainer/add_user_screen.dart';
 import 'package:trailpro_planning/presentation/authorization_screen.dart';
@@ -22,7 +19,7 @@ final GoRouter router =
   GoRoute(
       path: '/splashscreen',
       builder: (BuildContext context, GoRouterState state) =>
-          const SplashScreen()),
+          SplashScreen()),
   GoRoute(
       path: '/infoscreen',
       builder: (BuildContext context, GoRouterState state) =>
@@ -33,24 +30,20 @@ final GoRouter router =
           const SiteTrailpro()),
   GoRoute(
       path: '/trainerscreen',
-      builder: (BuildContext context, GoRouterState state) => BlocProvider(
-          create: (context) => StudentScreenCubit(),
-          child: const TrainerScreen())),
+      builder: (BuildContext context, GoRouterState state) =>
+          const TrainerScreen()),
   GoRoute(
       path: '/adduserscreen',
-      builder: (BuildContext context, GoRouterState state) => AddUserScreen()),
+      builder: (BuildContext context, GoRouterState state) =>
+          const AddUserScreen()),
   GoRoute(
       path: '/creatsamlescreen',
-      builder: (BuildContext context, GoRouterState state) => BlocProvider(
-          create: (context) => AddSamplesCubit(),
-          child: const AddSamplesScreen())),
+      builder: (BuildContext context, GoRouterState state) =>
+          const AddSamplesScreen()),
   GoRoute(
       path: '/studentscreen',
       builder: (BuildContext context, GoRouterState state) =>
-          BlocProvider(
-              create: (context) => StudentScreenCubit(),
-              child: const StudentScreen())
-  ),
+          const StudentScreen()),
   GoRoute(
       path: '/dayplan',
       builder: (BuildContext context, GoRouterState state) => const DayPlan()),

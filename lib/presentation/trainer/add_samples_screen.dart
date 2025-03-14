@@ -5,76 +5,76 @@ import 'package:trailpro_planning/domain/samples_cubit.dart';
 class AddSamplesScreen extends StatelessWidget {
   const AddSamplesScreen({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
-    context.read<AddSamplesCubit>().loadSamples();
-    return BlocBuilder<AddSamplesCubit, AddSamplesModel>(
-        builder: (context, value) {
-      return Scaffold(
-        appBar: AppBar(
-            centerTitle: true,
-            title: const Text(
-                style: TextStyle(fontSize: 30, color: Colors.white), 'Шаблоны'),
-            backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-        body: (!value.isLoading)
-            ? const Center(
-                child: CircularProgressIndicator(
-                color: Color.fromRGBO(255, 132, 26, 1),
-                strokeWidth: 3,
-              ))
-            : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.separated(
-                  itemCount: value.samplesSplit.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 2),
-                  itemBuilder: (context, index) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(value.samplesSplit[index][0]),
-                        Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                    color: Color.fromRGBO(255, 132, 26, 1),
-                                    Icons.edit)),
-                            IconButton(
-                                onPressed: () {
-                                  _showModalAddSample(
-                                      context,
-                                      value.samplesSplit[index][0],
-                                      value.samplesSplit[index][1]);
-                                },
-                                icon: const Icon(
-                                    color: Color.fromRGBO(255, 132, 26, 1),
-                                    Icons.copy)),
-                            IconButton(
-                                onPressed: () {
-                                  _showDeleteModal(context, index);
-                                },
-                                icon: const Icon(
-                                    color: Color.fromRGBO(255, 132, 26, 1),
-                                    Icons.delete)),
-                          ],
-                        ),
-                      ],
-                    );
-                  },
+    return BlocProvider(
+      create: (context) => AddSamplesCubit()..loadSamples(),
+      child: BlocBuilder<AddSamplesCubit, AddSamplesModel>(
+          builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+              centerTitle: true,
+              title: const Text(
+                  style: TextStyle(fontSize: 30, color: Colors.white), 'Шаблоны'),
+              backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+          body: (!state.isLoading)
+              ? const Center(
+                  child: CircularProgressIndicator(
+                  color: Color.fromRGBO(255, 132, 26, 1),
+                  strokeWidth: 3,
+                ))
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.separated(
+                    itemCount: state.samplesSplit.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 2),
+                    itemBuilder: (context, index) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(state.samplesSplit[index][0]),
+                          Row(
+                            children: [
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                      color: Color.fromRGBO(255, 132, 26, 1),
+                                      Icons.edit)),
+                              IconButton(
+                                  onPressed: () {
+                                    _showModalAddSample(
+                                        context,
+                                        state.samplesSplit[index][0],
+                                        state.samplesSplit[index][1]);
+                                  },
+                                  icon: const Icon(
+                                      color: Color.fromRGBO(255, 132, 26, 1),
+                                      Icons.copy)),
+                              IconButton(
+                                  onPressed: () {
+                                    _showDeleteModal(context, index);
+                                  },
+                                  icon: const Icon(
+                                      color: Color.fromRGBO(255, 132, 26, 1),
+                                      Icons.delete)),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
-          onPressed: () {
-            _showModalAddSample(context, '', '');
-          },
-          child: const Icon(color: Colors.white, Icons.add),
-        ),
-      );
-    });
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
+            onPressed: () {
+              _showModalAddSample(context, '', '');
+            },
+            child: const Icon(color: Colors.white, Icons.add),
+          ),
+        );
+      }),
+    );
   }
 
   void _showModalAddSample(BuildContext context, String label, String description) {

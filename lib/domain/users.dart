@@ -4,10 +4,17 @@ import 'package:trailpro_planning/domain/models/models.dart';
 
 class Users {
 
-  void createUserList() async {
-    List<String>? authUserList = await ApiGSheet().getUserList();
+  void createUserAndGroupsList() async {
+    Future<List<String>?> authUserListFuture = ApiGSheet().getUserList();
+    Future<List<String>?> groupsListFuture = ApiGSheet().getGroupsList();
+    List<String>? authUserList = await authUserListFuture;
+    List<String>? proupsList = await groupsListFuture;
     Management.userList = authUserList!;
+    Management.groupsList = proupsList!;
   }
+
+
+
 
   Future<User> user (String login) async {
     List<String>? authUserList = await ApiGSheet().authUserData(login);
@@ -17,9 +24,10 @@ class Users {
     return newUser;
   }
 
-  void addUser(String login, String pin, String role, List<String> groups) async {
+  void addUser(String login, String pin, String role, List<String> groups) {
     List<String> authUserList = [login, login, pin, role];
     authUserList.addAll(groups);
+    ApiGSheet().createNewSheetPlan(login);
     ApiGSheet().addUser(login, authUserList);
   }
 }
