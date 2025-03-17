@@ -345,7 +345,10 @@ class TrainerScreen extends StatelessWidget {
                       icon: const Icon(
                           color: Color.fromRGBO(255, 132, 26, 1),
                           Icons.group_add),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop();
+                        context.push('/addgroupscreen');
+                      },
                     ),
                   ],
                 ),

@@ -217,7 +217,7 @@ class StudentScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0), // Закругленные углы
                 ),
               ),
-              onPressed: () {},
+              onPressed: () => _showGroupsListModal(context),
               child: Column(
                 children: [
                   const Text('Профиль'),
@@ -236,4 +236,79 @@ class StudentScreen extends StatelessWidget {
             'План тренировок'),
         backgroundColor: const Color.fromRGBO(1, 57, 104, 1));
   }
+
+  void _showGroupsListModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          insetPadding: EdgeInsets.zero,
+          child: Container(
+            height: MediaQuery.of(dialogContext).size.height,
+            width: MediaQuery.of(dialogContext).size.width,
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const Text(
+                  'Профиль',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                Text('Ваш логин: ${Management.user.login}'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Ваше имя: ${Management.user.name}'),
+                    IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                            color: Color.fromRGBO(255, 132, 26, 1),
+                            Icons.edit)),
+                  ],
+                ),
+                TextButton(onPressed: (){},
+                    child: const Text('Изменить ПИН-КОД')),
+                const Text('Ваши группы'),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: Management.user.groups.length,
+                    separatorBuilder: (dialogContext, index) =>
+                    const SizedBox(height: 8),
+                    itemBuilder: (dialogContext, index) {
+                      return TextButton(
+                        child: Text(
+                          style: const TextStyle(
+                              fontSize: 20, color: Colors.black),
+                          Management.user.groups[index],
+                        ),
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop();
+                          context
+                              .read<StudentScreenCubit>()
+                              .choosingPlanType(Management.user.groups[index]);
+                        },
+                      );
+                    },
+                  ),
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(200, 50),
+                        backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: const Text(
+                        style: TextStyle(fontSize: 24, color: Colors.white),
+                        'Закрыть')),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trailpro_planning/presentation/trainer/add_group_screen.dart';
 import 'package:trailpro_planning/presentation/trainer/add_samples_screen.dart';
 import 'package:trailpro_planning/presentation/trainer/add_user_screen.dart';
 import 'package:trailpro_planning/presentation/authorization_screen.dart';
@@ -36,6 +37,10 @@ final GoRouter router =
       path: '/adduserscreen',
       builder: (BuildContext context, GoRouterState state) =>
           const AddUserScreen()),
+      GoRoute(
+          path: '/addgroupscreen',
+          builder: (BuildContext context, GoRouterState state) =>
+          const AddGroupScreen()),
   GoRoute(
       path: '/creatsamlescreen',
       builder: (BuildContext context, GoRouterState state) =>

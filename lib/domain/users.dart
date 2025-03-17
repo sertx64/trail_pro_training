@@ -30,4 +30,10 @@ class Users {
     ApiGSheet().createNewSheetPlan(login);
     ApiGSheet().addUser(login, authUserList);
   }
+
+  void addGroup(String groupName) {
+    Management.groupsList.add(groupName);
+    ApiGSheet().createNewSheetPlan(groupName);
+    ApiGSheet().addGroup(Management.groupsList);
+  }
 }

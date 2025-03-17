@@ -33,6 +33,11 @@ class ApiGSheet {
     return groupsList;
   }
 
+  void addGroup(List<String> groupsList) async {
+    final sheet = ss.worksheetByTitle('groups_sheet');
+    await sheet!.values.insertColumnByKey('groups_id', groupsList);
+  }
+
   void addUser(String login, List<String> userList) async {
     final sheet = ss.worksheetByTitle('users');
     await sheet!.values.insertRowByKey(login, userList);

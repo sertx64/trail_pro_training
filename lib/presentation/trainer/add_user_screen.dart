@@ -94,12 +94,12 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     fixedSize: const Size(200, 50),
                     backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
                 onPressed: () {
-                  if (Management.userList.contains(_login.text) || _pin.text.trim() == '' || _login.text.trim() == '') {
+                  if (Management.userList.contains(_login.text.trim()) || Management.groupsList.contains(_login.text.trim()) || _pin.text.trim() == '' || _login.text.trim() == '') {
                     return;
                   } else {
-                    Management.userList.add(_login.text);
+                    Management.userList.add(_login.text.trim());
                     String role = _isTrainer ? 'trainer' : 'student';
-                    Users().addUser(_login.text, _pin.text, role, ['tp_week_plan']);
+                    Users().addUser(_login.text.trim(), _pin.text.trim(), role, ['tp_week_plan']);
                     context.go('/trainerscreen');
                   }
                 },
