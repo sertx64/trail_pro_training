@@ -13,7 +13,7 @@ class StudentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StudentScreenCubit()..loadWeekPlan(),
+      create: (context) => StudentScreenCubit()..choosingPlanType(Management.user.groups[0]),
       child: BlocBuilder<StudentScreenCubit, PlanDataModel>(
           builder: (context, state) {
         return Scaffold(
@@ -196,7 +196,7 @@ class StudentScreen extends StatelessWidget {
                       ? null
                       : {
                           context.push('/dayplan',
-                              extra: [dayPlanGroup, dayPlanPersonal]),
+                              extra: [context.read<StudentScreenCubit>().planType, dayPlanGroup, dayPlanPersonal]),
                         };
                 },
               )),

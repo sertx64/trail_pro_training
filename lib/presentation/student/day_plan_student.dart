@@ -4,18 +4,16 @@ import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
-
-
-
 class DayPlan extends StatelessWidget {
   const DayPlan({super.key});
 
-
   @override
   Widget build(BuildContext context) {
-    final List<DayPlanModel> dayPlan = GoRouterState.of(context).extra as List<DayPlanModel>;
-    final DayPlanModel dayPlanGroup = dayPlan[0];
-    final DayPlanModel dayPlanPersonal = dayPlan[1];
+    final List<dynamic> dayPlan =
+        GoRouterState.of(context).extra as List<dynamic>;
+    final String groupName = dayPlan[0];
+    final DayPlanModel dayPlanGroup = dayPlan[1];
+    final DayPlanModel dayPlanPersonal = dayPlan[2];
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -31,8 +29,7 @@ class DayPlan extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Visibility(
-                  visible:
-                      (dayPlanGroup.label == '') ? false : true,
+                  visible: (dayPlanGroup.label == '') ? false : true,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -51,8 +48,7 @@ class DayPlan extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible:
-                      (dayPlanPersonal.label == '') ? false : true,
+                  visible: (dayPlanPersonal.label == '') ? false : true,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -72,10 +68,11 @@ class DayPlan extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible: (DatePasing().isAfterDay(dayPlanGroup.date) && dayPlanGroup.label != '')
+                  visible: (DatePasing().isAfterDay(dayPlanGroup.date) &&
+                          dayPlanGroup.label != '')
                       ? true
                       : false,
-                  child: ReportsWidget(dayPlanGroup.date),
+                  child: ReportsWidget(groupName, dayPlanGroup.date),
                 ),
               ],
             ),

@@ -34,6 +34,7 @@ class Users {
   void addGroup(String groupName) {
     Management.groupsList.add(groupName);
     ApiGSheet().createNewSheetPlan(groupName);
+    ApiGSheet().createNewSheetGroupReports('${groupName}_reports');
     ApiGSheet().addGroup(Management.groupsList);
   }
 }

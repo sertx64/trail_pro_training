@@ -6,23 +6,26 @@ import 'package:trailpro_planning/domain/report_cubit.dart';
 import 'package:trailpro_planning/presentation/reports/sent_report_widget.dart';
 
 class ReportsWidget extends StatelessWidget {
-  const ReportsWidget(this.date, {super.key});
+  const ReportsWidget(this.groupName, this.date, {super.key});
+  final String groupName;
   final String date;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ReportCubit(),
-      child: _ReportsWidget(date),
+      child: _ReportsWidget(groupName, date),
     );
   }
 }
 
 class _ReportsWidget extends StatelessWidget {
-  const _ReportsWidget(this.date, {super.key});
+  const _ReportsWidget(this.groupName, this.date, {super.key});
+  final String groupName;
   final String date;
+
   @override
   Widget build(BuildContext context) {
-    context.read<ReportCubit>().loadReports(date);
+    context.read<ReportCubit>().loadReports(groupName, date);
     return BlocBuilder<ReportCubit, ReportsForView>(builder: (context, value) {
       return (!value.isLoading)
           ? const Center(
@@ -33,7 +36,7 @@ class _ReportsWidget extends StatelessWidget {
           : (!value.reports
                       .any((report) => report.name == Management.user.login) &&
                   Management.user.role == 'student')
-              ? SentReportWidget(date)
+              ? SentReportWidget(groupName, date)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

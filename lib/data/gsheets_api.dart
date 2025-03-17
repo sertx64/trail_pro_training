@@ -43,14 +43,14 @@ class ApiGSheet {
     await sheet!.values.insertRowByKey(login, userList);
   }
 
-  Future<List<String>?> getReportsList(String date) async {
-    final sheet = ss.worksheetByTitle('reports');
+  Future<List<String>?> getReportsList(String sheetName, String date) async {
+    final sheet = ss.worksheetByTitle(sheetName);
     final reportsList = await sheet!.values.rowByKey(date);
     return reportsList;
   }
 
-  void sendReportsList(String date, List<String> reportList) async {
-    final sheet = ss.worksheetByTitle('reports');
+  void sendReportsList(String sheetName, String date, List<String> reportList) async {
+    final sheet = ss.worksheetByTitle(sheetName);
     await sheet!.values.insertRowByKey(date, reportList);
   }
 
@@ -77,6 +77,20 @@ class ApiGSheet {
 
     // Запись данных в новый лист
     await newSheet.values.insertRows(1, data);
+  }
+
+  void createNewSheetGroupReports(String nameSheet) async{
+    // Получение исходного листа
+    final Worksheet sourceSheet = ss.worksheetByTitle('reports')!;
+
+    // Чтение данных с исходного листа
+    final List<String> data = await sourceSheet.values.column(1);
+
+    // Создание нового листа
+    final Worksheet newSheet = await ss.addWorksheet(nameSheet);
+
+    // Запись данных в новый лист
+    await newSheet.values.insertColumn(1, data);
   }
 
 

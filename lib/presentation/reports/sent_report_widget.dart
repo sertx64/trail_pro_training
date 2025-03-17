@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/domain/report_cubit.dart';
-import 'package:trailpro_planning/domain/sent_report.dart';
+
 
 class SentReportWidget extends StatefulWidget {
-  const SentReportWidget(this.date, {super.key});
+  const SentReportWidget(this.groupName, this.date, {super.key});
   final String date;
+  final String groupName;
 
   @override
   State<SentReportWidget> createState() => _SentReportWidgetState();
@@ -22,15 +23,17 @@ class _SentReportWidgetState extends State<SentReportWidget> {
     if (controllerFeedback.text == '') {
       controllerFeedback.text = 'нет комментария';
     }
-    SentStudentReport().sentReport(widget.date, _load.toStringAsFixed(0),
+    context
+        .read<ReportCubit>().sentReport(widget.groupName, widget.date, _load.toStringAsFixed(0),
         _feeling.toStringAsFixed(0), controllerFeedback.text);
     context.read<ReportCubit>().renewReportsOnWidget(_load.toStringAsFixed(0),
         _feeling.toStringAsFixed(0), controllerFeedback.text);
   }
 
   void sentReportSkip() {
-    SentStudentReport()
-        .sentReport(widget.date, '0', '0', 'Пропустил тренировку. День отдыха');
+    context
+        .read<ReportCubit>()
+        .sentReport(widget.groupName, widget.date, '0', '0', 'Пропустил тренировку. День отдыха');
     context
         .read<ReportCubit>()
         .renewReportsOnWidget('0', '0', 'Пропустил тренировку. День отдыха');

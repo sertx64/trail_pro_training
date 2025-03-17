@@ -90,7 +90,7 @@ class DayPlanTrainer extends StatelessWidget {
                         ),
                     ),
                   ),
-                  ReportsWidget(dayPlan.date),
+                  ReportsWidget(context.read<StudentScreenCubit>().planType, dayPlan.date),
                 ],
               )
               : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
