@@ -92,15 +92,35 @@ class StudentScreenCubit extends Cubit<PlanDataModel> {
     weekPlanList =
         (await ApiGSheet().getWeekPlanList(plan, '$yearweek'))!;
 
+    print(weekPlanList);
+
     final List<DayPlanModel> weekPlan = [
-      DayPlanModel('ПН', weekPlanList![0], weekPlanList[1], weekPlanList[2]),
-      DayPlanModel('ВТ', weekPlanList[3], weekPlanList[4], weekPlanList[5]),
-      DayPlanModel('СР', weekPlanList[6], weekPlanList[7], weekPlanList[8]),
-      DayPlanModel('ЧТ', weekPlanList[9], weekPlanList[10], weekPlanList[11]),
-      DayPlanModel('ПТ', weekPlanList[12], weekPlanList[13], weekPlanList[14]),
-      DayPlanModel('СБ', weekPlanList[15], weekPlanList[16], weekPlanList[17]),
-      DayPlanModel('ВС', weekPlanList[18], weekPlanList[19], weekPlanList[20]),
+      DayPlanModel('ПН', dateOnWeekPlan(weekPlanList[0]), weekPlanList[1], weekPlanList[2]),
+      DayPlanModel('ВТ', dateOnWeekPlan(weekPlanList[3]), weekPlanList[4], weekPlanList[5]),
+      DayPlanModel('СР', dateOnWeekPlan(weekPlanList[6]), weekPlanList[7], weekPlanList[8]),
+      DayPlanModel('ЧТ', dateOnWeekPlan(weekPlanList[9]), weekPlanList[10], weekPlanList[11]),
+      DayPlanModel('ПТ', dateOnWeekPlan(weekPlanList[12]), weekPlanList[13], weekPlanList[14]),
+      DayPlanModel('СБ', dateOnWeekPlan(weekPlanList[15]), weekPlanList[16], weekPlanList[17]),
+      DayPlanModel('ВС', dateOnWeekPlan(weekPlanList[18]), weekPlanList[19], weekPlanList[20]),
     ];
     return weekPlan;
   }
+
+  String dateOnWeekPlan(String dateFromTab) {
+    if (dateFromTab.startsWith('4')) {
+      DateTime startDate = DateTime(1899, 12, 30);
+
+      // Количество дней
+      int days = int.parse(dateFromTab);
+
+      // Добавляем дни к начальной дате
+      DateTime resultDate = startDate.add(Duration(days: days));
+
+      // Форматируем вывод
+      String formattedDate = "${resultDate.day.toString().padLeft(2, '0')}.${resultDate.month.toString().padLeft(2, '0')}.${resultDate.year}";
+      return formattedDate; // Вывод: 17.03.2025
+    } else {return dateFromTab;}
+  }
+
+
 }
