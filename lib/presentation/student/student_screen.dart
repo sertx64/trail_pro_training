@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
-import 'package:trailpro_planning/domain/student_cubit.dart';
+import 'package:trailpro_planning/domain/home_cubit.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
+import 'package:trailpro_planning/domain/users.dart';
 import 'package:trailpro_planning/presentation/climbing_animation.dart';
 
 class StudentScreen extends StatelessWidget {
@@ -13,8 +14,8 @@ class StudentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StudentScreenCubit()..choosingPlanType(Management.user.groups[0]),
-      child: BlocBuilder<StudentScreenCubit, PlanDataModel>(
+      create: (context) => HomeScreenCubit()..choosingPlanType(Management.user.groups[0]),
+      child: BlocBuilder<HomeScreenCubit, PlanDataModel>(
           builder: (context, state) {
         return Scaffold(
             appBar: buildAppBar(context),
@@ -48,7 +49,7 @@ class StudentScreen extends StatelessWidget {
                     fixedSize: const Size(90, 50),
                     backgroundColor: const Color.fromARGB(200, 1, 57, 104)),
                 onPressed: () {
-                  context.read<StudentScreenCubit>().nextWeek();
+                  context.read<HomeScreenCubit>().nextWeek();
                 },
                 child:
                     const Icon(color: Colors.white, Icons.arrow_forward_sharp)),
@@ -60,7 +61,7 @@ class StudentScreen extends StatelessWidget {
                     fixedSize: const Size(80, 40),
                     backgroundColor: const Color.fromARGB(200, 1, 57, 104)),
                 onPressed: () {
-                  context.read<StudentScreenCubit>().previousWeek();
+                  context.read<HomeScreenCubit>().previousWeek();
                 },
                 child: const Icon(color: Colors.white, Icons.arrow_back_sharp)),
           ],
@@ -89,10 +90,10 @@ class StudentScreen extends StatelessWidget {
                 color: (dayPlanGroup.date == DatePasing().dateNow())
                     ? Colors.green[100]
                     : (DatePasing().isAfterDay(dayPlanGroup.date))
-                        ? Colors.grey[350]
-                        : Colors.white,
-                border: Border.all(
-                    width: 3.0, color: const Color.fromRGBO(1, 57, 104, 1)),
+                        ? Colors.grey[400]
+                        : Colors.grey[200],
+                // border: Border.all(
+                //     width: 3.0, color: const Color.fromRGBO(1, 57, 104, 1)),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: ListTile(
@@ -105,7 +106,7 @@ class StudentScreen extends StatelessWidget {
                         width: 60,
                         decoration: BoxDecoration(
                           border: Border.all(
-                              width: 5.0,
+                              width: 2.0,
                               color: (dayPlanGroup.label == '')
                                   ? Colors.blueGrey
                                   : const Color.fromRGBO(1, 57, 104, 1)),
@@ -196,7 +197,7 @@ class StudentScreen extends StatelessWidget {
                       ? null
                       : {
                           context.push('/dayplan',
-                              extra: [context.read<StudentScreenCubit>().planType, dayPlanGroup, dayPlanPersonal]),
+                              extra: [context.read<HomeScreenCubit>().planType, dayPlanGroup, dayPlanPersonal]),
                         };
                 },
               )),
@@ -217,7 +218,7 @@ class StudentScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0), // Закругленные углы
                 ),
               ),
-              onPressed: () => _showGroupsListModal(context),
+              onPressed: () => _showProfileModal(context),
               child: Column(
                 children: [
                   const Text('Профиль'),
@@ -237,7 +238,7 @@ class StudentScreen extends StatelessWidget {
         backgroundColor: const Color.fromRGBO(1, 57, 104, 1));
   }
 
-  void _showGroupsListModal(BuildContext context) {
+  void _showProfileModal(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -251,24 +252,52 @@ class StudentScreen extends StatelessWidget {
               children: [
                 const Text(
                   'Профиль',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                Text('Ваш логин: ${Management.user.login}'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Ваше имя: ${Management.user.name}'),
-                    IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                            color: Color.fromRGBO(255, 132, 26, 1),
-                            Icons.edit)),
+                    Text(
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        'Ваш логин: ${Management.user.login}'),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Text(
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            'Ваше имя: ${Management.user.name}'),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.of(dialogContext).pop();
+                              _showChangeNameModal(context);
+                            },
+                            icon: const Icon(
+                                color: Color.fromRGBO(255, 132, 26, 1),
+                                Icons.edit)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            'Вы можете'),
+                        TextButton(
+                            onPressed: (){
+                              Navigator.of(dialogContext).pop();
+                              _showChangePinModal(context);
+                            },
+                            child: const Text(
+                                style: TextStyle(color: Color.fromRGBO(255, 132, 26, 1), fontSize: 20, fontWeight: FontWeight.bold),
+                                'изменить ПИН-КОД')),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        'Ваши группы:'),
                   ],
                 ),
-                TextButton(onPressed: (){},
-                    child: const Text('Изменить ПИН-КОД')),
-                const Text('Ваши группы'),
                 const SizedBox(height: 16),
                 Expanded(
                   child: ListView.separated(
@@ -279,19 +308,20 @@ class StudentScreen extends StatelessWidget {
                       return TextButton(
                         child: Text(
                           style: const TextStyle(
-                              fontSize: 20, color: Colors.black),
+                              fontSize: 24, color: Color.fromRGBO(1, 57, 104, 1), fontWeight: FontWeight.bold),
                           Management.user.groups[index],
                         ),
                         onPressed: () {
                           Navigator.of(dialogContext).pop();
                           context
-                              .read<StudentScreenCubit>()
+                              .read<HomeScreenCubit>()
                               .choosingPlanType(Management.user.groups[index]);
                         },
                       );
                     },
                   ),
                 ),
+
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         fixedSize: const Size(200, 50),
@@ -310,5 +340,126 @@ class StudentScreen extends StatelessWidget {
     );
   }
 
+  void _showChangePinModal (BuildContext context) {
+    final TextEditingController oldPin = TextEditingController();
+    final TextEditingController newPin = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Сменить ПИН-КОД?'),
+          content: const Text(
+              'ПИН-КОД будет изменён.'),
+          actions: [
+            const Text('Введите старый ПИН'),
+            TextField(
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(fontSize: 14),
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                ),
+              ),
+              controller: oldPin,
+            ),
+            const Text('Введите новый ПИН'),
+            TextField(
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(fontSize: 14),
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                ),
+              ),
+              controller: newPin,
+            ),
+            TextButton(
+              onPressed: () {
+                if (oldPin.text == Management.user.pin && newPin.text != '') {
+                  Management.user.pin = newPin.text;
+                  Users().changePersonalDataUser(Management.user.login, Management.user.name, newPin.text, Management.user.role, Management.user.groups);
+                  Navigator.of(dialogContext).pop();
+                  _showProfileModal(context);
+                }
+              },
+              child: const Center(
+                  child: Text(
+                      style: TextStyle(color: Colors.red), 'Изменить')),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                _showProfileModal(context);
+              },
+              child: const Center(
+                  child: Text(
+                      style: TextStyle(color: Colors.black),
+                      'Отмена')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showChangeNameModal (BuildContext context) {
+    final TextEditingController newName = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Изменить имя?'),
+          content: const Text(
+              'Имя будет изменёно.'),
+          actions: [
+            const Text('Введите новое имя'),
+            TextField(
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 14),
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                ),
+              ),
+              controller: newName,
+            ),
+
+            TextButton(
+              onPressed: () {
+                if (newName.text.trim() != '') {
+                  Management.user.name = newName.text.trim();
+                  Users().changePersonalDataUser(Management.user.login, newName.text.trim(), Management.user.pin, Management.user.role, Management.user.groups);
+                  Navigator.of(dialogContext).pop();
+                  _showProfileModal(context);
+
+                }
+              },
+              child: const Center(
+                  child: Text(
+                      style: TextStyle(color: Colors.red), 'Изменить')),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                _showProfileModal(context);
+              },
+              child: const Center(
+                  child: Text(
+                      style: TextStyle(color: Colors.black),
+                      'Отмена')),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 }

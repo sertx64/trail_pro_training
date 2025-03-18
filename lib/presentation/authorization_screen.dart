@@ -59,12 +59,6 @@ class _AuthorizationState extends State<Authorization> {
     return Scaffold(
         appBar: AppBar(
             actions: [
-              // IconButton(
-              //   icon: const Icon(
-              //       color: Color.fromRGBO(255, 132, 26, 1),
-              //       Icons.fitness_center_rounded),
-              //   onPressed: () => context.push('/trainerauth'),
-              // ),
               IconButton(
                 icon: const Icon(
                     color: Color.fromRGBO(255, 132, 26, 1), Icons.info_outline),

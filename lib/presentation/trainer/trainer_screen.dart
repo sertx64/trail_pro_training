@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
-import 'package:trailpro_planning/domain/student_cubit.dart';
+import 'package:trailpro_planning/domain/home_cubit.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
+import 'package:trailpro_planning/domain/users.dart';
 import 'package:trailpro_planning/presentation/climbing_animation.dart';
 import 'package:trailpro_planning/presentation/trainer/day_plan_trainer.dart';
 
@@ -14,8 +15,8 @@ class TrainerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StudentScreenCubit()..loadWeekPlan(),
-      child: BlocBuilder<StudentScreenCubit, PlanDataModel>(
+      create: (context) => HomeScreenCubit()..loadWeekPlan(),
+      child: BlocBuilder<HomeScreenCubit, PlanDataModel>(
           builder: (context, state) {
         return (state.isDay)
             ? DayPlanTrainer()
@@ -129,7 +130,7 @@ class TrainerScreen extends StatelessWidget {
                 onTap: () {
                   (dayPlan.label == '' && DatePasing().isAfterDay(dayPlan.date))
                       ? null
-                      : {context.read<StudentScreenCubit>().openDay(index)};
+                      : {context.read<HomeScreenCubit>().openDay(index)};
                 },
               )),
         );
@@ -156,7 +157,7 @@ class TrainerScreen extends StatelessWidget {
                       fixedSize: const Size(90, 50),
                       backgroundColor: const Color.fromARGB(200, 1, 57, 104)),
                   onPressed: () {
-                    context.read<StudentScreenCubit>().nextWeek();
+                    context.read<HomeScreenCubit>().nextWeek();
                   },
                   child: const Icon(
                       color: Colors.white, Icons.arrow_forward_sharp)),
@@ -168,7 +169,7 @@ class TrainerScreen extends StatelessWidget {
                       fixedSize: const Size(80, 40),
                       backgroundColor: const Color.fromARGB(200, 1, 57, 104)),
                   onPressed: () {
-                    context.read<StudentScreenCubit>().previousWeek();
+                    context.read<HomeScreenCubit>().previousWeek();
                   },
                   child:
                       const Icon(color: Colors.white, Icons.arrow_back_sharp)),
@@ -187,7 +188,7 @@ class TrainerScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
             style: const TextStyle(fontSize: 30, color: Colors.white),
-            context.read<StudentScreenCubit>().planType),
+            context.read<HomeScreenCubit>().planType),
         backgroundColor: const Color.fromRGBO(1, 57, 104, 1));
   }
 
@@ -284,18 +285,30 @@ class TrainerScreen extends StatelessWidget {
                     separatorBuilder: (dialogContext, index) =>
                         const SizedBox(height: 8),
                     itemBuilder: (dialogContext, index) {
-                      return TextButton(
-                        child: Text(
-                          Management.userList[index],
-                          style: const TextStyle(
-                              fontSize: 20, color: Colors.black),
-                        ),
-                        onPressed: () {
-                          Navigator.of(dialogContext).pop();
-                          context
-                              .read<StudentScreenCubit>()
-                              .choosingPlanType(Management.userList[index]);
-                        },
+                      return Row(
+                        children: [
+                          TextButton(
+                            child: Text(
+                              Management.userList[index],
+                              style: const TextStyle(
+                                  fontSize: 20, color: Colors.black),
+                            ),
+                            onPressed: () {
+                              Navigator.of(dialogContext).pop();
+                              context
+                                  .read<HomeScreenCubit>()
+                                  .choosingPlanType(Management.userList[index]);
+                            },
+                          ),
+                          IconButton(
+                              icon: const Icon(
+                                  color: Color.fromRGBO(255, 132, 26, 1),
+                                  Icons.info_outline),
+                              onPressed: () {
+                                Navigator.of(dialogContext).pop();
+                                _showProfileUserModal(context, Management.userList[index]);
+                              }),
+                        ],
                       );
                     },
                   ),
@@ -369,7 +382,7 @@ class TrainerScreen extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(dialogContext).pop();
                           context
-                              .read<StudentScreenCubit>()
+                              .read<HomeScreenCubit>()
                               .choosingPlanType(Management.groupsList[index]);
                         },
                       );
@@ -393,4 +406,148 @@ class TrainerScreen extends StatelessWidget {
       },
     );
   }
+
+  void _showProfileUserModal(BuildContext context, String loginSelectUser) async {
+    User selectUser = await Users().getUserData(loginSelectUser);
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          insetPadding: EdgeInsets.zero,
+          child: Container(
+            height: MediaQuery.of(dialogContext).size.height,
+            width: MediaQuery.of(dialogContext).size.width,
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Text(
+                  style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  (selectUser.role == 'student') ?'Профиль ученика' :'Это тренер',
+                ),
+                const SizedBox(height: 16),
+                Column(
+                  children: [
+                    Text(
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        'Логин: ${selectUser.login}'),
+                    const SizedBox(height: 8),
+                    Text(
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        'Имя: ${selectUser.name}'),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                if (selectUser.role == 'student')Row(
+                  children: [
+                    const Text(
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        'Группы ученика'),
+                    IconButton(
+                        icon: const Icon(
+                            color: Color.fromRGBO(255, 132, 26, 1),
+                            Icons.group_add),
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop();
+                          _showSelectGroupsModal(context, selectUser);
+                        }),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                if (selectUser.role == 'student') Expanded(
+                  child: ListView.separated(
+                    itemCount: selectUser.groups.length,
+                    separatorBuilder: (dialogContext, index) =>
+                    const SizedBox(height: 8),
+                    itemBuilder: (dialogContext, index) {
+                      return Text(
+                        style: const TextStyle(
+                            fontSize: 24, color: Color.fromRGBO(1, 57, 104, 1), fontWeight: FontWeight.bold),
+                        selectUser.groups[index],
+                      );
+                    },
+                  ),
+                ),
+
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(200, 50),
+                        backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: const Text(
+                        style: TextStyle(fontSize: 24, color: Colors.white),
+                        'Закрыть')),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSelectGroupsModal(BuildContext context, User selectUser) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          insetPadding: EdgeInsets.zero,
+          child: Container(
+            height: MediaQuery.of(dialogContext).size.height,
+            width: MediaQuery.of(dialogContext).size.width,
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const Text(
+                  'Группы',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text('В какую группу добавить ученика ${selectUser.login}'),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: Management.groupsList.length,
+                    separatorBuilder: (dialogContext, index) =>
+                    const SizedBox(height: 8),
+                    itemBuilder: (dialogContext, index) {
+                      return TextButton(
+                        child: Text(
+                          style: const TextStyle(
+                              fontSize: 20, color: Colors.black),
+                          Management.groupsList[index],
+                        ),
+                        onPressed: () {
+                          if (!selectUser.groups.contains(Management.groupsList[index])) {
+                            selectUser.groups.add(Management.groupsList[index]);
+                            Users().changePersonalDataUser(
+                                selectUser.login, selectUser.name,
+                                selectUser.pin, selectUser.role,
+                                selectUser.groups);
+                          }
+                          Navigator.of(dialogContext).pop();
+
+                        },
+                      );
+                    },
+                  ),
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(200, 50),
+                        backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: const Text(
+                        style: TextStyle(fontSize: 24, color: Colors.white),
+                        'Закрыть')),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
 }

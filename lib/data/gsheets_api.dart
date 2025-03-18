@@ -4,7 +4,7 @@ import 'package:trailpro_planning/domain/management.dart';
 class ApiGSheet {
   final Spreadsheet ss = Management.forGSheetsApi;
 
-  Future<List<String>?> authUserData(String login) async {
+  Future<List<String>?> getUserData(String login) async {
     final sheet = ss.worksheetByTitle('users');
     final userData = await sheet!.values.rowByKey(login);
     return userData;
@@ -38,7 +38,7 @@ class ApiGSheet {
     await sheet!.values.insertColumnByKey('groups_id', groupsList);
   }
 
-  void addUser(String login, List<String> userList) async {
+  void changePersonalDataOrAddUser(String login, List<String> userList) async {
     final sheet = ss.worksheetByTitle('users');
     await sheet!.values.insertRowByKey(login, userList);
   }
@@ -93,6 +93,9 @@ class ApiGSheet {
     await newSheet.values.insertColumn(1, data);
   }
 
+  // void changePersonalData(String login, String name, String pin, List<String> groups){
+  //
+  // }
 
 
 }

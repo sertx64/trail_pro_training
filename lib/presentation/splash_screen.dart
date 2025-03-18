@@ -15,12 +15,13 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final login = box.get('login', defaultValue: '');
+    final pin = box.get('pin', defaultValue: '');
 
     Future.delayed(const Duration(seconds: 4), () {
       if (login == '') {
         context.go('/authorization');
       } else {
-        goToRoleScreen(context, login);
+        goToRoleScreen(context, login, pin);
       }
     });
 
@@ -34,15 +35,23 @@ class SplashScreen extends StatelessWidget {
     );
   }
 
-  void goToRoleScreen(BuildContext context, String login) async {
+  void goToRoleScreen(BuildContext context, String login, String pin) async {
+
     User user = await Users().user(login);
-    Management.user = user;
-    if (user.role == 'student') {
-      context.go('/studentscreen');
+    if (user.pin == pin) {
+      box.put('login', login);
+      box.put('pin', pin);
+      Management.user = user;
+      if (user.role == 'student') {
+        context.go('/studentscreen');
+      } else {
+        Samples().createSamplesSplitList();
+        Users().createUserAndGroupsList();
+        context.go('/trainerscreen');
+      }
     } else {
-      Samples().createSamplesSplitList();
-      Users().createUserAndGroupsList();
-      context.go('/trainerscreen');
+      context.go('/authorization');
     }
+
   }
 }

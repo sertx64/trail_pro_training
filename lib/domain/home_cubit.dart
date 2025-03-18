@@ -4,8 +4,8 @@ import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
 
-class StudentScreenCubit extends Cubit<PlanDataModel> {
-  StudentScreenCubit() : super(PlanDataModel(false, false, [], []));
+class HomeScreenCubit extends Cubit<PlanDataModel> {
+  HomeScreenCubit() : super(PlanDataModel(false, false, [], []));
 
   int yearWeekIndex = int.parse(DatePasing().yearWeekNow());
   int indexDay = 0;
@@ -91,8 +91,6 @@ class StudentScreenCubit extends Cubit<PlanDataModel> {
   Future<List<DayPlanModel>> weekPlanStudent(String plan, int yearweek) async {
     weekPlanList =
         (await ApiGSheet().getWeekPlanList(plan, '$yearweek'))!;
-
-    print(weekPlanList);
 
     final List<DayPlanModel> weekPlan = [
       DayPlanModel('ПН', dateOnWeekPlan(weekPlanList[0]), weekPlanList[1], weekPlanList[2]),

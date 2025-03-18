@@ -17,18 +17,33 @@ class Users {
 
 
   Future<User> user (String login) async {
-    List<String>? authUserList = await ApiGSheet().authUserData(login);
+    List<String>? authUserList = await ApiGSheet().getUserData(login);
     List<String> groups = authUserList!.sublist(4);
     User newUser = User(authUserList[0], authUserList[1], authUserList[2],authUserList[3], groups);
     Management.user = newUser;
     return newUser;
   }
 
-  void addUser(String login, String pin, String role, List<String> groups) {
-    List<String> authUserList = [login, login, pin, role];
-    authUserList.addAll(groups);
-    ApiGSheet().createNewSheetPlan(login);
-    ApiGSheet().addUser(login, authUserList);
+  Future<User> getUserData (String login) async {
+    List<String>? authUserList = await ApiGSheet().getUserData(login);
+    List<String> groups = authUserList!.sublist(4);
+    User newUser = User(authUserList[0], authUserList[1], authUserList[2],authUserList[3], groups);
+    return newUser;
+  }
+
+
+
+  void addUser(String login, String name, String pin, String role, List<String> groups) {
+    List<String> userList = [login, name, pin, role];
+    userList.addAll(groups);
+    if (role == 'student') ApiGSheet().createNewSheetPlan(login);
+    ApiGSheet().changePersonalDataOrAddUser(login, userList);
+  }
+
+  void changePersonalDataUser(String login, String name, String pin, String role, List<String> groups) {
+    List<String> userList = [login, name, pin, role];
+    userList.addAll(groups);
+    ApiGSheet().changePersonalDataOrAddUser(login, userList);
   }
 
   void addGroup(String groupName) {

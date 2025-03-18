@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
-import 'package:trailpro_planning/domain/student_cubit.dart';
+import 'package:trailpro_planning/domain/home_cubit.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
 class DayPlanTrainer extends StatelessWidget {
@@ -18,14 +18,14 @@ class DayPlanTrainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DayPlanModel dayPlan = context.read<StudentScreenCubit>().selectDay;
+    DayPlanModel dayPlan = context.read<HomeScreenCubit>().selectDay;
     _controllerLabelTraining.text = dayPlan.label;
     _controllerDescriptionTraining.text = dayPlan.description;
     return Scaffold(
       appBar: AppBar(
         actions: [
           TextButton(
-            onPressed: () => context.read<StudentScreenCubit>().backToWeek(),
+            onPressed: () => context.read<HomeScreenCubit>().backToWeek(),
             child: const Text(
                 style: TextStyle(
                     fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
@@ -90,7 +90,7 @@ class DayPlanTrainer extends StatelessWidget {
                         ),
                     ),
                   ),
-                  ReportsWidget(context.read<StudentScreenCubit>().planType, dayPlan.date),
+                  ReportsWidget(context.read<HomeScreenCubit>().planType, dayPlan.date),
                 ],
               )
               : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -165,7 +165,7 @@ class DayPlanTrainer extends StatelessWidget {
                                   const Color.fromRGBO(1, 57, 104, 1)),
                           onPressed: () async {
                             context
-                                .read<StudentScreenCubit>()
+                                .read<HomeScreenCubit>()
                                 .applyAndBackToWeek(
                                     _controllerLabelTraining.text,
                                     _controllerDescriptionTraining.text);

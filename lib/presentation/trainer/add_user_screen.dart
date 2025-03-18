@@ -99,7 +99,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   } else {
                     Management.userList.add(_login.text.trim());
                     String role = _isTrainer ? 'trainer' : 'student';
-                    Users().addUser(_login.text.trim(), _pin.text.trim(), role, ['tp_week_plan']);
+                    Users().addUser(_login.text.trim(),_login.text.trim(), _pin.text.trim(), role, ['tp_week_plan']);
                     context.go('/trainerscreen');
                   }
                 },
