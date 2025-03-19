@@ -4,6 +4,8 @@ import 'package:trailpro_planning/domain/management.dart';
 class ApiGSheet {
   final Spreadsheet ss = Management.forGSheetsApi;
 
+
+
   Future<List<String>?> getUserData(String login) async {
     final sheet = ss.worksheetByTitle('users');
     final userData = await sheet!.values.rowByKey(login);
