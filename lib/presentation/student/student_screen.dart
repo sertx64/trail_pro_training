@@ -7,6 +7,7 @@ import 'package:trailpro_planning/domain/home_cubit.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/domain/users.dart';
 import 'package:trailpro_planning/presentation/climbing_animation.dart';
+import 'package:trailpro_planning/presentation/student/day_plan_student.dart';
 
 class StudentScreen extends StatelessWidget {
   const StudentScreen({super.key});
@@ -14,60 +15,45 @@ class StudentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeScreenCubit()..choosingPlanType(Management.user.groups[0]),
+      create: (context) =>
+          HomeScreenCubit()..choosingPlanType(Management.user.groups[0]),
       child: BlocBuilder<HomeScreenCubit, PlanDataModel>(
           builder: (context, state) {
-        return Scaffold(
-            appBar: buildAppBar(context),
-            body: (!state.planLoaded)
-                ? const Center(child: LottieAnimationLoadBar())
-                : Stack(
-                    children: [
-                      buildListViewDaysWeek(state),
-                      buildButtonSelectWeek(context)
-                    ],
-                  ));
+        return (state.isDay)
+            ? DayPlan()
+            : Scaffold(
+          appBar: buildAppBar(context),
+          body: (!state.planLoaded)
+              ? const Center(child: LottieAnimationLoadBar())
+              : buildListViewDaysWeek(state),
+          floatingActionButton: buildFloatingActionButton(context),
+        );
       }),
     );
   }
 
-  Positioned buildButtonSelectWeek(BuildContext context) {
-    return Positioned(
-      bottom: 16,
-      left: 0,
-      right: 8,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    fixedSize: const Size(90, 50),
-                    backgroundColor: const Color.fromARGB(200, 1, 57, 104)),
-                onPressed: () {
-                  context.read<HomeScreenCubit>().nextWeek();
-                },
-                child:
-                    const Icon(color: Colors.white, Icons.arrow_forward_sharp)),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    fixedSize: const Size(80, 40),
-                    backgroundColor: const Color.fromARGB(200, 1, 57, 104)),
-                onPressed: () {
-                  context.read<HomeScreenCubit>().previousWeek();
-                },
-                child: const Icon(color: Colors.white, Icons.arrow_back_sharp)),
-          ],
-        ),
-      ),
-    );
+  Padding buildFloatingActionButton(BuildContext context) {
+    return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 40.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                backgroundColor: const Color.fromARGB(200, 1, 57, 104),
+                onPressed: context.read<HomeScreenCubit>().previousWeek,
+                heroTag: 'prevWeek',
+                child: const Icon(color: Colors.white, Icons.arrow_back_sharp),
+              ),
+              const SizedBox(width: 11),
+              FloatingActionButton(
+                  backgroundColor: const Color.fromARGB(200, 1, 57, 104),
+                  onPressed: context.read<HomeScreenCubit>().nextWeek,
+                  heroTag: 'nextWeek',
+                  child: const Icon(
+                      color: Colors.white, Icons.arrow_forward_sharp)),
+            ],
+          ),
+        );
   }
 
   ListView buildListViewDaysWeek(PlanDataModel state) {
@@ -195,10 +181,14 @@ class StudentScreen extends StatelessWidget {
                 onTap: () {
                   (dayPlanGroup.label == '' && dayPlanPersonal.label == '')
                       ? null
-                      : {
-                          context.push('/dayplan',
-                              extra: [context.read<HomeScreenCubit>().planType, dayPlanGroup, dayPlanPersonal]),
-                        };
+                      : {context.read<HomeScreenCubit>().openDay(index)};
+                  // {
+                  //         context.push('/dayplan', extra: [
+                  //           context.read<HomeScreenCubit>().planType,
+                  //           dayPlanGroup,
+                  //           dayPlanPersonal
+                  //         ]),
+                  //       };
                 },
               )),
         );
@@ -259,13 +249,15 @@ class StudentScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                         'Ваш логин: ${Management.user.login}'),
                     const SizedBox(height: 8),
                     Row(
                       children: [
                         Text(
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                             'Ваше имя: ${Management.user.name}'),
                         IconButton(
                             onPressed: () {
@@ -280,21 +272,26 @@ class StudentScreen extends StatelessWidget {
                     Row(
                       children: [
                         const Text(
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                             'Вы можете'),
                         TextButton(
-                            onPressed: (){
+                            onPressed: () {
                               Navigator.of(dialogContext).pop();
                               _showChangePinModal(context);
                             },
                             child: const Text(
-                                style: TextStyle(color: Color.fromRGBO(255, 132, 26, 1), fontSize: 20, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: Color.fromRGBO(255, 132, 26, 1),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
                                 'изменить ПИН-КОД')),
                       ],
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                         'Ваши группы:'),
                   ],
                 ),
@@ -303,12 +300,14 @@ class StudentScreen extends StatelessWidget {
                   child: ListView.separated(
                     itemCount: Management.user.groups.length,
                     separatorBuilder: (dialogContext, index) =>
-                    const SizedBox(height: 8),
+                        const SizedBox(height: 8),
                     itemBuilder: (dialogContext, index) {
                       return TextButton(
                         child: Text(
                           style: const TextStyle(
-                              fontSize: 24, color: Color.fromRGBO(1, 57, 104, 1), fontWeight: FontWeight.bold),
+                              fontSize: 24,
+                              color: Color.fromRGBO(1, 57, 104, 1),
+                              fontWeight: FontWeight.bold),
                           Management.user.groups[index],
                         ),
                         onPressed: () {
@@ -321,7 +320,6 @@ class StudentScreen extends StatelessWidget {
                     },
                   ),
                 ),
-
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         fixedSize: const Size(200, 50),
@@ -340,7 +338,7 @@ class StudentScreen extends StatelessWidget {
     );
   }
 
-  void _showChangePinModal (BuildContext context) {
+  void _showChangePinModal(BuildContext context) {
     final TextEditingController oldPin = TextEditingController();
     final TextEditingController newPin = TextEditingController();
     showDialog(
@@ -348,8 +346,7 @@ class StudentScreen extends StatelessWidget {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text('Сменить ПИН-КОД?'),
-          content: const Text(
-              'ПИН-КОД будет изменён.'),
+          content: const Text('ПИН-КОД будет изменён.'),
           actions: [
             const Text('Введите старый ПИН'),
             TextField(
@@ -383,14 +380,18 @@ class StudentScreen extends StatelessWidget {
               onPressed: () {
                 if (oldPin.text == Management.user.pin && newPin.text != '') {
                   Management.user.pin = newPin.text;
-                  Users().changePersonalDataUser(Management.user.login, Management.user.name, newPin.text, Management.user.role, Management.user.groups);
+                  Users().changePersonalDataUser(
+                      Management.user.login,
+                      Management.user.name,
+                      newPin.text,
+                      Management.user.role,
+                      Management.user.groups);
                   Navigator.of(dialogContext).pop();
                   _showProfileModal(context);
                 }
               },
               child: const Center(
-                  child: Text(
-                      style: TextStyle(color: Colors.red), 'Изменить')),
+                  child: Text(style: TextStyle(color: Colors.red), 'Изменить')),
             ),
             TextButton(
               onPressed: () {
@@ -398,9 +399,7 @@ class StudentScreen extends StatelessWidget {
                 _showProfileModal(context);
               },
               child: const Center(
-                  child: Text(
-                      style: TextStyle(color: Colors.black),
-                      'Отмена')),
+                  child: Text(style: TextStyle(color: Colors.black), 'Отмена')),
             ),
           ],
         );
@@ -408,15 +407,14 @@ class StudentScreen extends StatelessWidget {
     );
   }
 
-  void _showChangeNameModal (BuildContext context) {
+  void _showChangeNameModal(BuildContext context) {
     final TextEditingController newName = TextEditingController();
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text('Изменить имя?'),
-          content: const Text(
-              'Имя будет изменёно.'),
+          content: const Text('Имя будет изменёно.'),
           actions: [
             const Text('Введите новое имя'),
             TextField(
@@ -431,20 +429,22 @@ class StudentScreen extends StatelessWidget {
               ),
               controller: newName,
             ),
-
             TextButton(
               onPressed: () {
                 if (newName.text.trim() != '') {
                   Management.user.name = newName.text.trim();
-                  Users().changePersonalDataUser(Management.user.login, newName.text.trim(), Management.user.pin, Management.user.role, Management.user.groups);
+                  Users().changePersonalDataUser(
+                      Management.user.login,
+                      newName.text.trim(),
+                      Management.user.pin,
+                      Management.user.role,
+                      Management.user.groups);
                   Navigator.of(dialogContext).pop();
                   _showProfileModal(context);
-
                 }
               },
               child: const Center(
-                  child: Text(
-                      style: TextStyle(color: Colors.red), 'Изменить')),
+                  child: Text(style: TextStyle(color: Colors.red), 'Изменить')),
             ),
             TextButton(
               onPressed: () {
@@ -452,14 +452,11 @@ class StudentScreen extends StatelessWidget {
                 _showProfileModal(context);
               },
               child: const Center(
-                  child: Text(
-                      style: TextStyle(color: Colors.black),
-                      'Отмена')),
+                  child: Text(style: TextStyle(color: Colors.black), 'Отмена')),
             ),
           ],
         );
       },
     );
   }
-
 }

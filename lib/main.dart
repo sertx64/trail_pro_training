@@ -34,8 +34,9 @@ void main() async {
   await Hive.openBox('user');
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    systemNavigationBarColor: Color.fromRGBO(1, 57, 104, 1), // Цвет фона навигационной панели
+    systemNavigationBarColor: Color.fromARGB(200, 1, 57, 104), // Цвет фона навигационной панели
     systemNavigationBarIconBrightness: Brightness.light, // Цвет иконок (светлый или темный)
   ));
   runApp(const MyApp());

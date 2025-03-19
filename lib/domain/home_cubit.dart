@@ -9,7 +9,8 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
 
   int yearWeekIndex = int.parse(DatePasing().yearWeekNow());
   int indexDay = 0;
-  DayPlanModel selectDay = DayPlanModel('', '', '', '');
+  DayPlanModel selectDayGroup = DayPlanModel('', '', '', '');
+  DayPlanModel selectDayPersonal = DayPlanModel('', '', '', '');
   List<String> weekPlanList = [];
   String planType = 'tp_week_plan';
 
@@ -42,7 +43,8 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
   void openDay(int index) {
     indexDay = index;
     PlanDataModel currentPlanData = state;
-    selectDay = currentPlanData.weekPlanGroup[index];
+    selectDayGroup = currentPlanData.weekPlanGroup[index];
+    selectDayPersonal = currentPlanData.weekPlanPersonal[index];
     currentPlanData.isDay = true;
     emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal));
   }

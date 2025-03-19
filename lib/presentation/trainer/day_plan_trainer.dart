@@ -18,7 +18,7 @@ class DayPlanTrainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DayPlanModel dayPlan = context.read<HomeScreenCubit>().selectDay;
+    DayPlanModel dayPlan = context.read<HomeScreenCubit>().selectDayGroup;
     _controllerLabelTraining.text = dayPlan.label;
     _controllerDescriptionTraining.text = dayPlan.description;
     return Scaffold(
@@ -189,6 +189,14 @@ class DayPlanTrainer extends StatelessWidget {
                     ],
                   ),
                 ]),
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 40.0),
+        child: FloatingActionButton(
+          backgroundColor: const Color.fromARGB(200, 1, 57, 104),
+          onPressed: context.read<HomeScreenCubit>().backToWeek,
+          child: const Icon(color: Colors.white, Icons.arrow_back_sharp),
         ),
       ),
       endDrawer: Drawer(

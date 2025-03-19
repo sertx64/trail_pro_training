@@ -19,8 +19,7 @@ final GoRouter router =
           const Authorization()),
   GoRoute(
       path: '/splashscreen',
-      builder: (BuildContext context, GoRouterState state) =>
-          SplashScreen()),
+      builder: (BuildContext context, GoRouterState state) => SplashScreen()),
   GoRoute(
       path: '/infoscreen',
       builder: (BuildContext context, GoRouterState state) =>
@@ -37,9 +36,9 @@ final GoRouter router =
       path: '/adduserscreen',
       builder: (BuildContext context, GoRouterState state) =>
           const AddUserScreen()),
-      GoRoute(
-          path: '/addgroupscreen',
-          builder: (BuildContext context, GoRouterState state) =>
+  GoRoute(
+      path: '/addgroupscreen',
+      builder: (BuildContext context, GoRouterState state) =>
           const AddGroupScreen()),
   GoRoute(
       path: '/creatsamlescreen',
@@ -49,7 +48,4 @@ final GoRouter router =
       path: '/studentscreen',
       builder: (BuildContext context, GoRouterState state) =>
           const StudentScreen()),
-  GoRoute(
-      path: '/dayplan',
-      builder: (BuildContext context, GoRouterState state) => const DayPlan()),
 ]);

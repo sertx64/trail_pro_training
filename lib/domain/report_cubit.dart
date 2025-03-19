@@ -20,7 +20,7 @@ class ReportCubit extends Cubit<ReportsForView> {
 
   void renewReportsOnWidget(String load, String feeling, String feedback) {
     List<ReportModel> reports = state.reports;
-    reports.add(ReportModel(Management.user.name, load, feeling, feedback));
+    reports.add(ReportModel(Management.user.login, load, feeling, feedback));
     final ReportsForView newReport = ReportsForView(reports, true);
     emit(newReport);
   }
@@ -47,7 +47,7 @@ class ReportCubit extends Cubit<ReportsForView> {
       return (sheetNameGroup == 'tp_week_plan') ? 'reports' : '${sheetNameGroup}_reports';
     }
     List<String>? reportsList = await ApiGSheet().getReportsList(sheetNameReports(), dayDate);
-    reportsList!.add(Management.user.name);
+    reportsList!.add(Management.user.login);
     reportsList.add(load);
     reportsList.add(feeling);
     reportsList.add(feedback);

@@ -26,12 +26,38 @@ class TrainerScreen extends StatelessWidget {
                 bottomNavigationBar: buildBottomAppBar(context),
                 body: (!state.planLoaded)
                     ? const Center(child: LottieAnimationLoadBar())
-                    : Stack(children: [
-                        buildListViewDaysWeek(state),
-                        buildBottonSelectWeek(context),
-                      ]));
+                    : buildListViewDaysWeek(state),
+                floatingActionButton: buildFloatingActionButton(context),
+              );
       }),
     );
+  }
+
+  Padding buildFloatingActionButton(BuildContext context) {
+    return Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0, vertical: 40.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      backgroundColor: const Color.fromARGB(200, 1, 57, 104),
+                      onPressed: context.read<HomeScreenCubit>().previousWeek,
+                      heroTag: 'prevWeek',
+                      child: const Icon(
+                          color: Colors.white, Icons.arrow_back_sharp),
+                    ),
+                    const SizedBox(width: 11),
+                    FloatingActionButton(
+                        backgroundColor:
+                            const Color.fromARGB(200, 1, 57, 104),
+                        onPressed: context.read<HomeScreenCubit>().nextWeek,
+                        heroTag: 'nextWeek',
+                        child: const Icon(
+                            color: Colors.white, Icons.arrow_forward_sharp)),
+                  ],
+                ),
+              );
   }
 
   ListView buildListViewDaysWeek(PlanDataModel state) {
@@ -138,42 +164,6 @@ class TrainerScreen extends StatelessWidget {
       itemCount: 7,
       separatorBuilder: (context, index) => const SizedBox(height: 1),
     );
-  }
-
-  Positioned buildBottonSelectWeek(BuildContext context) {
-    return Positioned(
-        bottom: 0,
-        left: 0,
-        right: 8,
-        child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      elevation: 8,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      fixedSize: const Size(90, 50),
-                      backgroundColor: const Color.fromARGB(200, 1, 57, 104)),
-                  onPressed: () {
-                    context.read<HomeScreenCubit>().nextWeek();
-                  },
-                  child: const Icon(
-                      color: Colors.white, Icons.arrow_forward_sharp)),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      elevation: 8,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      fixedSize: const Size(80, 40),
-                      backgroundColor: const Color.fromARGB(200, 1, 57, 104)),
-                  onPressed: () {
-                    context.read<HomeScreenCubit>().previousWeek();
-                  },
-                  child:
-                      const Icon(color: Colors.white, Icons.arrow_back_sharp)),
-            ])));
   }
 
   AppBar buildAppBar(BuildContext context) {
@@ -306,7 +296,8 @@ class TrainerScreen extends StatelessWidget {
                                   Icons.info_outline),
                               onPressed: () {
                                 Navigator.of(dialogContext).pop();
-                                _showProfileUserModal(context, Management.userList[index]);
+                                _showProfileSelectUserModal(
+                                    context, Management.userList[index]);
                               }),
                         ],
                       );
@@ -407,7 +398,7 @@ class TrainerScreen extends StatelessWidget {
     );
   }
 
-  void _showProfileUserModal(BuildContext context, String loginSelectUser) async {
+  void _showProfileSelectUserModal(BuildContext context, String loginSelectUser) async {
     User selectUser = await Users().getUserData(loginSelectUser);
     showDialog(
       context: context,
@@ -421,53 +412,62 @@ class TrainerScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  (selectUser.role == 'student') ?'Профиль ученика' :'Это тренер',
+                  style: const TextStyle(
+                      fontSize: 30, fontWeight: FontWeight.bold),
+                  (selectUser.role == 'student')
+                      ? 'Профиль ученика'
+                      : 'Это тренер',
                 ),
                 const SizedBox(height: 16),
                 Column(
                   children: [
                     Text(
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                         'Логин: ${selectUser.login}'),
                     const SizedBox(height: 8),
                     Text(
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                         'Имя: ${selectUser.name}'),
                   ],
                 ),
                 const SizedBox(height: 8),
-                if (selectUser.role == 'student')Row(
-                  children: [
-                    const Text(
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        'Группы ученика'),
-                    IconButton(
-                        icon: const Icon(
-                            color: Color.fromRGBO(255, 132, 26, 1),
-                            Icons.group_add),
-                        onPressed: () {
-                          Navigator.of(dialogContext).pop();
-                          _showSelectGroupsModal(context, selectUser);
-                        }),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                if (selectUser.role == 'student') Expanded(
-                  child: ListView.separated(
-                    itemCount: selectUser.groups.length,
-                    separatorBuilder: (dialogContext, index) =>
-                    const SizedBox(height: 8),
-                    itemBuilder: (dialogContext, index) {
-                      return Text(
-                        style: const TextStyle(
-                            fontSize: 24, color: Color.fromRGBO(1, 57, 104, 1), fontWeight: FontWeight.bold),
-                        selectUser.groups[index],
-                      );
-                    },
+                if (selectUser.role == 'student')
+                  Row(
+                    children: [
+                      const Text(
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                          'Группы ученика'),
+                      IconButton(
+                          icon: const Icon(
+                              color: Color.fromRGBO(255, 132, 26, 1),
+                              Icons.group_add),
+                          onPressed: () {
+                            Navigator.of(dialogContext).pop();
+                            _showGroupsSelectUserModal(context, selectUser);
+                          }),
+                    ],
                   ),
-                ),
-
+                const SizedBox(height: 16),
+                if (selectUser.role == 'student')
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: selectUser.groups.length,
+                      separatorBuilder: (dialogContext, index) =>
+                          const SizedBox(height: 8),
+                      itemBuilder: (dialogContext, index) {
+                        return Text(
+                          style: const TextStyle(
+                              fontSize: 24,
+                              color: Color.fromRGBO(1, 57, 104, 1),
+                              fontWeight: FontWeight.bold),
+                          selectUser.groups[index],
+                        );
+                      },
+                    ),
+                  ),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         fixedSize: const Size(200, 50),
@@ -486,7 +486,7 @@ class TrainerScreen extends StatelessWidget {
     );
   }
 
-  void _showSelectGroupsModal(BuildContext context, User selectUser) {
+  void _showGroupsSelectUserModal(BuildContext context, User selectUser) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -508,7 +508,7 @@ class TrainerScreen extends StatelessWidget {
                   child: ListView.separated(
                     itemCount: Management.groupsList.length,
                     separatorBuilder: (dialogContext, index) =>
-                    const SizedBox(height: 8),
+                        const SizedBox(height: 8),
                     itemBuilder: (dialogContext, index) {
                       return TextButton(
                         child: Text(
@@ -517,15 +517,17 @@ class TrainerScreen extends StatelessWidget {
                           Management.groupsList[index],
                         ),
                         onPressed: () {
-                          if (!selectUser.groups.contains(Management.groupsList[index])) {
+                          if (!selectUser.groups
+                              .contains(Management.groupsList[index])) {
                             selectUser.groups.add(Management.groupsList[index]);
                             Users().changePersonalDataUser(
-                                selectUser.login, selectUser.name,
-                                selectUser.pin, selectUser.role,
+                                selectUser.login,
+                                selectUser.name,
+                                selectUser.pin,
+                                selectUser.role,
                                 selectUser.groups);
                           }
                           Navigator.of(dialogContext).pop();
-
                         },
                       );
                     },
@@ -548,6 +550,4 @@ class TrainerScreen extends StatelessWidget {
       },
     );
   }
-
-
 }

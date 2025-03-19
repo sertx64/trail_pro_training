@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
+import 'package:trailpro_planning/domain/home_cubit.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
@@ -9,11 +10,8 @@ class DayPlan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<dynamic> dayPlan =
-        GoRouterState.of(context).extra as List<dynamic>;
-    final String groupName = dayPlan[0];
-    final DayPlanModel dayPlanGroup = dayPlan[1];
-    final DayPlanModel dayPlanPersonal = dayPlan[2];
+    final DayPlanModel dayPlanGroup = context.read<HomeScreenCubit>().selectDayGroup;
+    final DayPlanModel dayPlanPersonal = context.read<HomeScreenCubit>().selectDayPersonal;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -72,11 +70,19 @@ class DayPlan extends StatelessWidget {
                           dayPlanGroup.label != '')
                       ? true
                       : false,
-                  child: ReportsWidget(groupName, dayPlanGroup.date),
+                  child: ReportsWidget(context.read<HomeScreenCubit>().planType, dayPlanGroup.date),
                 ),
               ],
             ),
           )),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 40.0),
+        child: FloatingActionButton(
+          backgroundColor: const Color.fromARGB(200, 1, 57, 104),
+          onPressed: context.read<HomeScreenCubit>().backToWeek,
+          child: const Icon(color: Colors.white, Icons.arrow_back_sharp),
+        ),
+      ),
     );
   }
 }
