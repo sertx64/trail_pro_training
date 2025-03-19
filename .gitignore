@@ -1,5 +1,5 @@
 # Исключить файл с конфиденциальными данными
-/lib/data/gsheet_credential.dart
+**/lib/data/gsheet_credential.dart
 # Miscellaneous
 *.class
 *.log
