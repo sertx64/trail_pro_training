@@ -27,7 +27,7 @@ class ReportCubit extends Cubit<ReportsForView> {
 
   Future<List<String>?> getReports(String sheetNameGroup, String dayDate) async {
     String sheetNameReports() {
-      return (sheetNameGroup == 'tp_week_plan') ? 'reports' : '${sheetNameGroup}_reports';
+      return (sheetNameGroup == 'TrailPro') ? 'reports' : '${sheetNameGroup}_reports';
     }
     return await ApiGSheet().getReportsList(sheetNameReports(), dayDate);
   }
@@ -44,7 +44,7 @@ class ReportCubit extends Cubit<ReportsForView> {
   void sentReport(String sheetNameGroup, String dayDate, String load, String feeling,
       String feedback) async {
     String sheetNameReports(){
-      return (sheetNameGroup == 'tp_week_plan') ? 'reports' : '${sheetNameGroup}_reports';
+      return (sheetNameGroup == 'TrailPro') ? 'reports' : '${sheetNameGroup}_reports';
     }
     List<String>? reportsList = await ApiGSheet().getReportsList(sheetNameReports(), dayDate);
     reportsList!.add(Management.user.login);
