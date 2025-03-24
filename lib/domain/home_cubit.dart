@@ -12,7 +12,7 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
   DayPlanModel selectDayGroup = DayPlanModel('', '', '', '');
   DayPlanModel selectDayPersonal = DayPlanModel('', '', '', '');
   List<String> weekPlanList = [];
-  String planType = 'tp_week_plan';
+  String planType = 'TrailPro';
 
   void choosingPlanType(String pType){
     planType =  pType;
