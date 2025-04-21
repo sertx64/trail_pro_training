@@ -4,6 +4,7 @@ import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/domain/home_cubit.dart';
+import 'package:trailpro_planning/domain/url_utils.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
 class DayPlanTrainer extends StatelessWidget {
@@ -78,10 +79,11 @@ class DayPlanTrainer extends StatelessWidget {
                             const SizedBox(
                               height: 10,
                             ),
-                            Text(
-                                style:
-                                    const TextStyle(color: Colors.black, fontSize: 16),
-                                dayPlan.description),
+                            RichText(
+                              text: TextSpan(
+                                children: UrlUtils.buildTextWithClickableLinks(dayPlan.description),
+                              ),
+                            ),
                             const SizedBox(
                               height: 10,
                             ),

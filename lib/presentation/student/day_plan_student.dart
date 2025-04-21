@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/home_cubit.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
+import 'package:trailpro_planning/domain/url_utils.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
 class DayPlan extends StatelessWidget {
@@ -37,11 +38,11 @@ class DayPlan extends StatelessWidget {
                               color: Color.fromRGBO(255, 132, 26, 1),
                               fontSize: 19),
                           dayPlanGroup.label),
-                      Text(
-                          style: const TextStyle(
-                              color: Color.fromRGBO(1, 57, 104, 1),
-                              fontSize: 20),
-                          dayPlanGroup.description),
+                      RichText(
+                        text: TextSpan(
+                          children: UrlUtils.buildTextWithClickableLinks(dayPlanGroup.description),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -56,11 +57,11 @@ class DayPlan extends StatelessWidget {
                               color: Color.fromRGBO(255, 132, 26, 1),
                               fontSize: 19),
                           dayPlanPersonal.label),
-                      Text(
-                          style: const TextStyle(
-                              color: Color.fromRGBO(1, 57, 104, 1),
-                              fontSize: 20),
-                          dayPlanPersonal.description),
+                      RichText(
+                        text: TextSpan(
+                          children: UrlUtils.buildTextWithClickableLinks(dayPlanPersonal.description),
+                        ),
+                      ),
                       const SizedBox(height: 18),
                     ],
                   ),

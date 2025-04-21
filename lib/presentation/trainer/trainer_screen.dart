@@ -6,6 +6,7 @@ import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/home_cubit.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/domain/users.dart';
+import 'package:trailpro_planning/domain/url_utils.dart';
 import 'package:trailpro_planning/presentation/climbing_animation.dart';
 import 'package:trailpro_planning/presentation/trainer/day_plan_trainer.dart';
 
@@ -142,12 +143,11 @@ class TrainerScreen extends StatelessWidget {
                         children: [
                           const SizedBox(height: 8),
                           const Text('описание:'),
-                          Text(
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Color.fromRGBO(1, 57, 104, 1),
-                                  fontSize: 18),
-                              dayPlan.description),
+                          RichText(
+                            text: TextSpan(
+                              children: UrlUtils.buildTextWithClickableLinks(dayPlan.description),
+                            ),
+                          ),
                         ],
                       ),
                     ),

@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/domain/samples.dart';
 import 'package:trailpro_planning/domain/users.dart';
+import 'package:trailpro_planning/presentation/theme/app_theme_export.dart';
 
 class Authorization extends StatefulWidget {
   const Authorization({super.key});
@@ -23,7 +24,6 @@ class _AuthorizationState extends State<Authorization> {
     User user = await Users().user(login);
 
     if (user.pin == pin) {
-
       box.put('login', login);
       box.put('pin', pin);
       if (user.role == 'student') {
@@ -60,75 +60,57 @@ class _AuthorizationState extends State<Authorization> {
         appBar: AppBar(
             actions: [
               IconButton(
-                icon: const Icon(
-                    color: Color.fromRGBO(255, 132, 26, 1), Icons.info_outline),
+                icon: Icon(
+                    color: AppColors.accent,
+                    Icons.info_outline),
                 onPressed: () => context.push('/infoscreen'),
               ),
             ],
             centerTitle: true,
-            title: const Text(
-                style: TextStyle(fontSize: 30, color: Colors.white),
+            title: Text(
+                style: AppTextStyles.heading1,
                 'TrailPro planning'),
-            backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+            backgroundColor: AppColors.primary),
         body: Center(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 150),
+            SizedBox(height: AppSpacing.xxl * 3.75),
             const Text('логин'),
             SizedBox(
               height: 50,
               width: 250,
               child: TextField(
                 textAlign: TextAlign.center,
-                cursorColor: const Color.fromRGBO(255, 132, 26, 1),
-                style: const TextStyle(fontSize: 16),
-                decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                  ),
-                ),
+                cursorColor: AppColors.accent,
+                style: AppTextStyles.body1,
+                decoration: AppTheme.roundInputDecoration,
                 controller: _login,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: AppSpacing.small),
             const Text('пин'),
             SizedBox(
               height: 50,
               width: 250,
               child: TextField(
                 textAlign: TextAlign.center,
-                cursorColor: const Color.fromRGBO(255, 132, 26, 1),
+                cursorColor: AppColors.accent,
                 obscureText: true,
                 keyboardType: TextInputType.number,
-                style: const TextStyle(fontSize: 14),
-                decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                  ),
-                ),
+                style: AppTextStyles.body2,
+                decoration: AppTheme.roundInputDecoration,
                 controller: _pin,
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: AppSpacing.small),
             ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    elevation: 8,
-                    fixedSize: const Size(200, 50),
-                    backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+                style: AppTheme.elevatedButtonStyle,
                 onPressed: goToRoleScreen,
-                child: const Text(
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                child: Text(
+                    style: AppTextStyles.button,
                     'Войти')),
-            const SizedBox(
-              height: 30,
-            ),
+            SizedBox(height: AppSpacing.large),
           ],
         )));
   }
