@@ -5,7 +5,7 @@ import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
 
 class HomeScreenCubit extends Cubit<PlanDataModel> {
-  HomeScreenCubit() : super(PlanDataModel(false, false, [], []));
+  HomeScreenCubit() : super(PlanDataModel(false, false, [], [], 'TrailPro'));
 
   int yearWeekIndex = int.parse(DatePasing().yearWeekNow());
   int indexDay = 0;
@@ -15,14 +15,21 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
   String planType = 'TrailPro';
 
   void choosingPlanType(String pType){
-    planType =  pType;
+    planType = pType;
+    PlanDataModel currentPlanData = state;
+    currentPlanData.planType = planType;
+    if (!isClosed) {
+      emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal, currentPlanData.planType));
+    }
     loadWeekPlan();
   }
 
   void loadWeekPlan() async {
     PlanDataModel currentPlanData = state;
     currentPlanData.planLoaded = false;
-    emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal));
+    if (!isClosed) {
+      emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal, currentPlanData.planType));
+    }
     List<DayPlanModel> currentWeekPlanGroup =
         await weekPlanStudent(planType, yearWeekIndex);
     currentPlanData.planLoaded = true;
@@ -31,12 +38,16 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
       7,
       (index) => DayPlanModel('', '', '', ''),
     );
-    emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal));
+    if (!isClosed) {
+      emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal, currentPlanData.planType));
+    }
     if (Management.user.role == 'student') {
       List<DayPlanModel> currentWeekPlanPersonal =
           await weekPlanStudent(Management.user.login, yearWeekIndex);
       currentPlanData.weekPlanPersonal = currentWeekPlanPersonal;
-      emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal));
+      if (!isClosed) {
+        emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal, currentPlanData.planType));
+      }
     }
   }
 
@@ -46,13 +57,17 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
     selectDayGroup = currentPlanData.weekPlanGroup[index];
     selectDayPersonal = currentPlanData.weekPlanPersonal[index];
     currentPlanData.isDay = true;
-    emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal));
+    if (!isClosed) {
+      emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal, currentPlanData.planType));
+    }
   }
 
   void backToWeek(){
     PlanDataModel currentPlanData = state;
     currentPlanData.isDay = false;
-    emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal));
+    if (!isClosed) {
+      emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal, currentPlanData.planType));
+    }
   }
 
   void applyAndBackToWeek(String label, String description) {
@@ -60,7 +75,9 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
     currentPlanData.weekPlanGroup[indexDay].label = label;
     currentPlanData.weekPlanGroup[indexDay].description = description;
     currentPlanData.isDay = false;
-    emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal));
+    if (!isClosed) {
+      emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal, currentPlanData.planType));
+    }
     sentPlan(planType, label, description);
   }
 

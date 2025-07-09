@@ -20,10 +20,7 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
-            title: const Text(
-                style: TextStyle(fontSize: 30, color: Colors.white),
-                'Новая группа'),
-            backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+            title: const Text('Новая группа')),
         body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,

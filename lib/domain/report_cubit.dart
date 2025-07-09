@@ -10,9 +10,15 @@ class ReportCubit extends Cubit<ReportsForView> {
 
   void loadReports(String sheetNameGroup, String date) async {
     if (!isLoadReport) {
-      List<String> reportsList = (await getReports(sheetNameGroup, date))!;
+      List<String>? reportsList = await getReports(sheetNameGroup, date);
       isLoadReport = true;
-      List<ReportModel> reports = splitReports(reportsList);
+      
+      // Проверяем на null и пустой список
+      List<ReportModel> reports = [];
+      if (reportsList != null && reportsList.isNotEmpty) {
+        reports = splitReports(reportsList);
+      }
+      
       final ReportsForView newReport = ReportsForView(reports, true);
       emit(newReport);
     }
@@ -34,10 +40,25 @@ class ReportCubit extends Cubit<ReportsForView> {
 
   List<ReportModel> splitReports(List<String> reports) {
     List<ReportModel> splitList = [];
-    for (var i = 0; i < reports.length; i += 4) {
-      splitList.add(ReportModel(
-          reports[i], reports[i + 1], reports[i + 2], reports[i + 3]));
+    
+    // Проверяем, что у нас есть данные для разбора
+    if (reports.isEmpty) {
+      return splitList;
     }
+    
+    // Убеждаемся, что количество элементов кратно 4 (логин, нагрузка, самочувствие, обратная связь)
+    for (var i = 0; i < reports.length; i += 4) {
+      // Проверяем, что у нас есть все 4 элемента для отчета
+      if (i + 3 < reports.length) {
+      splitList.add(ReportModel(
+          reports[i],     // логин
+          reports[i + 1], // нагрузка
+          reports[i + 2], // самочувствие
+          reports[i + 3]  // обратная связь
+        ));
+    }
+    }
+    
     return splitList;
   }
 
@@ -47,7 +68,13 @@ class ReportCubit extends Cubit<ReportsForView> {
       return (sheetNameGroup == 'TrailPro') ? 'reports' : '${sheetNameGroup}_reports';
     }
     List<String>? reportsList = await ApiGSheet().getReportsList(sheetNameReports(), dayDate);
-    reportsList!.add(Management.user.login);
+    
+    // Если список отчетов null, создаем новый
+    if (reportsList == null) {
+      reportsList = [];
+    }
+    
+    reportsList.add(Management.user.login);
     reportsList.add(load);
     reportsList.add(feeling);
     reportsList.add(feedback);

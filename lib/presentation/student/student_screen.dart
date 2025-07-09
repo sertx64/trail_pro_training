@@ -8,6 +8,8 @@ import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/domain/users.dart';
 import 'package:trailpro_planning/presentation/climbing_animation.dart';
 import 'package:trailpro_planning/presentation/student/day_plan_student.dart';
+import 'package:trailpro_planning/presentation/theme/app_colors.dart';
+import 'package:trailpro_planning/presentation/theme/app_theme.dart';
 
 class StudentScreen extends StatelessWidget {
   const StudentScreen({super.key});
@@ -22,316 +24,485 @@ class StudentScreen extends StatelessWidget {
         return (state.isDay)
             ? DayPlan()
             : Scaffold(
-          appBar: buildAppBar(context),
-          body: (!state.planLoaded)
-              ? const Center(child: LottieAnimationLoadBar())
-              : buildListViewDaysWeek(state),
-          floatingActionButton: buildFloatingActionButton(context),
-        );
+                appBar: _buildAppBar(context),
+                body: (!state.planLoaded)
+                    ? const Center(child: LottieAnimationLoadBar())
+                    : _buildWeekPlanList(state),
+                floatingActionButton: _buildFloatingActionButtons(context),
+              );
       }),
     );
   }
 
-  Padding buildFloatingActionButton(BuildContext context) {
-    return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 40.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                backgroundColor: const Color.fromARGB(200, 1, 57, 104),
-                onPressed: context.read<HomeScreenCubit>().previousWeek,
-                heroTag: 'prevWeek',
-                child: const Icon(color: Colors.white, Icons.arrow_back_sharp),
-              ),
-              const SizedBox(width: 11),
-              FloatingActionButton(
-                  backgroundColor: const Color.fromARGB(200, 1, 57, 104),
-                  onPressed: context.read<HomeScreenCubit>().nextWeek,
-                  heroTag: 'nextWeek',
-                  child: const Icon(
-                      color: Colors.white, Icons.arrow_forward_sharp)),
-            ],
-          ),
-        );
-  }
-
-  ListView buildListViewDaysWeek(PlanDataModel state) {
-    return ListView.separated(
-      itemBuilder: (context, index) {
-        DayPlanModel dayPlanGroup = state.weekPlanGroup[index];
-        DayPlanModel dayPlanPersonal = state.weekPlanPersonal[index];
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-              decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(3, 7),
-                  ),
-                ],
-                color: (dayPlanGroup.date == DatePasing().dateNow())
-                    ? Colors.green[100]
-                    : (DatePasing().isAfterDay(dayPlanGroup.date))
-                        ? Colors.grey[400]
-                        : Colors.grey[200],
-                // border: Border.all(
-                //     width: 3.0, color: const Color.fromRGBO(1, 57, 104, 1)),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: ListTile(
-                contentPadding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                title: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      title: const Text('План тренировок'),
+      actions: [
+        // Профиль пользователя
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'profile') {
+                _showProfileModal(context);
+              } else if (value == 'logout') {
+                context.go('/authorization');
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'profile',
+                child: Row(
                   children: [
-                    Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 2.0,
-                              color: (dayPlanGroup.label == '')
-                                  ? Colors.blueGrey
-                                  : const Color.fromRGBO(1, 57, 104, 1)),
-                          shape: BoxShape.circle,
-                          color: (dayPlanGroup.label == '')
-                              ? (dayPlanPersonal.label == '')
-                                  ? Colors.blueGrey
-                                  : Colors.green
-                              : const Color.fromRGBO(255, 132, 26, 1),
-                        ),
-                        child: Center(
-                          child: Text(
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                  fontSize: 22),
-                              dayPlanGroup.day),
-                        )),
+                    const Icon(Icons.person_outline),
                     const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                                style: const TextStyle(
-                                    color: Color.fromRGBO(1, 57, 104, 1),
-                                    fontSize: 20),
-                                dayPlanGroup.date),
-                            const SizedBox(width: 10),
-                            if (dayPlanGroup.date == DatePasing().dateNow())
-                              const Text(
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                  'Сегодня!'),
-                          ],
-                        ),
-                        Visibility(
-                          visible: (dayPlanGroup.label == '') ? false : true,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Color.fromRGBO(1, 57, 104, 1),
-                                      fontSize: 18),
-                                  dayPlanGroup.label),
-                            ],
-                          ),
-                        ),
-                        Visibility(
-                          visible: (dayPlanPersonal.label == '') ? false : true,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('(персональная)'),
-                              Text(
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Color.fromRGBO(1, 57, 104, 1),
-                                      fontSize: 18),
-                                  dayPlanPersonal.label),
-                            ],
-                          ),
-                        ),
-                        Visibility(
-                          visible: (dayPlanGroup.label == '' &&
-                                  dayPlanPersonal.label == '')
-                              ? true
-                              : false,
-                          child: const Text(
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Color.fromRGBO(1, 57, 104, 1),
-                                  fontSize: 18),
-                              'День отдыха'),
-                        ),
-                      ],
-                    ),
+                    Text('Профиль (${Management.user.login})'),
                   ],
                 ),
-                onTap: () {
-                  (dayPlanGroup.label == '' && dayPlanPersonal.label == '')
-                      ? null
-                      : {context.read<HomeScreenCubit>().openDay(index)};
-                  // {
-                  //         context.push('/dayplan', extra: [
-                  //           context.read<HomeScreenCubit>().planType,
-                  //           dayPlanGroup,
-                  //           dayPlanPersonal
-                  //         ]),
-                  //       };
-                },
-              )),
-        );
-      },
-      itemCount: 7,
-      separatorBuilder: (context, index) => const SizedBox(height: 1),
+              ),
+              const PopupMenuDivider(),
+              const PopupMenuItem(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout),
+                    SizedBox(width: 8),
+                    Text('Выйти'),
+                  ],
+                ),
+              ),
+            ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(
+                    radius: 16,
+                    child: Text(
+                      Management.user.name.isNotEmpty
+                          ? Management.user.name[0].toUpperCase()
+                          : Management.user.login[0].toUpperCase(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.arrow_drop_down),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-        actions: [
-          TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white, // Цвет текста
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0), // Закругленные углы
-                ),
+  Widget _buildWeekPlanList(PlanDataModel state) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(8.0),
+      itemCount: 7,
+      itemBuilder: (context, index) {
+        DayPlanModel dayPlanGroup = state.weekPlanGroup[index];
+        DayPlanModel dayPlanPersonal = state.weekPlanPersonal[index];
+        
+        bool isToday = dayPlanGroup.date == DatePasing().dateNow();
+        bool isPast = DatePasing().isAfterDay(dayPlanGroup.date);
+        bool hasTraining = dayPlanGroup.label.isNotEmpty || dayPlanPersonal.label.isNotEmpty;
+        
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+          color: AppTheme.getDayStatusColor(dayPlanGroup.date, isToday, isPast, hasTraining),
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(16.0),
+            leading: _buildDayIndicator(dayPlanGroup.day, hasTraining, dayPlanPersonal.label.isNotEmpty),
+            title: _buildDayTitle(dayPlanGroup, dayPlanPersonal, isToday),
+            subtitle: _buildDaySubtitle(dayPlanGroup, dayPlanPersonal),
+            trailing: hasTraining
+                ? const Icon(Icons.chevron_right, color: AppColors.primary)
+                : null,
+            onTap: hasTraining
+                ? () => context.read<HomeScreenCubit>().openDay(index)
+                : null,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDayIndicator(String day, bool hasTraining, bool hasPersonal) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: hasTraining ? AppColors.accent : AppColors.grey,
+        border: Border.all(
+          color: hasTraining ? AppColors.primary : AppColors.grey,
+          width: 2,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          day,
+          style: const TextStyle(
+            color: AppColors.textLight,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDayTitle(DayPlanModel dayPlanGroup, DayPlanModel dayPlanPersonal, bool isToday) {
+    return Row(
+      children: [
+        Text(
+          dayPlanGroup.date,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primary,
+          ),
+        ),
+        if (isToday) ...[
+          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: AppColors.accent,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Text(
+              'Сегодня',
+              style: TextStyle(
+                color: AppColors.textLight,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
               ),
-              onPressed: () => _showProfileModal(context),
-              child: Column(
-                children: [
-                  const Text('Профиль'),
-                  Text(Management.user.login),
-                ],
-              )),
-          IconButton(
-            icon: const Icon(
-                color: Color.fromRGBO(255, 132, 26, 1), Icons.exit_to_app),
-            onPressed: () => context.go('/authorization'),
+            ),
           ),
         ],
-        centerTitle: true,
-        title: const Text(
-            style: TextStyle(fontSize: 27, color: Colors.white),
-            'План тренировок'),
-        backgroundColor: const Color.fromRGBO(1, 57, 104, 1));
+      ],
+    );
+  }
+
+  Widget _buildDaySubtitle(DayPlanModel dayPlanGroup, DayPlanModel dayPlanPersonal) {
+    List<Widget> subtitleWidgets = [];
+    
+    if (dayPlanGroup.label.isNotEmpty) {
+      subtitleWidgets.add(
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          margin: const EdgeInsets.only(top: 4),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            dayPlanGroup.label,
+            style: const TextStyle(
+              color: AppColors.primary,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      );
+    }
+    
+    if (dayPlanPersonal.label.isNotEmpty) {
+      subtitleWidgets.add(
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          margin: const EdgeInsets.only(top: 4),
+          decoration: BoxDecoration(
+            color: AppColors.success.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.person, size: 14, color: AppColors.success),
+              const SizedBox(width: 4),
+              Text(
+                dayPlanPersonal.label,
+                style: const TextStyle(
+                  color: AppColors.success,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
+    if (subtitleWidgets.isEmpty) {
+      subtitleWidgets.add(
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          margin: const EdgeInsets.only(top: 4),
+          decoration: BoxDecoration(
+            color: AppColors.grey.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.free_breakfast, size: 14, color: AppColors.grey),
+              SizedBox(width: 4),
+              Text(
+                'День отдыха',
+                style: TextStyle(
+                  color: AppColors.grey,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: subtitleWidgets,
+    );
+  }
+
+  Widget _buildFloatingActionButtons(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: 'prevWeek',
+            onPressed: context.read<HomeScreenCubit>().previousWeek,
+            child: const Icon(Icons.chevron_left),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'nextWeek',
+            onPressed: context.read<HomeScreenCubit>().nextWeek,
+            child: const Icon(Icons.chevron_right),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showProfileModal(BuildContext context) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext dialogContext) {
-        return Dialog(
-          insetPadding: EdgeInsets.zero,
-          child: Container(
-            height: MediaQuery.of(dialogContext).size.height,
-            width: MediaQuery.of(dialogContext).size.width,
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                const Text(
-                  'Профиль',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                        'Ваш логин: ${Management.user.login}'),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Text(
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                            'Ваше имя: ${Management.user.name}'),
-                        IconButton(
-                            onPressed: () {
-                              Navigator.of(dialogContext).pop();
-                              _showChangeNameModal(context);
-                            },
-                            icon: const Icon(
-                                color: Color.fromRGBO(255, 132, 26, 1),
-                                Icons.edit)),
-                      ],
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext sheetContext) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.8,
+          maxChildSize: 0.95,
+          minChildSize: 0.5,
+          expand: false,
+          builder: (context, scrollController) {
+            return Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Drag handle
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: AppColors.grey.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
-                    Row(
-                      children: [
-                        const Text(
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                            'Вы можете'),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.of(dialogContext).pop();
-                              _showChangePinModal(context);
-                            },
-                            child: const Text(
-                                style: TextStyle(
-                                    color: Color.fromRGBO(255, 132, 26, 1),
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                                'изменить ПИН-КОД')),
-                      ],
+                  ),
+                  const SizedBox(height: 20),
+                  
+                  // Title
+                  const Text(
+                    'Профиль',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
                     ),
-                    const SizedBox(height: 16),
-                    const Text(
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                        'Ваши группы:'),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: Management.user.groups.length,
-                    separatorBuilder: (dialogContext, index) =>
-                        const SizedBox(height: 8),
-                    itemBuilder: (dialogContext, index) {
-                      return TextButton(
-                        child: Text(
-                          style: const TextStyle(
-                              fontSize: 24,
-                              color: Color.fromRGBO(1, 57, 104, 1),
-                              fontWeight: FontWeight.bold),
-                          Management.user.groups[index],
+                  ),
+                  const SizedBox(height: 20),
+                  
+                  // Profile info
+                  _buildProfileInfo(),
+                  const SizedBox(height: 24),
+                  
+                  // Groups section
+                  const Text(
+                    'Ваши группы:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  
+                  // Groups list
+                  Expanded(
+                    child: _buildGroupsList(sheetContext),
+                  ),
+                  
+                  const SizedBox(height: 20),
+                  
+                  // Action buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () => _showChangeNameModal(context),
+                          icon: const Icon(Icons.edit),
+                          label: const Text('Изменить имя'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.textLight,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
                         ),
-                        onPressed: () {
-                          Navigator.of(dialogContext).pop();
-                          context
-                              .read<HomeScreenCubit>()
-                              .choosingPlanType(Management.user.groups[index]);
-                        },
-                      );
-                    },
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () => _showChangePinModal(context),
+                          icon: const Icon(Icons.lock),
+                          label: const Text('Изменить ПИН'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.accent,
+                            foregroundColor: AppColors.textLight,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 12),
+                  
+                  // Close button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.of(sheetContext).pop(),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        side: const BorderSide(color: AppColors.grey),
+                      ),
+                      child: const Text('Закрыть'),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildProfileInfo() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: AppColors.primary,
+                  radius: 24,
+                  child: Text(
+                    Management.user.name.isNotEmpty
+                        ? Management.user.name[0].toUpperCase()
+                        : Management.user.login[0].toUpperCase(),
+                    style: const TextStyle(
+                      color: AppColors.textLight,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: const Size(200, 50),
-                        backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
-                    onPressed: () {
-                      Navigator.of(dialogContext).pop();
-                    },
-                    child: const Text(
-                        style: TextStyle(fontSize: 24, color: Colors.white),
-                        'Закрыть')),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Management.user.name,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        'Логин: ${Management.user.login}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.text.withOpacity(0.7),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGroupsList(BuildContext sheetContext) {
+    return ListView.builder(
+      itemCount: Management.user.groups.length,
+      itemBuilder: (context, index) {
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(16),
+            leading: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.group, color: AppColors.primary),
+            ),
+            title: Text(
+              Management.user.groups[index],
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary,
+              ),
+            ),
+            trailing: const Icon(Icons.chevron_right, color: AppColors.primary),
+            onTap: () {
+              Navigator.of(sheetContext).pop();
+              context.read<HomeScreenCubit>()
+                  .choosingPlanType(Management.user.groups[index]);
+            },
           ),
         );
       },
@@ -341,65 +512,81 @@ class StudentScreen extends StatelessWidget {
   void _showChangePinModal(BuildContext context) {
     final TextEditingController oldPin = TextEditingController();
     final TextEditingController newPin = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Сменить ПИН-КОД?'),
-          content: const Text('ПИН-КОД будет изменён.'),
+          title: const Text('Изменить ПИН-код'),
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: oldPin,
+                  decoration: const InputDecoration(
+                    labelText: 'Текущий ПИН-код',
+                    prefixIcon: Icon(Icons.lock_outline),
+                  ),
+                  obscureText: true,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Введите текущий ПИН-код';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: newPin,
+                  decoration: const InputDecoration(
+                    labelText: 'Новый ПИН-код',
+                    prefixIcon: Icon(Icons.lock),
+                  ),
+                  obscureText: true,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Введите новый ПИН-код';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
+          ),
           actions: [
-            const Text('Введите старый ПИН'),
-            TextField(
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              style: const TextStyle(fontSize: 14),
-              decoration: const InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                ),
-              ),
-              controller: oldPin,
-            ),
-            const Text('Введите новый ПИН'),
-            TextField(
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              style: const TextStyle(fontSize: 14),
-              decoration: const InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                ),
-              ),
-              controller: newPin,
-            ),
             TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Отмена'),
+            ),
+            ElevatedButton(
               onPressed: () {
-                if (oldPin.text == Management.user.pin && newPin.text != '') {
-                  Management.user.pin = newPin.text;
-                  Users().changePersonalDataUser(
+                if (formKey.currentState!.validate()) {
+                  if (oldPin.text == Management.user.pin) {
+                    Management.user.pin = newPin.text;
+                    Users().changePersonalDataUser(
                       Management.user.login,
                       Management.user.name,
                       newPin.text,
                       Management.user.role,
-                      Management.user.groups);
-                  Navigator.of(dialogContext).pop();
-                  _showProfileModal(context);
+                      Management.user.groups,
+                    );
+                    Navigator.of(dialogContext).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('ПИН-код успешно изменен')),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Неверный текущий ПИН-код')),
+                    );
+                  }
                 }
               },
-              child: const Center(
-                  child: Text(style: TextStyle(color: Colors.red), 'Изменить')),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                _showProfileModal(context);
-              },
-              child: const Center(
-                  child: Text(style: TextStyle(color: Colors.black), 'Отмена')),
+              child: const Text('Изменить'),
             ),
           ],
         );
@@ -409,50 +596,53 @@ class StudentScreen extends StatelessWidget {
 
   void _showChangeNameModal(BuildContext context) {
     final TextEditingController newName = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    newName.text = Management.user.name;
+
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Изменить имя?'),
-          content: const Text('Имя будет изменёно.'),
-          actions: [
-            const Text('Введите новое имя'),
-            TextField(
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14),
-              decoration: const InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                ),
-              ),
+          title: const Text('Изменить имя'),
+          content: Form(
+            key: formKey,
+            child: TextFormField(
               controller: newName,
+              decoration: const InputDecoration(
+                labelText: 'Новое имя',
+                prefixIcon: Icon(Icons.person),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Введите новое имя';
+                }
+                return null;
+              },
             ),
+          ),
+          actions: [
             TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Отмена'),
+            ),
+            ElevatedButton(
               onPressed: () {
-                if (newName.text.trim() != '') {
+                if (formKey.currentState!.validate()) {
                   Management.user.name = newName.text.trim();
                   Users().changePersonalDataUser(
-                      Management.user.login,
-                      newName.text.trim(),
-                      Management.user.pin,
-                      Management.user.role,
-                      Management.user.groups);
+                    Management.user.login,
+                    newName.text.trim(),
+                    Management.user.pin,
+                    Management.user.role,
+                    Management.user.groups,
+                  );
                   Navigator.of(dialogContext).pop();
-                  _showProfileModal(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Имя успешно изменено')),
+                  );
                 }
               },
-              child: const Center(
-                  child: Text(style: TextStyle(color: Colors.red), 'Изменить')),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                _showProfileModal(context);
-              },
-              child: const Center(
-                  child: Text(style: TextStyle(color: Colors.black), 'Отмена')),
+              child: const Text('Изменить'),
             ),
           ],
         );

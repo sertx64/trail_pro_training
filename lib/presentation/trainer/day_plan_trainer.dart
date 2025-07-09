@@ -6,6 +6,7 @@ import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/domain/home_cubit.dart';
 import 'package:trailpro_planning/domain/url_utils.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
+import 'package:trailpro_planning/presentation/theme/app_colors.dart';
 
 class DayPlanTrainer extends StatelessWidget {
   DayPlanTrainer({super.key});
@@ -17,154 +18,270 @@ class DayPlanTrainer extends StatelessWidget {
 
   final List samples = Management.samplesSlitList;
 
+  String getFullDayName(String shortDay) {
+    switch (shortDay) {
+      case 'ПН':
+        return 'Понедельник';
+      case 'ВТ':
+        return 'Вторник';
+      case 'СР':
+        return 'Среда';
+      case 'ЧТ':
+        return 'Четверг';
+      case 'ПТ':
+        return 'Пятница';
+      case 'СБ':
+        return 'Суббота';
+      case 'ВС':
+        return 'Воскресенье';
+      default:
+        return shortDay;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     DayPlanModel dayPlan = context.read<HomeScreenCubit>().selectDayGroup;
     _controllerLabelTraining.text = dayPlan.label;
     _controllerDescriptionTraining.text = dayPlan.description;
+    
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          TextButton(
-            onPressed: () => context.read<HomeScreenCubit>().backToWeek(),
-            child: const Text(
-                style: TextStyle(
-                    fontSize: 20, color: Color.fromRGBO(255, 132, 26, 1)),
-                'Назад'),
-          ),
-        ],
-        backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
-        title: Text(
-            style: const TextStyle(fontSize: 20, color: Colors.white),
-            'День ${dayPlan.day} ${dayPlan.date}'),
-        centerTitle: true,
+        title: Text('${getFullDayName(dayPlan.day)}, ${dayPlan.date}'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: (DatePasing().isAfterDay(dayPlan.date))
-              ? Column(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: (DatePasing().isAfterDay(dayPlan.date))
+            ? Column(
                 children: [
-                  Container(
-                              decoration: BoxDecoration(
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(3, 7),
-                    ),
-                  ],
-                  color: (dayPlan.date ==
-                      DatePasing().dateNow())
-                      ? Colors.green[100]
-                      : (DatePasing().isAfterDay(dayPlan.date))
-                      ? Colors.grey[350]
-                      : Colors.white,
-                  border: Border.all(
-                      width: 3.0,
-                      color:
-                      const Color.fromRGBO(1, 57, 104, 1)),
-                  borderRadius: BorderRadius.circular(16),
-                              ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                  Card(
+                    elevation: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: (dayPlan.date == DatePasing().dateNow())
+                            ? AppColors.completedGreen
+                            : AppColors.pastGrey,
+                      ),
                       child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                style:
-                                    const TextStyle(color: Colors.black, fontSize: 20),
-                                dayPlan.label),
-                            const SizedBox(
-                              height: 10,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.fitness_center,
+                                color: AppColors.primary,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  dayPlan.label.isEmpty ? 'День отдыха' : dayPlan.label,
+                                  style: const TextStyle(
+                                    color: AppColors.text,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (dayPlan.description.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Описание:',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
+                            const SizedBox(height: 8),
                             RichText(
                               text: TextSpan(
                                 children: UrlUtils.buildTextWithClickableLinks(dayPlan.description),
+                                style: const TextStyle(
+                                  color: AppColors.text,
+                                  fontSize: 14,
+                                  height: 1.5,
+                                ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-
                           ],
-                        ),
+                        ],
+                      ),
                     ),
                   ),
                   ReportsWidget(context.read<HomeScreenCubit>().planType, dayPlan.date),
                 ],
               )
-              : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Row(
-                    children: [
-                      const Text(
-                          style: TextStyle(color: Colors.black, fontSize: 14),
-                          'Название'),
-                      TextButton(
-                          onPressed: () {
-                            _controllerLabelTraining.text = '';
-                          },
-                          child: const Text(
-                              style: TextStyle(color: Colors.black, fontSize: 14),
-                              '(очистить)'))
-                    ],
-                  ),
-                  TextField(
-                    maxLength: 27,
-                    decoration: const InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Card(
+                    elevation: 2,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Row(
+                            children: [
+                              Icon(
+                                Icons.edit,
+                                color: AppColors.primary,
+                                size: 24,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Редактирование тренировки',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          
+                          // Поле названия
+                          Row(
+                            children: [
+                              const Text(
+                                'Название тренировки',
+                                style: TextStyle(
+                                  color: AppColors.text,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const Spacer(),
+                              TextButton(
+                                onPressed: () {
+                                  _controllerLabelTraining.text = '';
+                                },
+                                child: const Text(
+                                  'Очистить',
+                                  style: TextStyle(
+                                    color: AppColors.accent,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            maxLength: 27,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 16, horizontal: 16),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: const BorderSide(color: AppColors.primary),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: BorderSide(color: AppColors.primary.withOpacity(0.5)),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                              ),
+                              counterStyle: const TextStyle(color: AppColors.primary),
+                            ),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.text,
+                              fontSize: 16,
+                            ),
+                            controller: _controllerLabelTraining,
+                          ),
+                          const SizedBox(height: 16),
+                          
+                          // Поле описания
+                          Row(
+                            children: [
+                              const Text(
+                                'Описание тренировки',
+                                style: TextStyle(
+                                  color: AppColors.text,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const Spacer(),
+                              TextButton(
+                                onPressed: () {
+                                  _controllerDescriptionTraining.text = '';
+                                },
+                                child: const Text(
+                                  'Очистить',
+                                  style: TextStyle(
+                                    color: AppColors.accent,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            maxLines: null,
+                            minLines: 3,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 16, horizontal: 16),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: const BorderSide(color: AppColors.primary),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: BorderSide(color: AppColors.primary.withOpacity(0.5)),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                              ),
+                              hintText: 'Введите описание тренировки...',
+                              hintStyle: TextStyle(color: AppColors.text.withOpacity(0.6)),
+                            ),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.text,
+                              fontSize: 16,
+                            ),
+                            controller: _controllerDescriptionTraining,
+                          ),
+                        ],
                       ),
                     ),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Color.fromRGBO(1, 57, 104, 1),
-                        fontSize: 16),
-                    controller: _controllerLabelTraining,
                   ),
+                  
+                  // Кнопки
                   Row(
                     children: [
-                      const Text(
-                          style: TextStyle(color: Colors.black, fontSize: 14),
-                          'Описание'),
-                      TextButton(
-                          onPressed: () {
-                            _controllerDescriptionTraining.text = '';
-                          },
-                          child: const Text(
-                              style:
-                              TextStyle(color: Colors.black, fontSize: 14),
-                              '(очистить)'))
-                    ],
-                  ),
-                  TextField(
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                      ),
-                    ),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Color.fromRGBO(1, 57, 104, 1),
-                        fontSize: 16),
-                    controller: _controllerDescriptionTraining,
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
+                      Expanded(
+                        child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromRGBO(1, 57, 104, 1)),
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            elevation: 4,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
                           onPressed: () async {
                             context
                                 .read<HomeScreenCubit>()
@@ -172,67 +289,224 @@ class DayPlanTrainer extends StatelessWidget {
                                     _controllerLabelTraining.text,
                                     _controllerDescriptionTraining.text);
                           },
-                          child: const Text(
-                              style:
-                                  TextStyle(fontSize: 24, color: Colors.white),
-                              'Сохранить')),
-                      Builder(builder: (context) {
-                        return ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green),
-                            onPressed: () {
-                              Scaffold.of(context).openEndDrawer();
-                            },
-                            child: const Text(
-                                style: TextStyle(
-                                    fontSize: 24, color: Colors.black),
-                                'Шаблоны'));
-                      }),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.save, size: 20),
+                              SizedBox(width: 8),
+                              Text(
+                                'Сохранить',
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.accent,
+                            foregroundColor: Colors.white,
+                            elevation: 4,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          onPressed: () {
+                            _showTemplatesBottomSheet(context);
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.library_books, size: 20),
+                              SizedBox(width: 8),
+                              Text(
+                                'Шаблоны',
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                ]),
-        ),
+                ],
+              ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 40.0),
-        child: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(200, 1, 57, 104),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 40.0),
+        child: FloatingActionButton.extended(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          elevation: 6,
           onPressed: context.read<HomeScreenCubit>().backToWeek,
-          child: const Icon(color: Colors.white, Icons.arrow_back_sharp),
+          icon: const Icon(Icons.arrow_back_rounded),
+          label: const Text(
+            'К неделе',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
         ),
       ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
+    );
+  }
+
+  void _showTemplatesBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            children: [
+              // Drag handle
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.text.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-              child: Text(
-                  style: TextStyle(fontSize: 24, color: Colors.black),
-                  'Шаблоны тренировок'),
-            ),
-            SizedBox(
-              height: 400,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(height: 8),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(samples[index][0]),
-                    onTap: () {
-                      _controllerLabelTraining.text = samples[index][0];
-                      _controllerDescriptionTraining.text = samples[index][1];
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-                itemCount: samples.length,
+              
+              // Заголовок
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.library_books,
+                      color: AppColors.primary,
+                      size: 28,
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      'Шаблоны тренировок',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+              
+              const Divider(height: 1),
+              
+              // Список шаблонов
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  separatorBuilder: (context, index) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 2,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () {
+                          _controllerLabelTraining.text = samples[index][0];
+                          _controllerDescriptionTraining.text = samples[index][1];
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 4,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: AppColors.accent,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      samples[index][0],
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.text,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      samples[index][1].length > 80 
+                                          ? '${samples[index][1].substring(0, 80)}...' 
+                                          : samples[index][1],
+                                      style: TextStyle(
+                                        color: AppColors.text.withOpacity(0.7),
+                                        fontSize: 14,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.accent.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(
+                                  Icons.add,
+                                  color: AppColors.accent,
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: samples.length,
+                ),
+              ),
+              
+              // Кнопка закрытия
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'Закрыть',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

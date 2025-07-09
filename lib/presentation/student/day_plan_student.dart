@@ -16,10 +16,7 @@ class DayPlan extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color.fromRGBO(1, 57, 104, 1),
-        title: Text(
-            style: const TextStyle(color: Colors.white, fontSize: 27),
-            dayPlanGroup.date),
+        title: Text(dayPlanGroup.date),
       ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),

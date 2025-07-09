@@ -6,8 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/router.dart';
 import 'package:trailpro_planning/data/gsheet_credential.dart';
-
-
+import 'package:trailpro_planning/presentation/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,11 +33,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: AppTheme.lightTheme,
       title: 'TrailPro planning',
       routerConfig: router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

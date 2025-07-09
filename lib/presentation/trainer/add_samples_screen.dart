@@ -13,10 +13,7 @@ class AddSamplesScreen extends StatelessWidget {
           builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-              centerTitle: true,
-              title: const Text(
-                  style: TextStyle(fontSize: 30, color: Colors.white), 'Шаблоны'),
-              backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+              title: const Text('Управление шаблонами')),
           body: (!state.isLoading)
               ? const Center(
                   child: CircularProgressIndicator(

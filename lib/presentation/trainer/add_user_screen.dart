@@ -22,10 +22,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
-            title: const Text(
-                style: TextStyle(fontSize: 30, color: Colors.white),
-                'Новый ученик'),
-            backgroundColor: const Color.fromRGBO(1, 57, 104, 1)),
+            title: const Text('Новый ученик')),
         body: Center(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
