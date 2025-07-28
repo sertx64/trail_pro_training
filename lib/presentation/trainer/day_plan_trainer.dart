@@ -6,17 +6,68 @@ import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/domain/home_cubit.dart';
 import 'package:trailpro_planning/domain/url_utils.dart';
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
-import 'package:trailpro_planning/presentation/theme/app_colors.dart';
 
-class DayPlanTrainer extends StatelessWidget {
-  DayPlanTrainer({super.key});
+class DayPlanTrainer extends StatefulWidget {
+  const DayPlanTrainer({super.key});
 
-  final TextEditingController _controllerLabelTraining =
-      TextEditingController();
-  final TextEditingController _controllerDescriptionTraining =
-      TextEditingController();
+  @override
+  State<DayPlanTrainer> createState() => _DayPlanTrainerState();
+}
 
+class _DayPlanTrainerState extends State<DayPlanTrainer>
+    with TickerProviderStateMixin {
+  final TextEditingController _controllerLabelTraining = TextEditingController();
+  final TextEditingController _controllerDescriptionTraining = TextEditingController();
+  
+  late AnimationController _fadeController;
+  late AnimationController _slideController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+  
   final List samples = Management.samplesSlitList;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    
+    _slideController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeInOut,
+    ));
+    
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _slideController,
+      curve: Curves.easeOutCubic,
+    ));
+    
+    _fadeController.forward();
+    _slideController.forward();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    _slideController.dispose();
+    _controllerLabelTraining.dispose();
+    _controllerDescriptionTraining.dispose();
+    super.dispose();
+  }
 
   String getFullDayName(String shortDay) {
     switch (shortDay) {
@@ -39,316 +90,451 @@ class DayPlanTrainer extends StatelessWidget {
     }
   }
 
+  String _formatDate(String date) {
+    try {
+      final parts = date.split('.');
+      if (parts.length == 3) {
+        final day = parts[0];
+        final month = parts[1];
+        final year = parts[2];
+        
+        final monthNames = [
+          '', 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+          'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+        ];
+        
+        final monthName = int.tryParse(month) != null && 
+                         int.parse(month) > 0 && 
+                         int.parse(month) <= 12
+            ? monthNames[int.parse(month)]
+            : month;
+            
+        return '$day $monthName $year';
+      }
+    } catch (e) {
+      return date;
+    }
+    return date;
+  }
+
+  Color _getStatusColor(String date) {
+    if (date == DatePasing().dateNow()) {
+      return Theme.of(context).colorScheme.primary;
+    } else if (DatePasing().isAfterDay(date)) {
+      return Theme.of(context).colorScheme.tertiary;
+    } else {
+      return Theme.of(context).colorScheme.outline;
+    }
+  }
+
+  IconData _getStatusIcon(String date) {
+    if (date == DatePasing().dateNow()) {
+      return Icons.today_rounded;
+    } else if (DatePasing().isAfterDay(date)) {
+      return Icons.check_circle_rounded;
+    } else {
+      return Icons.schedule_rounded;
+    }
+  }
+
+  String _getStatusText(String date) {
+    if (date == DatePasing().dateNow()) {
+      return 'Сегодня';
+    } else if (DatePasing().isAfterDay(date)) {
+      return 'Завершено';
+    } else {
+      return 'Запланировано';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    DayPlanModel dayPlan = context.read<HomeScreenCubit>().selectDayGroup;
+    final DayPlanModel dayPlan = context.read<HomeScreenCubit>().selectDayGroup;
     _controllerLabelTraining.text = dayPlan.label;
     _controllerDescriptionTraining.text = dayPlan.description;
     
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: Text('${getFullDayName(dayPlan.day)}, ${dayPlan.date}'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: (DatePasing().isAfterDay(dayPlan.date))
-            ? Column(
-                children: [
-                  Card(
-                    elevation: 4,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: (dayPlan.date == DatePasing().dateNow())
-                            ? AppColors.completedGreen
-                            : AppColors.pastGrey,
+        elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: context.read<HomeScreenCubit>().backToWeek,
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              getFullDayName(dayPlan.day),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            Text(
+              _formatDate(dayPlan.date),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+            ),
+          ],
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: _getStatusColor(dayPlan.date).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: _getStatusColor(dayPlan.date).withOpacity(0.3),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  _getStatusIcon(dayPlan.date),
+                  size: 16,
+                  color: _getStatusColor(dayPlan.date),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  _getStatusText(dayPlan.date),
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: _getStatusColor(dayPlan.date),
+                        fontWeight: FontWeight.w600,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.fitness_center,
-                                color: AppColors.primary,
-                                size: 24,
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  dayPlan.label.isEmpty ? 'День отдыха' : dayPlan.label,
-                                  style: const TextStyle(
-                                    color: AppColors.text,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (dayPlan.description.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            const Text(
-                              'Описание:',
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontSize: 16,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: DatePasing().isAfterDay(dayPlan.date)
+                ? _buildCompletedView(context, dayPlan)
+                : _buildEditingView(context, dayPlan),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompletedView(BuildContext context, DayPlanModel dayPlan) {
+    return Column(
+      children: [
+        // Карточка тренировки
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      dayPlan.label.isEmpty 
+                          ? Icons.spa_rounded
+                          : Icons.fitness_center_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          dayPlan.label.isEmpty ? 'День отдыха' : dayPlan.label,
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.w600,
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            RichText(
-                              text: TextSpan(
-                                children: UrlUtils.buildTextWithClickableLinks(dayPlan.description),
-                                style: const TextStyle(
-                                  color: AppColors.text,
-                                  fontSize: 14,
-                                  height: 1.5,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-                  ReportsWidget(context.read<HomeScreenCubit>().planType, dayPlan.date),
-                ],
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Card(
-                    elevation: 2,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Row(
-                            children: [
-                              Icon(
-                                Icons.edit,
-                                color: AppColors.primary,
-                                size: 24,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Редактирование тренировки',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          
-                          // Поле названия
-                          Row(
-                            children: [
-                              const Text(
-                                'Название тренировки',
-                                style: TextStyle(
-                                  color: AppColors.text,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const Spacer(),
-                              TextButton(
-                                onPressed: () {
-                                  _controllerLabelTraining.text = '';
-                                },
-                                child: const Text(
-                                  'Очистить',
-                                  style: TextStyle(
-                                    color: AppColors.accent,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            maxLength: 27,
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 16),
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                                borderSide: const BorderSide(color: AppColors.primary),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                                borderSide: BorderSide(color: AppColors.primary.withOpacity(0.5)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                                borderSide: const BorderSide(color: AppColors.primary, width: 2),
-                              ),
-                              counterStyle: const TextStyle(color: AppColors.primary),
-                            ),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.text,
-                              fontSize: 16,
-                            ),
-                            controller: _controllerLabelTraining,
-                          ),
-                          const SizedBox(height: 16),
-                          
-                          // Поле описания
-                          Row(
-                            children: [
-                              const Text(
-                                'Описание тренировки',
-                                style: TextStyle(
-                                  color: AppColors.text,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const Spacer(),
-                              TextButton(
-                                onPressed: () {
-                                  _controllerDescriptionTraining.text = '';
-                                },
-                                child: const Text(
-                                  'Очистить',
-                                  style: TextStyle(
-                                    color: AppColors.accent,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            maxLines: null,
-                            minLines: 3,
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 16),
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                                borderSide: const BorderSide(color: AppColors.primary),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                                borderSide: BorderSide(color: AppColors.primary.withOpacity(0.5)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                                borderSide: const BorderSide(color: AppColors.primary, width: 2),
-                              ),
-                              hintText: 'Введите описание тренировки...',
-                              hintStyle: TextStyle(color: AppColors.text.withOpacity(0.6)),
-                            ),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.text,
-                              fontSize: 16,
-                            ),
-                            controller: _controllerDescriptionTraining,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  
-                  // Кнопки
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
-                            elevation: 4,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          onPressed: () async {
-                            context
-                                .read<HomeScreenCubit>()
-                                .applyAndBackToWeek(
-                                    _controllerLabelTraining.text,
-                                    _controllerDescriptionTraining.text);
-                          },
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.save, size: 20),
-                              SizedBox(width: 8),
-                              Text(
-                                'Сохранить',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          ),
                         ),
+                        if (dayPlan.label.isNotEmpty)
+                          Text(
+                            'Тренировка завершена',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.tertiary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              
+              if (dayPlan.description.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.description_rounded,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Описание',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.accent,
-                            foregroundColor: Colors.white,
-                            elevation: 4,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          onPressed: () {
-                            _showTemplatesBottomSheet(context);
-                          },
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.library_books, size: 20),
-                              SizedBox(width: 8),
-                              Text(
-                                'Шаблоны',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      const SizedBox(height: 12),
+                      RichText(
+                        text: TextSpan(
+                          children: UrlUtils.buildTextWithClickableLinks(dayPlan.description),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                height: 1.5,
                               ),
-                            ],
-                          ),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-      ),
-      floatingActionButton: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 40.0),
-        child: FloatingActionButton.extended(
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
-          elevation: 6,
-          onPressed: context.read<HomeScreenCubit>().backToWeek,
-          icon: const Icon(Icons.arrow_back_rounded),
-          label: const Text(
-            'К неделе',
-            style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ],
+            ],
           ),
         ),
-      ),
+        
+        const SizedBox(height: 24),
+        
+        // Виджет отчётов
+        ReportsWidget(context.read<HomeScreenCubit>().planType, dayPlan.date),
+      ],
+    );
+  }
+
+  Widget _buildEditingView(BuildContext context, DayPlanModel dayPlan) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Заголовок редактирования
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Icon(
+                  Icons.edit_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Редактирование тренировки',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          ),
+                    ),
+                    Text(
+                      'Создайте план тренировки для этого дня',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        
+        const SizedBox(height: 24),
+        
+        // Форма редактирования
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Поле названия
+              _buildInputSection(
+                context,
+                'Название',
+                'Введите название тренировки',
+                Icons.fitness_center_rounded,
+                _controllerLabelTraining,
+                maxLength: 27,
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // Поле описания
+              _buildInputSection(
+                context,
+                'Описание',
+                'Опишите упражнения, подходы, время...',
+                Icons.description_rounded,
+                _controllerDescriptionTraining,
+                maxLines: 5,
+              ),
+              
+              const SizedBox(height: 32),
+              
+              // Кнопки действий
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: FilledButton.icon(
+                      onPressed: () async {
+                        context.read<HomeScreenCubit>().applyAndBackToWeek(
+                              _controllerLabelTraining.text,
+                              _controllerDescriptionTraining.text,
+                            );
+                      },
+                      icon: const Icon(Icons.save_rounded),
+                      label: const Text('Сохранить'),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _showTemplatesBottomSheet(context),
+                      icon: const Icon(Icons.library_books_rounded),
+                      label: const Text('Шаблоны'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInputSection(
+    BuildContext context,
+    String label,
+    String hint,
+    IconData icon,
+    TextEditingController controller, {
+    int? maxLength,
+    int? maxLines,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const Spacer(),
+            TextButton.icon(
+              onPressed: () => controller.clear(),
+              icon: const Icon(Icons.clear_rounded, size: 16),
+              label: const Text('Очистить'),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: controller,
+          maxLength: maxLength,
+          maxLines: maxLines ?? 1,
+          decoration: InputDecoration(
+            hintText: hint,
+            prefixIcon: Icon(
+              icon,
+              color: Theme.of(context).colorScheme.outline,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            filled: true,
+            fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+          ),
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+        ),
+      ],
     );
   }
 
@@ -359,10 +545,10 @@ class DayPlanTrainer extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.75,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          height: MediaQuery.of(context).size.height * 0.8,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
           child: Column(
             children: [
@@ -372,28 +558,46 @@ class DayPlanTrainer extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.text.withOpacity(0.3),
+                  color: Theme.of(context).colorScheme.outline.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
               
               // Заголовок
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: const Row(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                child: Row(
                   children: [
-                    Icon(
-                      Icons.library_books,
-                      color: AppColors.primary,
-                      size: 28,
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(
+                        Icons.library_books_rounded,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        size: 24,
+                      ),
                     ),
-                    SizedBox(width: 12),
-                    Text(
-                      'Шаблоны тренировок',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Шаблоны тренировок',
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                          Text(
+                            'Выберите готовый шаблон',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -404,80 +608,14 @@ class DayPlanTrainer extends StatelessWidget {
               
               // Список шаблонов
               Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  separatorBuilder: (context, index) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 2,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(12),
-                        onTap: () {
-                          _controllerLabelTraining.text = samples[index][0];
-                          _controllerDescriptionTraining.text = samples[index][1];
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 4,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: AppColors.accent,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      samples[index][0],
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.text,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      samples[index][1].length > 80 
-                                          ? '${samples[index][1].substring(0, 80)}...' 
-                                          : samples[index][1],
-                                      style: TextStyle(
-                                        color: AppColors.text.withOpacity(0.7),
-                                        fontSize: 14,
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: AppColors.accent.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: AppColors.accent,
-                                  size: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                child: samples.isEmpty
+                    ? _buildEmptyTemplatesState(context)
+                    : ListView.separated(
+                        padding: const EdgeInsets.all(16),
+                        separatorBuilder: (context, index) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) => _buildTemplateCard(context, index),
+                        itemCount: samples.length,
                       ),
-                    );
-                  },
-                  itemCount: samples.length,
-                ),
               ),
               
               // Кнопка закрытия
@@ -485,20 +623,12 @@ class DayPlanTrainer extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      elevation: 2,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
+                  child: FilledButton.tonalIcon(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      'Закрыть',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    icon: const Icon(Icons.close_rounded),
+                    label: const Text('Закрыть'),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                   ),
                 ),
@@ -507,6 +637,120 @@ class DayPlanTrainer extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildEmptyTemplatesState(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.library_books_outlined,
+            size: 64,
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'Нет доступных шаблонов',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Шаблоны тренировок пока не добавлены',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTemplateCard(BuildContext context, int index) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+        ),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () {
+          _controllerLabelTraining.text = samples[index][0];
+          _controllerDescriptionTraining.text = samples[index][1];
+          Navigator.pop(context);
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Шаблон "${samples[index][0]}" применен'),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Container(
+                width: 4,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      samples[index][0],
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      samples[index][1].length > 120 
+                          ? '${samples[index][1].substring(0, 120)}...' 
+                          : samples[index][1],
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.outline,
+                            height: 1.4,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.add_rounded,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

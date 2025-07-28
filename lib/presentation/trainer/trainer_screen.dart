@@ -16,7 +16,7 @@ class TrainerScreen extends StatelessWidget {
     return BlocBuilder<HomeScreenCubit, PlanDataModel>(
         builder: (context, state) {
       return (state.isDay)
-          ? DayPlanTrainer()
+                          ? const DayPlanTrainer()
           : Scaffold(
               body: (!state.planLoaded)
                   ? const Center(child: LottieAnimationLoadBar())

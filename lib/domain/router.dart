@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/presentation/info_screen.dart';
 import 'package:trailpro_planning/presentation/site_trailpro.dart';
 import 'package:trailpro_planning/presentation/splash_screen.dart';
-import 'package:trailpro_planning/presentation/student/student_screen.dart';
+
 import 'package:trailpro_planning/presentation/student/student_wrapper.dart';
 import 'package:trailpro_planning/presentation/student/student_main_layout.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
