@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/sertx/Desktop/flutter_SDK/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/sertx/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/sertx/AndroidStudioProjects/trail_pro_training1/android/app/.cxx/Debug/4b6p1b4k/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/sertx/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/sertx/AndroidStudioProjects/trail_pro_training1/android/app/.cxx/Debug/4b6p1b4k/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

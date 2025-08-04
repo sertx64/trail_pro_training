@@ -7,12 +7,13 @@ class DayPlanModel {
 }
 
 class PlanDataModel {
-  PlanDataModel(this.isDay, this.planLoaded, this.weekPlanGroup, this.weekPlanPersonal, this.planType);
+  PlanDataModel(this.isDay, this.planLoaded, this.weekPlanGroup, this.weekPlanPersonal, this.planType, {this.isViewMode = false});
   bool isDay;
   bool planLoaded;
   List<DayPlanModel> weekPlanGroup;
   List<DayPlanModel> weekPlanPersonal;
   String planType;
+  bool isViewMode;
 
 }
 

@@ -181,7 +181,7 @@ class _SentReportWidgetState extends State<SentReportWidget>
                     ),
                     const SizedBox(width: 16),
                     Text(
-                      'Справка по оценкам',
+                      'Справка',
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -479,7 +479,7 @@ class _SentReportWidgetState extends State<SentReportWidget>
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: const Text('Нет, тренировался'),
+                        child: const Text('Нет'),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -490,7 +490,7 @@ class _SentReportWidgetState extends State<SentReportWidget>
                           Navigator.of(context).pop();
                         },
                         icon: const Icon(Icons.check_rounded),
-                        label: const Text('Да, пропустил'),
+                        label: const Text('Пропустил'),
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor: Colors.orange.shade100,

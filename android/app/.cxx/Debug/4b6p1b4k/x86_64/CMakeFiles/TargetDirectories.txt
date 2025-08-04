@@ -1,0 +1,2 @@
+/Users/sertx/AndroidStudioProjects/trail_pro_training1/android/app/.cxx/Debug/4b6p1b4k/x86_64/CMakeFiles/edit_cache.dir
+/Users/sertx/AndroidStudioProjects/trail_pro_training1/android/app/.cxx/Debug/4b6p1b4k/x86_64/CMakeFiles/rebuild_cache.dir

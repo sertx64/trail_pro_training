@@ -1,0 +1,1 @@
+/Users/sertx/AndroidStudioProjects/trail_pro_training1/build/app/intermediates/cxx/RelWithDebInfo/h3u42u2u/obj/x86_64

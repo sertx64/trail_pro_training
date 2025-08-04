@@ -4,7 +4,7 @@ import 'package:trailpro_planning/domain/date_format.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/models/models.dart';
 import 'package:trailpro_planning/domain/home_cubit.dart';
-import 'package:trailpro_planning/domain/url_utils.dart';
+
 import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 
 class DayPlanTrainer extends StatefulWidget {
@@ -153,6 +153,10 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
     _controllerLabelTraining.text = dayPlan.label;
     _controllerDescriptionTraining.text = dayPlan.description;
     
+    // Определяем, является ли день прошедшим или текущим (используется в _buildMainContent)
+    // bool isPast = DatePasing().isAfterDay(dayPlan.date);
+    // bool isToday = dayPlan.date == DatePasing().dateNow();
+    
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -218,19 +222,21 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
           position: _slideAnimation,
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
-            child: DatePasing().isAfterDay(dayPlan.date)
-                ? _buildCompletedView(context, dayPlan)
-                : _buildEditingView(context, dayPlan),
+            child: context.read<HomeScreenCubit>().state.isViewMode 
+                ? _buildViewMode(context, dayPlan)
+                : _buildMainContent(context, dayPlan),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCompletedView(BuildContext context, DayPlanModel dayPlan) {
+
+
+  Widget _buildViewMode(BuildContext context, DayPlanModel dayPlan) {
     return Column(
       children: [
-        // Карточка тренировки
+        // Карточка тренировки для просмотра
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(24),
@@ -318,13 +324,11 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
                         ],
                       ),
                       const SizedBox(height: 12),
-                      RichText(
-                        text: TextSpan(
-                          children: UrlUtils.buildTextWithClickableLinks(dayPlan.description),
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                height: 1.5,
-                              ),
-                        ),
+                      Text(
+                        dayPlan.description,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              height: 1.5,
+                            ),
                       ),
                     ],
                   ),
@@ -338,6 +342,74 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
         
         // Виджет отчётов
         ReportsWidget(context.read<HomeScreenCubit>().planType, dayPlan.date),
+      ],
+    );
+  }
+
+  Widget _buildMainContent(BuildContext context, DayPlanModel dayPlan) {
+    bool isPast = DatePasing().isAfterDay(dayPlan.date);
+    bool isToday = dayPlan.date == DatePasing().dateNow();
+    
+    return Column(
+      children: [
+        // Показываем режим редактирования для всех дней
+        _buildEditingView(context, dayPlan),
+        
+        // Если день прошедший или текущий, показываем предупреждение
+        if (isPast || isToday) ...[
+          const SizedBox(height: 24),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.errorContainer,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: Theme.of(context).colorScheme.error,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        isPast ? 'Прошедший день' : 'Текущий день',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        isPast 
+                            ? 'Этот день уже прошёл. Изменения могут повлиять на существующие отчёты.'
+                            : 'Этот день уже наступил. Изменения могут повлиять на текущие тренировки.',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onErrorContainer,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+        
+        const SizedBox(height: 24),
+        
+        // Показываем отчёты для прошедших дней
+        if (isPast) ...[
+          ReportsWidget(context.read<HomeScreenCubit>().planType, dayPlan.date),
+        ],
       ],
     );
   }
@@ -381,7 +453,9 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
                           ),
                     ),
                     Text(
-                      'Создайте план тренировки для этого дня',
+                      DatePasing().isAfterDay(dayPlan.date) || dayPlan.date == DatePasing().dateNow()
+                          ? 'Редактирование тренировки (день уже наступил)'
+                          : 'Создайте план тренировки для этого дня',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
                           ),

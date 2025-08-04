@@ -21,7 +21,6 @@ class TrainerScreen extends StatelessWidget {
               body: (!state.planLoaded)
                   ? const Center(child: LottieAnimationLoadBar())
                   : _buildWeekPlanList(state),
-              floatingActionButton: _buildFloatingActionButtons(context),
             );
     });
   }
@@ -83,7 +82,9 @@ class TrainerScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: ElevatedButton.icon(
-                              onPressed: () => context.read<HomeScreenCubit>().openDay(index),
+                              onPressed: () => isPast 
+                                  ? context.read<HomeScreenCubit>().openDayForView(index)
+                                  : context.read<HomeScreenCubit>().openDayForEdit(index),
                               icon: isPast ? const Icon(Icons.visibility) : const Icon(Icons.edit),
                               label: Text(isPast ? 'Просмотр отчетов' : 'Редактировать'),
                               style: ElevatedButton.styleFrom(
@@ -94,6 +95,24 @@ class TrainerScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+                      if (isPast || isToday) ...[
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                onPressed: () => _showEditWarningDialog(context, index, dayPlan, isPast, isToday, context.read<HomeScreenCubit>()),
+                                icon: const Icon(Icons.edit_note),
+                                label: const Text('Редактировать тренировку'),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: AppColors.primary,
+                                  side: const BorderSide(color: AppColors.primary),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -109,6 +128,11 @@ class TrainerScreen extends StatelessWidget {
               title: _buildDayTitle(dayPlan, isToday),
               subtitle: _buildDaySubtitle(dayPlan),
               onTap: (isPast && !hasTraining) ? null : () => context.read<HomeScreenCubit>().openDay(index),
+              trailing: (isPast || isToday) ? IconButton(
+                icon: const Icon(Icons.edit_note, color: AppColors.primary),
+                onPressed: () => _showEditWarningDialog(context, index, dayPlan, isPast, isToday, context.read<HomeScreenCubit>()),
+                tooltip: 'Редактировать тренировку',
+              ) : null,
             ),
           );
         }
@@ -221,25 +245,116 @@ class TrainerScreen extends StatelessWidget {
 
 
 
-  Widget _buildFloatingActionButtons(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: 'prevWeek',
-            onPressed: context.read<HomeScreenCubit>().previousWeek,
-            child: const Icon(Icons.chevron_left),
+
+
+  void _showEditWarningDialog(BuildContext context, int index, DayPlanModel dayPlan, bool isPast, bool isToday, HomeScreenCubit homeCubit) {
+    String warningMessage = '';
+    String dayStatus = '';
+    
+    if (isPast) {
+      warningMessage = 'Этот день уже прошёл. Изменения могут повлиять на уже существующие отчёты студентов.';
+      dayStatus = 'Прошедший день';
+    } else if (isToday) {
+      warningMessage = 'Этот день уже наступил. Изменения могут повлиять на текущие тренировки.';
+      dayStatus = 'Текущий день';
+    }
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          const SizedBox(width: 16),
-          FloatingActionButton(
-            heroTag: 'nextWeek',
-            onPressed: context.read<HomeScreenCubit>().nextWeek,
-            child: const Icon(Icons.chevron_right),
+          title: Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: AppColors.primary,
+                size: 28,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Внимание!',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  dayStatus,
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                warningMessage,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: AppColors.text,
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Вы уверены, что хотите продолжить редактирование?',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'Отмена',
+                style: TextStyle(
+                  color: AppColors.grey,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                homeCubit.openDay(index);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.textLight,
+              ),
+              child: const Text(
+                'Продолжить',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
