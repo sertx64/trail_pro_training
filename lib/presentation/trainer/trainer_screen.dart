@@ -200,6 +200,63 @@ class TrainerScreen extends StatelessWidget {
 
   Widget _buildDaySubtitle(DayPlanModel dayPlan) {
     if (dayPlan.label.isNotEmpty) {
+      List<Widget> subtitleWidgets = [];
+      
+      // Добавляем время и место, если они есть
+      if (dayPlan.time.isNotEmpty || dayPlan.location.isNotEmpty) {
+        if (dayPlan.time.isNotEmpty) {
+          subtitleWidgets.add(
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.access_time, size: 12, color: AppColors.primary),
+                const SizedBox(width: 4),
+                Text(
+                  dayPlan.time,
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        
+        if (dayPlan.location.isNotEmpty) {
+          subtitleWidgets.add(
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.location_on, size: 12, color: AppColors.primary),
+                const SizedBox(width: 4),
+                Text(
+                  dayPlan.location,
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+      
+      // Добавляем название тренировки
+      subtitleWidgets.add(
+        Text(
+          dayPlan.label,
+          style: const TextStyle(
+            color: AppColors.primary,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      );
+      
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         margin: const EdgeInsets.only(top: 4),
@@ -207,13 +264,9 @@ class TrainerScreen extends StatelessWidget {
           color: AppColors.primary.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(
-          dayPlan.label,
-          style: const TextStyle(
-            color: AppColors.primary,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: subtitleWidgets,
         ),
       );
     } else {

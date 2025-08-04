@@ -18,6 +18,8 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
     with TickerProviderStateMixin {
   final TextEditingController _controllerLabelTraining = TextEditingController();
   final TextEditingController _controllerDescriptionTraining = TextEditingController();
+  final TextEditingController _controllerTimeTraining = TextEditingController();
+  final TextEditingController _controllerLocationTraining = TextEditingController();
   
   late AnimationController _fadeController;
   late AnimationController _slideController;
@@ -66,6 +68,8 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
     _slideController.dispose();
     _controllerLabelTraining.dispose();
     _controllerDescriptionTraining.dispose();
+    _controllerTimeTraining.dispose();
+    _controllerLocationTraining.dispose();
     super.dispose();
   }
 
@@ -152,6 +156,8 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
     final DayPlanModel dayPlan = context.read<HomeScreenCubit>().selectDayGroup;
     _controllerLabelTraining.text = dayPlan.label;
     _controllerDescriptionTraining.text = dayPlan.description;
+    _controllerTimeTraining.text = dayPlan.time;
+    _controllerLocationTraining.text = dayPlan.location;
     
     // Определяем, является ли день прошедшим или текущим (используется в _buildMainContent)
     // bool isPast = DatePasing().isAfterDay(dayPlan.date);
@@ -277,6 +283,48 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
                                 fontWeight: FontWeight.w600,
                               ),
                         ),
+                        // Отображаем время и место, если они есть
+                        if (dayPlan.label.isNotEmpty && (dayPlan.time.isNotEmpty || dayPlan.location.isNotEmpty)) ...[
+                          const SizedBox(height: 8),
+                          if (dayPlan.time.isNotEmpty)
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.access_time,
+                                  size: 14,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  dayPlan.time,
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        color: Theme.of(context).colorScheme.primary,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          if (dayPlan.location.isNotEmpty) ...[
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  size: 14,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  dayPlan.location,
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        color: Theme.of(context).colorScheme.primary,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ],
                         if (dayPlan.label.isNotEmpty)
                           Text(
                             'Тренировка завершена',
@@ -499,6 +547,30 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
               
               const SizedBox(height: 24),
               
+              // Поле времени
+              _buildInputSection(
+                context,
+                'Время',
+                'Например: 19:00',
+                Icons.access_time,
+                _controllerTimeTraining,
+                maxLength: 10,
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // Поле места
+              _buildInputSection(
+                context,
+                'Место',
+                'Например: Спортивная площадка',
+                Icons.location_on,
+                _controllerLocationTraining,
+                maxLength: 50,
+              ),
+              
+              const SizedBox(height: 24),
+              
               // Поле описания
               _buildInputSection(
                 context,
@@ -521,6 +593,8 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
                         context.read<HomeScreenCubit>().applyAndBackToWeek(
                               _controllerLabelTraining.text,
                               _controllerDescriptionTraining.text,
+                              time: _controllerTimeTraining.text,
+                              location: _controllerLocationTraining.text,
                             );
                       },
                       icon: const Icon(Icons.save_rounded),
@@ -760,6 +834,9 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
         onTap: () {
           _controllerLabelTraining.text = samples[index][0];
           _controllerDescriptionTraining.text = samples[index][1];
+          // Очищаем поля времени и места при применении шаблона
+          _controllerTimeTraining.text = '';
+          _controllerLocationTraining.text = '';
           Navigator.pop(context);
           
           ScaffoldMessenger.of(context).showSnackBar(

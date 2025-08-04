@@ -30,6 +30,46 @@ class DayPlan extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('Групповая тренировка'),
+                      // Отображаем время и место, если они есть
+                      if (dayPlanGroup.time.isNotEmpty || dayPlanGroup.location.isNotEmpty) ...[
+                        if (dayPlanGroup.time.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.access_time, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
+                                const SizedBox(width: 8),
+                                Text(
+                                  dayPlanGroup.time,
+                                  style: const TextStyle(
+                                    color: Color.fromRGBO(255, 132, 26, 1),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (dayPlanGroup.location.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.location_on, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
+                                const SizedBox(width: 8),
+                                Text(
+                                  dayPlanGroup.location,
+                                  style: const TextStyle(
+                                    color: Color.fromRGBO(255, 132, 26, 1),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(height: 8),
+                      ],
                       Text(
                           style: const TextStyle(
                               color: Color.fromRGBO(255, 132, 26, 1),
@@ -49,6 +89,46 @@ class DayPlan extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('персональная'),
+                      // Отображаем время и место для персональной тренировки, если они есть
+                      if (dayPlanPersonal.time.isNotEmpty || dayPlanPersonal.location.isNotEmpty) ...[
+                        if (dayPlanPersonal.time.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.access_time, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
+                                const SizedBox(width: 8),
+                                Text(
+                                  dayPlanPersonal.time,
+                                  style: const TextStyle(
+                                    color: Color.fromRGBO(255, 132, 26, 1),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (dayPlanPersonal.location.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.location_on, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
+                                const SizedBox(width: 8),
+                                Text(
+                                  dayPlanPersonal.location,
+                                  style: const TextStyle(
+                                    color: Color.fromRGBO(255, 132, 26, 1),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(height: 8),
+                      ],
                       Text(
                           style: const TextStyle(
                               color: Color.fromRGBO(255, 132, 26, 1),

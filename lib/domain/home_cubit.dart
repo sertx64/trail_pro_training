@@ -9,8 +9,8 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
 
   int yearWeekIndex = int.parse(DatePasing().yearWeekNow());
   int indexDay = 0;
-  DayPlanModel selectDayGroup = DayPlanModel('', '', '', '');
-  DayPlanModel selectDayPersonal = DayPlanModel('', '', '', '');
+  DayPlanModel selectDayGroup = DayPlanModel('', '', '', '', time: '', location: '');
+  DayPlanModel selectDayPersonal = DayPlanModel('', '', '', '', time: '', location: '');
   List<String> weekPlanList = [];
   String planType = 'TrailPro';
 
@@ -36,7 +36,7 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
     currentPlanData.weekPlanGroup = currentWeekPlanGroup;
     currentPlanData.weekPlanPersonal = List.generate(
       7,
-      (index) => DayPlanModel('', '', '', ''),
+      (index) => DayPlanModel('', '', '', '', time: '', location: ''),
     );
     if (!isClosed) {
       emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal, currentPlanData.planType, isViewMode: currentPlanData.isViewMode));
@@ -87,15 +87,29 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
     }
   }
 
-  void applyAndBackToWeek(String label, String description) {
+  void applyAndBackToWeek(String label, String description, {String time = '', String location = ''}) {
     PlanDataModel currentPlanData = state;
+    
+    // Формируем полную строку label с временем и местом
+    String fullLabel = '';
+    if (time.isNotEmpty) {
+      fullLabel += 'time: $time\n';
+    }
+    if (location.isNotEmpty) {
+      fullLabel += 'location: $location\n';
+    }
+    fullLabel += label;
+    
     currentPlanData.weekPlanGroup[indexDay].label = label;
     currentPlanData.weekPlanGroup[indexDay].description = description;
+    currentPlanData.weekPlanGroup[indexDay].time = time;
+    currentPlanData.weekPlanGroup[indexDay].location = location;
+    
     currentPlanData.isDay = false;
     if (!isClosed) {
       emit(PlanDataModel(currentPlanData.isDay, currentPlanData.planLoaded, currentPlanData.weekPlanGroup, currentPlanData.weekPlanPersonal, currentPlanData.planType, isViewMode: currentPlanData.isViewMode));
     }
-    sentPlan(planType, label, description);
+    sentPlan(planType, fullLabel, description);
   }
 
   void sentPlan(String plan, String label, String description) async {
@@ -129,13 +143,13 @@ class HomeScreenCubit extends Cubit<PlanDataModel> {
         (await ApiGSheet().getWeekPlanList(plan, '$yearweek'))!;
 
     final List<DayPlanModel> weekPlan = [
-      DayPlanModel('ПН', dateOnWeekPlan(weekPlanList[0]), weekPlanList[1], weekPlanList[2]),
-      DayPlanModel('ВТ', dateOnWeekPlan(weekPlanList[3]), weekPlanList[4], weekPlanList[5]),
-      DayPlanModel('СР', dateOnWeekPlan(weekPlanList[6]), weekPlanList[7], weekPlanList[8]),
-      DayPlanModel('ЧТ', dateOnWeekPlan(weekPlanList[9]), weekPlanList[10], weekPlanList[11]),
-      DayPlanModel('ПТ', dateOnWeekPlan(weekPlanList[12]), weekPlanList[13], weekPlanList[14]),
-      DayPlanModel('СБ', dateOnWeekPlan(weekPlanList[15]), weekPlanList[16], weekPlanList[17]),
-      DayPlanModel('ВС', dateOnWeekPlan(weekPlanList[18]), weekPlanList[19], weekPlanList[20]),
+      DayPlanModel.parseFromLabel('ПН', dateOnWeekPlan(weekPlanList[0]), weekPlanList[1], weekPlanList[2]),
+      DayPlanModel.parseFromLabel('ВТ', dateOnWeekPlan(weekPlanList[3]), weekPlanList[4], weekPlanList[5]),
+      DayPlanModel.parseFromLabel('СР', dateOnWeekPlan(weekPlanList[6]), weekPlanList[7], weekPlanList[8]),
+      DayPlanModel.parseFromLabel('ЧТ', dateOnWeekPlan(weekPlanList[9]), weekPlanList[10], weekPlanList[11]),
+      DayPlanModel.parseFromLabel('ПТ', dateOnWeekPlan(weekPlanList[12]), weekPlanList[13], weekPlanList[14]),
+      DayPlanModel.parseFromLabel('СБ', dateOnWeekPlan(weekPlanList[15]), weekPlanList[16], weekPlanList[17]),
+      DayPlanModel.parseFromLabel('ВС', dateOnWeekPlan(weekPlanList[18]), weekPlanList[19], weekPlanList[20]),
     ];
     return weekPlan;
   }

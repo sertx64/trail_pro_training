@@ -120,6 +120,69 @@ class StudentPlanScreen extends StatelessWidget {
     List<Widget> subtitleWidgets = [];
     
     if (dayPlanGroup.label.isNotEmpty) {
+      List<Widget> groupInfo = [];
+      
+      // Добавляем время и место, если они есть
+      if (dayPlanGroup.time.isNotEmpty || dayPlanGroup.location.isNotEmpty) {
+        if (dayPlanGroup.time.isNotEmpty) {
+          groupInfo.add(
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.access_time, size: 12, color: AppColors.primary),
+                const SizedBox(width: 4),
+                Text(
+                  dayPlanGroup.time,
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        
+        if (dayPlanGroup.location.isNotEmpty) {
+          groupInfo.add(
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.location_on, size: 12, color: AppColors.primary),
+                const SizedBox(width: 4),
+                Text(
+                  dayPlanGroup.location,
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        
+        if (groupInfo.isNotEmpty) {
+          subtitleWidgets.add(
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              margin: const EdgeInsets.only(top: 4),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: groupInfo,
+              ),
+            ),
+          );
+        }
+      }
+      
+      // Добавляем название тренировки
       subtitleWidgets.add(
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -141,6 +204,69 @@ class StudentPlanScreen extends StatelessWidget {
     }
     
     if (dayPlanPersonal.label.isNotEmpty) {
+      List<Widget> personalInfo = [];
+      
+      // Добавляем время и место для персонального плана, если они есть
+      if (dayPlanPersonal.time.isNotEmpty || dayPlanPersonal.location.isNotEmpty) {
+        if (dayPlanPersonal.time.isNotEmpty) {
+          personalInfo.add(
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.access_time, size: 12, color: AppColors.success),
+                const SizedBox(width: 4),
+                Text(
+                  dayPlanPersonal.time,
+                  style: const TextStyle(
+                    color: AppColors.success,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        
+        if (dayPlanPersonal.location.isNotEmpty) {
+          personalInfo.add(
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.location_on, size: 12, color: AppColors.success),
+                const SizedBox(width: 4),
+                Text(
+                  dayPlanPersonal.location,
+                  style: const TextStyle(
+                    color: AppColors.success,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        
+        if (personalInfo.isNotEmpty) {
+          subtitleWidgets.add(
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              margin: const EdgeInsets.only(top: 4),
+              decoration: BoxDecoration(
+                color: AppColors.success.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: personalInfo,
+              ),
+            ),
+          );
+        }
+      }
+      
+      // Добавляем название персональной тренировки
       subtitleWidgets.add(
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
