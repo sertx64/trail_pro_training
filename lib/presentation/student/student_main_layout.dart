@@ -80,37 +80,18 @@ class _StudentMainLayoutState extends State<StudentMainLayout> {
 
           // Otherwise show main layout with tabs
           return Scaffold(
-            appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(kToolbarHeight),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(16),
-                    bottomRight: Radius.circular(16),
-                  ),
-                  border: Border.all(
-                    color: Colors.black.withOpacity(0.6),
-                    width: 0.6,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+            appBar: AppBar(
+              title: Text(_getAppBarTitle(state)),
+              backgroundColor: Colors.white,
+              elevation: 0,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
                 ),
-                child: AppBar(
-                  title: Text(_getAppBarTitle(state)),
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
-                    ),
-                  ),
+                side: BorderSide(
+                  color: Colors.black,
+                  width: 0.6,
                 ),
               ),
             ),
@@ -123,16 +104,9 @@ class _StudentMainLayoutState extends State<StudentMainLayout> {
                   topRight: Radius.circular(16),
                 ),
                 border: Border.all(
-                  color: Colors.black.withOpacity(0.6),
+                  color: Colors.black,
                   width: 0.6,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
               ),
               child: SafeArea(
                 child: Padding(

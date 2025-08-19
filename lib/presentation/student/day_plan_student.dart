@@ -9,6 +9,54 @@ import 'package:trailpro_planning/presentation/reports/reports_widget.dart';
 class DayPlan extends StatelessWidget {
   const DayPlan({super.key});
 
+  String getFullDayName(String shortDay) {
+    switch (shortDay) {
+      case 'ПН':
+        return 'Понедельник';
+      case 'ВТ':
+        return 'Вторник';
+      case 'СР':
+        return 'Среда';
+      case 'ЧТ':
+        return 'Четверг';
+      case 'ПТ':
+        return 'Пятница';
+      case 'СБ':
+        return 'Суббота';
+      case 'ВС':
+        return 'Воскресенье';
+      default:
+        return shortDay;
+    }
+  }
+
+  String _formatDate(String date) {
+    try {
+      final parts = date.split('.');
+      if (parts.length == 3) {
+        final day = parts[0];
+        final month = parts[1];
+        final year = parts[2];
+        
+        final monthNames = [
+          '', 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+          'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+        ];
+        
+        final monthName = int.tryParse(month) != null && 
+                         int.parse(month) > 0 && 
+                         int.parse(month) <= 12
+            ? monthNames[int.parse(month)]
+            : month;
+            
+        return '$day $monthName $year г.';
+      }
+    } catch (e) {
+      return date;
+    }
+    return date;
+  }
+
   @override
   Widget build(BuildContext context) {
     final DayPlanModel dayPlanGroup = context.read<HomeScreenCubit>().selectDayGroup;
@@ -21,7 +69,32 @@ class DayPlan extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(dayPlanGroup.date),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(16),
+              bottomRight: Radius.circular(16),
+            ),
+            side: BorderSide(
+              color: Colors.black,
+              width: 0.6,
+            ),
+          ),
+          title: Column(
+            children: [
+              Text(
+                getFullDayName(dayPlanGroup.day),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              Text(
+                _formatDate(dayPlanGroup.date),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+              ),
+            ],
+          ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -30,17 +103,16 @@ class DayPlan extends StatelessWidget {
           ),
         ),
       body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 12),
                 Visibility(
                   visible: (dayPlanGroup.label == '') ? false : true,
                   child: Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(20),
@@ -80,55 +152,54 @@ class DayPlan extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 8),
                         
                         // Время и место
                         if (dayPlanGroup.time.isNotEmpty || dayPlanGroup.location.isNotEmpty) ...[
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (dayPlanGroup.time.isNotEmpty) ...[
-                                Flexible(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(Icons.access_time, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
-                                        const SizedBox(width: 8),
-                                        Flexible(
-                                          child: Text(
-                                            dayPlanGroup.time,
-                                            style: const TextStyle(
-                                              color: Color.fromRGBO(255, 132, 26, 1),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.access_time, size: 20, color: Colors.black),
+                                      const SizedBox(width: 8),
+                                      Flexible(
+                                        child: Text(
+                                          dayPlanGroup.time,
+                                          style: const TextStyle(
+                                            color: Color.fromRGBO(255, 132, 26, 1),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
                                           ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                if (dayPlanGroup.location.isNotEmpty) const SizedBox(width: 8),
+                                if (dayPlanGroup.location.isNotEmpty) const SizedBox(height: 8),
                               ],
                               if (dayPlanGroup.location.isNotEmpty)
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.location_on, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
-                                        const SizedBox(width: 8),
-                                        Expanded(
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.location_on, size: 20, color: Colors.black),
+                                      const SizedBox(width: 8),
+                                                                              Expanded(
                                           child: Text(
                                             dayPlanGroup.location,
                                             style: const TextStyle(
@@ -136,11 +207,11 @@ class DayPlan extends StatelessWidget {
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: true,
+                                            overflow: TextOverflow.visible,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                    ],
                                   ),
                                 ),
                             ],
@@ -163,7 +234,6 @@ class DayPlan extends StatelessWidget {
                         // Описание тренировки
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(12),
@@ -185,8 +255,6 @@ class DayPlan extends StatelessWidget {
                   visible: (dayPlanPersonal.label == '') ? false : true,
                   child: Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(20),
@@ -205,7 +273,6 @@ class DayPlan extends StatelessWidget {
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: Colors.green.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
@@ -226,55 +293,54 @@ class DayPlan extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 8),
                         
                         // Время и место
                         if (dayPlanPersonal.time.isNotEmpty || dayPlanPersonal.location.isNotEmpty) ...[
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (dayPlanPersonal.time.isNotEmpty) ...[
-                                Flexible(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(Icons.access_time, size: 16, color: Colors.green),
-                                        const SizedBox(width: 8),
-                                        Flexible(
-                                          child: Text(
-                                            dayPlanPersonal.time,
-                                            style: const TextStyle(
-                                              color: Colors.green,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.access_time, size: 16, color: Colors.green),
+                                      const SizedBox(width: 8),
+                                      Flexible(
+                                        child: Text(
+                                          dayPlanPersonal.time,
+                                          style: const TextStyle(
+                                            color: Colors.green,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
                                           ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                if (dayPlanPersonal.location.isNotEmpty) const SizedBox(width: 8),
+                                if (dayPlanPersonal.location.isNotEmpty) const SizedBox(height: 8),
                               ],
                               if (dayPlanPersonal.location.isNotEmpty)
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.location_on, size: 16, color: Colors.green),
-                                        const SizedBox(width: 8),
-                                        Expanded(
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.location_on, size: 16, color: Colors.green),
+                                      const SizedBox(width: 8),
+                                                                              Expanded(
                                           child: Text(
                                             dayPlanPersonal.location,
                                             style: const TextStyle(
@@ -282,11 +348,11 @@ class DayPlan extends StatelessWidget {
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: true,
+                                            overflow: TextOverflow.visible,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                    ],
                                   ),
                                 ),
                             ],
@@ -309,7 +375,6 @@ class DayPlan extends StatelessWidget {
                         // Описание тренировки
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(12),
@@ -323,6 +388,7 @@ class DayPlan extends StatelessWidget {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 8),
                       ],
                     ),
                   ),
@@ -334,6 +400,7 @@ class DayPlan extends StatelessWidget {
                       : false,
                   child: ReportsWidget(context.read<HomeScreenCubit>().planType, dayPlanGroup.date),
                 ),
+                const SizedBox(height: 16)
               ],
             ),
           )),

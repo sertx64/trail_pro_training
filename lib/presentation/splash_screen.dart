@@ -154,7 +154,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 return FadeTransition(
                   opacity: _fadeAnimation,
                   child: Text(
-                    'TrailPro Planning',
+                    'TrailPro',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w600,

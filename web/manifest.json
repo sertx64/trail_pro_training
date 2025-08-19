@@ -1,6 +1,6 @@
 {
-    "name": "trailpro_planning",
-    "short_name": "trailpro_planning",
+    "name": "TrailPro",
+    "short_name": "TrailPro",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
