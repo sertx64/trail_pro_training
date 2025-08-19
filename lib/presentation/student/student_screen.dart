@@ -223,16 +223,18 @@ class StudentScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.person, size: 14, color: AppColors.success),
               const SizedBox(width: 4),
-              Text(
-                dayPlanPersonal.label,
-                style: const TextStyle(
-                  color: AppColors.success,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+              Expanded(
+                child: Text(
+                  dayPlanPersonal.label,
+                  style: const TextStyle(
+                    color: AppColors.success,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

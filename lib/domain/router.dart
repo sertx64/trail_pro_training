@@ -61,7 +61,7 @@ final GoRouter router =
       path: '/studentscreen',
       builder: (BuildContext context, GoRouterState state) =>
           const StudentWrapper(child: StudentMainLayout())),
-  GoRoute(
+    GoRoute(
       path: '/studentplan',
       builder: (BuildContext context, GoRouterState state) =>
           const StudentWrapper(child: StudentMainLayout(initialIndex: 0))),

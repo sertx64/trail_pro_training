@@ -12,7 +12,7 @@ import 'package:trailpro_planning/domain/models/models.dart';
 
 class StudentMainLayout extends StatefulWidget {
   final int initialIndex;
-  
+
   const StudentMainLayout({super.key, this.initialIndex = 0});
 
   @override
@@ -21,7 +21,7 @@ class StudentMainLayout extends StatefulWidget {
 
 class _StudentMainLayoutState extends State<StudentMainLayout> {
   late int _currentIndex;
-  
+
   late final List<Widget> _pages;
 
   @override
@@ -38,12 +38,6 @@ class _StudentMainLayoutState extends State<StudentMainLayout> {
   void _onGroupSelected() {
     setState(() {
       _currentIndex = 0; // Переключаемся на план
-    });
-  }
-
-  void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
     });
   }
 
@@ -66,40 +60,207 @@ class _StudentMainLayoutState extends State<StudentMainLayout> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeScreenCubit, PlanDataModel>(
-      builder: (context, state) {
-        // If day view is open, show DayPlanStudent
-        if (state.isDay) {
-          return DayPlan();
+    return BlocListener<HomeScreenCubit, PlanDataModel>(
+      listener: (context, state) {
+        // Если план загружен и мы находимся на вкладке групп, переключаемся на план
+        if (state.planLoaded &&
+            _currentIndex == 1 &&
+            state.planType != 'personal') {
+          setState(() {
+            _currentIndex = 0;
+          });
         }
-        
-        // Otherwise show main layout with tabs
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(_getAppBarTitle(state)),
-          ),
-          body: _pages[_currentIndex],
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: _onTabTapped,
-            backgroundColor: AppColors.background,
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.calendar_today),
-                label: 'План',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.groups),
-                label: 'Группы',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.person),
-                label: 'Профиль',
-              ),
-            ],
-          ),
-        );
       },
+      child: BlocBuilder<HomeScreenCubit, PlanDataModel>(
+        builder: (context, state) {
+          // If day view is open, show DayPlanStudent
+          if (state.isDay) {
+            return const DayPlan();
+          }
+
+          // Otherwise show main layout with tabs
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
+                  ),
+                  border: Border.all(
+                    color: Colors.black.withOpacity(0.6),
+                    width: 0.6,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: AppBar(
+                  title: Text(_getAppBarTitle(state)),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            body: _pages[_currentIndex],
+            bottomNavigationBar: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+                border: Border.all(
+                  color: Colors.black.withOpacity(0.6),
+                  width: 0.6,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    children: [
+                      // Кнопки переключения недель (только для экрана плана и не в режиме дня)
+                      if (_currentIndex == 0) ...[
+                        BlocBuilder<HomeScreenCubit, PlanDataModel>(
+                          builder: (context, state) {
+                            // Скрываем кнопки если открыт экран дня
+                            if (state.isDay) {
+                              return const SizedBox();
+                            }
+
+                            return Row(
+                              children: [
+                                _buildWeekNavItem(
+                                  onPressed: () => context
+                                      .read<HomeScreenCubit>()
+                                      .previousWeek(),
+                                  icon: Icons.chevron_left,
+                                  tooltip: 'Предыдущая неделя',
+                                ),
+                                const SizedBox(width: 16),
+                                _buildWeekNavItem(
+                                  onPressed: () => context
+                                      .read<HomeScreenCubit>()
+                                      .nextWeek(),
+                                  icon: Icons.chevron_right,
+                                  tooltip: 'Следующая неделя',
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ] else ...[
+                        // Заглушка для других экранов
+                        const SizedBox(),
+                      ],
+
+                      const Spacer(),
+
+                      // Основная навигация
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildNavItem(0, Icons.calendar_today, 'План'),
+                          const SizedBox(width: 16),
+                          _buildNavItem(1, Icons.groups, 'Группы'),
+                          const SizedBox(width: 16),
+                          _buildNavItem(2, Icons.person, 'Профиль'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
-} 
+
+  Widget _buildWeekNavItem({
+    required VoidCallback onPressed,
+    required IconData icon,
+    required String tooltip,
+  }) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(
+          icon,
+          color: Theme.of(context).colorScheme.onSurface,
+          size: 24,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(int index, IconData icon, String label) {
+    final isSelected = _currentIndex == index;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Theme.of(context).colorScheme.primaryContainer
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected
+                  ? Theme.of(context).colorScheme.onPrimaryContainer
+                  : Theme.of(context).colorScheme.onSurface,
+              size: 24,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.onPrimaryContainer
+                        : Theme.of(context).colorScheme.onSurface,
+                    fontWeight:
+                        isSelected ? FontWeight.w600 : FontWeight.normal,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

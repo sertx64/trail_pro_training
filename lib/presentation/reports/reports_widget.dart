@@ -295,7 +295,7 @@ class _ReportsWidget extends StatelessWidget {
               ),
             ],
           ),
-                     const SizedBox(height: 16),
+                     const SizedBox(height: 6),
 
            // Оценки в виде красивых чипов (только если не пропустил тренировку)
           if (report.feedback.trim() != 'Пропустил тренировку. День отдыха') ...[
@@ -326,10 +326,10 @@ class _ReportsWidget extends StatelessWidget {
                      if (report.feedback.trim().isNotEmpty && 
                report.feedback.trim() != 'нет комментария' &&
                report.feedback.trim() != 'Пропустил тренировку. День отдыха') ...[
-             const SizedBox(height: 16),
+             const SizedBox(height: 12),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
@@ -357,11 +357,12 @@ class _ReportsWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Text(
                     report.feedback.trim(),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           height: 1.4,
+                          fontWeight: FontWeight.w600,
                         ),
                   ),
                 ],
@@ -371,10 +372,9 @@ class _ReportsWidget extends StatelessWidget {
 
           // Специальная метка для пропуска тренировки
           if (report.feedback.trim() == 'Пропустил тренировку. День отдыха') ...[
-            const SizedBox(height: 16),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.orange.shade50,
                 borderRadius: BorderRadius.circular(16),
@@ -386,37 +386,24 @@ class _ReportsWidget extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       color: Colors.orange.shade100,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                                         child: Icon(
-                       Icons.spa_rounded,
-                       size: 20,
-                       color: Colors.orange.shade700,
-                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'День отдыха',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: Colors.orange.shade700,
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                        Text(
-                          'Участник пропустил тренировку',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Colors.orange.shade600,
-                              ),
-                        ),
-                      ],
+                    child: Icon(
+                      Icons.spa_rounded,
+                      size: 18,
+                      color: Colors.orange.shade700,
                     ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    'День отдыха',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Colors.orange.shade700,
+                          fontWeight: FontWeight.w600,
+                        ),
                   ),
                 ],
               ),
@@ -437,7 +424,7 @@ class _ReportsWidget extends StatelessWidget {
   ) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(16),
@@ -453,10 +440,10 @@ class _ReportsWidget extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  size: 20,
+                  size: 18,
                   color: color,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 6),
                 Text(
                   label,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
@@ -466,21 +453,28 @@ class _ReportsWidget extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.w700,
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: color,
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    description,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: color.withOpacity(0.8),
+                          fontWeight: FontWeight.w500,
+                        ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              description,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: color.withOpacity(0.8),
-                    fontWeight: FontWeight.w500,
-                  ),
+                ),
+              ],
             ),
           ],
         ),

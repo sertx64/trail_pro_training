@@ -19,7 +19,6 @@ class StudentPlanScreen extends StatelessWidget {
           body: (!state.planLoaded)
               ? const Center(child: LottieAnimationLoadBar())
               : _buildWeekPlanList(state, context),
-          floatingActionButton: _buildFloatingActionButtons(context),
         );
       },
     );
@@ -147,16 +146,18 @@ class StudentPlanScreen extends StatelessWidget {
         if (dayPlanGroup.location.isNotEmpty) {
           groupInfo.add(
             Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(Icons.location_on, size: 12, color: AppColors.primary),
                 const SizedBox(width: 4),
-                Text(
-                  dayPlanGroup.location,
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                Expanded(
+                  child: Text(
+                    dayPlanGroup.location,
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -231,16 +232,18 @@ class StudentPlanScreen extends StatelessWidget {
         if (dayPlanPersonal.location.isNotEmpty) {
           personalInfo.add(
             Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(Icons.location_on, size: 12, color: AppColors.success),
                 const SizedBox(width: 4),
-                Text(
-                  dayPlanPersonal.location,
-                  style: const TextStyle(
-                    color: AppColors.success,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                Expanded(
+                  child: Text(
+                    dayPlanPersonal.location,
+                    style: const TextStyle(
+                      color: AppColors.success,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -276,16 +279,18 @@ class StudentPlanScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.person, size: 14, color: AppColors.success),
               const SizedBox(width: 4),
-              Text(
-                dayPlanPersonal.label,
-                style: const TextStyle(
-                  color: AppColors.success,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+              Expanded(
+                child: Text(
+                  dayPlanPersonal.label,
+                  style: const TextStyle(
+                    color: AppColors.success,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -328,29 +333,5 @@ class StudentPlanScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFloatingActionButtons(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: 'prevWeek',
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.textLight,
-            onPressed: context.read<HomeScreenCubit>().previousWeek,
-            child: const Icon(Icons.chevron_left),
-          ),
-          const SizedBox(width: 16),
-          FloatingActionButton(
-            heroTag: 'nextWeek',
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.textLight,
-            onPressed: context.read<HomeScreenCubit>().nextWeek,
-            child: const Icon(Icons.chevron_right),
-          ),
-        ],
-      ),
-    );
-  }
+
 } 

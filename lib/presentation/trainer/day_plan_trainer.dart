@@ -163,8 +163,13 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
     // bool isPast = DatePasing().isAfterDay(dayPlan.date);
     // bool isToday = dayPlan.date == DatePasing().dateNow();
     
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<HomeScreenCubit>().backToWeek();
+        return false; // Предотвращаем стандартное поведение
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -233,6 +238,7 @@ class _DayPlanTrainerState extends State<DayPlanTrainer>
                 : _buildMainContent(context, dayPlan),
           ),
         ),
+      ),
       ),
     );
   }

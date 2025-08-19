@@ -13,11 +13,22 @@ class DayPlan extends StatelessWidget {
   Widget build(BuildContext context) {
     final DayPlanModel dayPlanGroup = context.read<HomeScreenCubit>().selectDayGroup;
     final DayPlanModel dayPlanPersonal = context.read<HomeScreenCubit>().selectDayPersonal;
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(dayPlanGroup.date),
-      ),
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<HomeScreenCubit>().backToWeek();
+        return false; // Предотвращаем стандартное поведение
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(dayPlanGroup.date),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.read<HomeScreenCubit>().backToWeek();
+            },
+          ),
+        ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
@@ -26,121 +37,294 @@ class DayPlan extends StatelessWidget {
               children: [
                 Visibility(
                   visible: (dayPlanGroup.label == '') ? false : true,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Групповая тренировка'),
-                      // Отображаем время и место, если они есть
-                      if (dayPlanGroup.time.isNotEmpty || dayPlanGroup.location.isNotEmpty) ...[
-                        if (dayPlanGroup.time.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.access_time, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
-                                const SizedBox(width: 8),
-                                Text(
-                                  dayPlanGroup.time,
-                                  style: const TextStyle(
-                                    color: Color.fromRGBO(255, 132, 26, 1),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        if (dayPlanGroup.location.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.location_on, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
-                                const SizedBox(width: 8),
-                                Text(
-                                  dayPlanGroup.location,
-                                  style: const TextStyle(
-                                    color: Color.fromRGBO(255, 132, 26, 1),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        const SizedBox(height: 8),
-                      ],
-                      Text(
-                          style: const TextStyle(
-                              color: Color.fromRGBO(255, 132, 26, 1),
-                              fontSize: 19),
-                          dayPlanGroup.label),
-                      RichText(
-                        text: TextSpan(
-                          children: UrlUtils.buildTextWithClickableLinks(dayPlanGroup.description),
+                  child: Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Заголовок блока
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(255, 132, 26, 1).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.groups_rounded,
+                                color: Color.fromRGBO(255, 132, 26, 1),
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Групповая тренировка',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color.fromRGBO(255, 132, 26, 1),
+                                  ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        
+                        // Время и место
+                        if (dayPlanGroup.time.isNotEmpty || dayPlanGroup.location.isNotEmpty) ...[
+                          Row(
+                            children: [
+                              if (dayPlanGroup.time.isNotEmpty) ...[
+                                Flexible(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(Icons.access_time, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
+                                        const SizedBox(width: 8),
+                                        Flexible(
+                                          child: Text(
+                                            dayPlanGroup.time,
+                                            style: const TextStyle(
+                                              color: Color.fromRGBO(255, 132, 26, 1),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                if (dayPlanGroup.location.isNotEmpty) const SizedBox(width: 8),
+                              ],
+                              if (dayPlanGroup.location.isNotEmpty)
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.location_on, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            dayPlanGroup.location,
+                                            style: const TextStyle(
+                                              color: Color.fromRGBO(255, 132, 26, 1),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                        
+                        // Название тренировки
+                        Text(
+                          dayPlanGroup.label,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: const Color.fromRGBO(255, 132, 26, 1),
+                                fontWeight: FontWeight.w600,
+                              ),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                        ),
+                        const SizedBox(height: 12),
+                        
+                        // Описание тренировки
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: RichText(
+                            text: TextSpan(
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    height: 1.5,
+                                  ),
+                              children: UrlUtils.buildTextWithClickableLinks(dayPlanGroup.description),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Visibility(
                   visible: (dayPlanPersonal.label == '') ? false : true,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('персональная'),
-                      // Отображаем время и место для персональной тренировки, если они есть
-                      if (dayPlanPersonal.time.isNotEmpty || dayPlanPersonal.location.isNotEmpty) ...[
-                        if (dayPlanPersonal.time.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.access_time, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
-                                const SizedBox(width: 8),
-                                Text(
-                                  dayPlanPersonal.time,
-                                  style: const TextStyle(
-                                    color: Color.fromRGBO(255, 132, 26, 1),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        if (dayPlanPersonal.location.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.location_on, size: 16, color: Color.fromRGBO(255, 132, 26, 1)),
-                                const SizedBox(width: 8),
-                                Text(
-                                  dayPlanPersonal.location,
-                                  style: const TextStyle(
-                                    color: Color.fromRGBO(255, 132, 26, 1),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        const SizedBox(height: 8),
-                      ],
-                      Text(
-                          style: const TextStyle(
-                              color: Color.fromRGBO(255, 132, 26, 1),
-                              fontSize: 19),
-                          dayPlanPersonal.label),
-                      RichText(
-                        text: TextSpan(
-                          children: UrlUtils.buildTextWithClickableLinks(dayPlanPersonal.description),
+                  child: Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
-                      ),
-                      const SizedBox(height: 18),
-                    ],
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Заголовок блока
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.green.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.person_rounded,
+                                color: Colors.green,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Персональная',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.green,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        
+                        // Время и место
+                        if (dayPlanPersonal.time.isNotEmpty || dayPlanPersonal.location.isNotEmpty) ...[
+                          Row(
+                            children: [
+                              if (dayPlanPersonal.time.isNotEmpty) ...[
+                                Flexible(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(Icons.access_time, size: 16, color: Colors.green),
+                                        const SizedBox(width: 8),
+                                        Flexible(
+                                          child: Text(
+                                            dayPlanPersonal.time,
+                                            style: const TextStyle(
+                                              color: Colors.green,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                if (dayPlanPersonal.location.isNotEmpty) const SizedBox(width: 8),
+                              ],
+                              if (dayPlanPersonal.location.isNotEmpty)
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.location_on, size: 16, color: Colors.green),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            dayPlanPersonal.location,
+                                            style: const TextStyle(
+                                              color: Colors.green,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                        
+                        // Название тренировки
+                        Text(
+                          dayPlanPersonal.label,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600,
+                              ),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                        ),
+                        const SizedBox(height: 12),
+                        
+                        // Описание тренировки
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: RichText(
+                            text: TextSpan(
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    height: 1.5,
+                                  ),
+                              children: UrlUtils.buildTextWithClickableLinks(dayPlanPersonal.description),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Visibility(
@@ -153,13 +337,7 @@ class DayPlan extends StatelessWidget {
               ],
             ),
           )),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 40.0),
-        child: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(200, 1, 57, 104),
-          onPressed: context.read<HomeScreenCubit>().backToWeek,
-          child: const Icon(color: Colors.white, Icons.arrow_back_sharp),
-        ),
+
       ),
     );
   }

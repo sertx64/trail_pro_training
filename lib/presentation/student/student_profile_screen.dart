@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:trailpro_planning/domain/management.dart';
 import 'package:trailpro_planning/domain/users.dart';
+import 'package:trailpro_planning/domain/home_cubit.dart';
 import 'package:trailpro_planning/presentation/theme/app_colors.dart';
 
 class StudentProfileScreen extends StatefulWidget {
@@ -157,6 +159,27 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             label: const Text('Изменить ПИН-код'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accent,
+              foregroundColor: AppColors.textLight,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 2,
+            ),
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // About TrailPro Button
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: () => context.push('/infoscreen'),
+            icon: const Icon(Icons.info_outline),
+            label: const Text('О TrailPro'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
               foregroundColor: AppColors.textLight,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
@@ -404,4 +427,6 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       },
     );
   }
+
+
 } 
