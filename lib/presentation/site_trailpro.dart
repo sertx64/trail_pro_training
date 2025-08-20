@@ -36,46 +36,56 @@ class _SiteTrailproState extends State<SiteTrailpro> {
           ),
         ],
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Column(
-            children: [
-              // Прогресс-бар загрузки
-              if (_isLoading && _progress < 1.0)
-                LinearProgressIndicator(
-                  value: _progress,
-                  backgroundColor: AppColors.grey.withOpacity(0.3),
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                ),
-              
-              // WebView
-              Expanded(
-                child: _hasError
-                    ? _buildErrorWidget()
-                    : InAppWebView(
+          // Прогресс-бар загрузки
+          if (_isLoading && _progress < 1.0)
+            LinearProgressIndicator(
+              value: _progress,
+                                backgroundColor: AppColors.grey.withValues(alpha: 0.3),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+            ),
+          
+          // WebView
+          Expanded(
+            child: _hasError
+                ? _buildErrorWidget()
+                : InAppWebView(
                         initialUrlRequest: URLRequest(
                           url: WebUri('https://trailpro.ru'),
                         ),
                         onWebViewCreated: (controller) {
+                          debugPrint('WebView created successfully');
                           _webViewController = controller;
                         },
                         onLoadStart: (controller, url) {
+                          debugPrint('WebView load started: $url');
                           setState(() {
                             _isLoading = true;
                             _hasError = false;
                           });
                         },
                         onProgressChanged: (controller, progress) {
+                          debugPrint('WebView progress: $progress%');
                           setState(() {
                             _progress = progress / 100.0;
                           });
                         },
                         onLoadStop: (controller, url) {
+                          debugPrint('WebView load finished: $url');
                           setState(() {
                             _isLoading = false;
                           });
                         },
                         onReceivedError: (controller, request, error) {
+                          debugPrint('WebView error: ${error.description}');
+                          setState(() {
+                            _isLoading = false;
+                            _hasError = true;
+                          });
+                        },
+                        onReceivedHttpError: (controller, request, errorResponse) {
+                          debugPrint('WebView HTTP error: ${errorResponse.statusCode}');
                           setState(() {
                             _isLoading = false;
                             _hasError = true;
@@ -89,20 +99,32 @@ class _SiteTrailproState extends State<SiteTrailpro> {
                           supportZoom: true,
                           builtInZoomControls: false,
                           displayZoomControls: false,
+                          allowsBackForwardNavigationGestures: true,
+                          allowsLinkPreview: true,
+                          cacheEnabled: true,
+                          mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
                         ),
+                        onReceivedServerTrustAuthRequest: (controller, challenge) async {
+                          debugPrint('SSL challenge received for: ${challenge.protectionSpace.host}');
+                          return ServerTrustAuthResponse(
+                            action: ServerTrustAuthResponseAction.PROCEED,
+                          );
+                        },
+                        onReceivedClientCertRequest: (controller, challenge) async {
+                          debugPrint('Client cert request received');
+                          return ClientCertResponse(
+                            action: ClientCertResponseAction.CANCEL,
+                          );
+                        },
+                        shouldOverrideUrlLoading: (controller, navigationAction) async {
+                          debugPrint('URL loading: ${navigationAction.request.url}');
+                          return NavigationActionPolicy.ALLOW;
+                        },
+                        onContentSizeChanged: (controller, oldContentSize, newContentSize) {
+                          debugPrint('Content size changed: ${oldContentSize.width}x${oldContentSize.height} -> ${newContentSize.width}x${newContentSize.height}');
+                        },
                       ),
               ),
-            ],
-          ),
-          
-          // Индикатор загрузки
-          if (_isLoading && _progress == 0.0)
-            Container(
-              color: Theme.of(context).colorScheme.background,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
         ],
       ),
     );
@@ -118,7 +140,7 @@ class _SiteTrailproState extends State<SiteTrailpro> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
+                const Icon(
                   Icons.error_outline,
                   size: 64,
                   color: AppColors.error,
@@ -147,7 +169,7 @@ class _SiteTrailproState extends State<SiteTrailpro> {
                 Text(
                   'Проверьте подключение к интернету и попробуйте снова',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.text.withOpacity(0.7),
+                    color: AppColors.text.withValues(alpha: 0.7),
                   ),
                   textAlign: TextAlign.center,
                 ),
