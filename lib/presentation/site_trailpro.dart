@@ -103,6 +103,11 @@ class _SiteTrailproState extends State<SiteTrailpro> {
                           allowsLinkPreview: true,
                           cacheEnabled: true,
                           mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+                          safeBrowsingEnabled: false,
+                          allowFileAccess: true,
+                          allowContentAccess: true,
+                          domStorageEnabled: true,
+                          databaseEnabled: true,
                         ),
                         onReceivedServerTrustAuthRequest: (controller, challenge) async {
                           debugPrint('SSL challenge received for: ${challenge.protectionSpace.host}');
